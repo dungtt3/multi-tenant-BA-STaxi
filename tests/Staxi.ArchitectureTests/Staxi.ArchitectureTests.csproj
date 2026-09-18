@@ -23,6 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Staxi.Admin.Api\Staxi.Admin.Api.csproj" />
+    <ProjectReference Include="..\..\src\Staxi.Admin.Application\Staxi.Admin.Application.csproj" />
+    <ProjectReference Include="..\..\src\Staxi.Admin.Domain\Staxi.Admin.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Staxi.Admin.Infrastructure\Staxi.Admin.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Staxi.Platform\Staxi.Platform.csproj" />
     <ProjectReference Include="..\Staxi.TenantLeakTests\Staxi.TenantLeakTests.csproj" />
   </ItemGroup>

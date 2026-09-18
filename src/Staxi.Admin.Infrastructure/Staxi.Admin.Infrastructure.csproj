@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Staxi.Admin.Infrastructure</RootNamespace>
+    <AssemblyName>Staxi.Admin.Infrastructure</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Staxi.Admin.Application\Staxi.Admin.Application.csproj" />
+    <ProjectReference Include="..\Staxi.Platform\Staxi.Platform.csproj" />
+  </ItemGroup>
+
+</Project>

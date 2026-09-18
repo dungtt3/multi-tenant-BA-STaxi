@@ -12,7 +12,7 @@ public sealed class PhamViSignalRTests(AssemblyCatalog assemblies)
     [Fact(DisplayName = "R2: Cấm phát SignalR vượt phạm vi, kể cả trong leak test (AD-7)")]
     public void GoiSignalR_KhongDuocPhatVuotPhamVi()
     {
-        var violations = assemblies.PlatformAndLeakTests.SelectMany(MethodCallScanner.Read)
+        var violations = assemblies.SanPhamVaLeakTests.SelectMany(MethodCallScanner.Read)
             .Where(call => call.Target.DeclaringType.Namespace == "Microsoft.AspNetCore.SignalR"
                 && call.Target.Name is "get_All" or "get_Others" or "AllExcept" or "OthersInGroup")
             .Select(call => $"{call.Location} → {call.Target.FullName}");
@@ -24,7 +24,7 @@ public sealed class PhamViSignalRTests(AssemblyCatalog assemblies)
     public void HubMethod_KhongNhanThamSoPhamVi()
     {
         string[] forbiddenNames = ["tenant", "tenantcode", "tenantid", "company", "companyid", "companycode", "mahang", "congty", "xncode"];
-        var violations = assemblies.PlatformAndLeakTests.SelectMany(TypeScanner.Read)
+        var violations = assemblies.SanPhamVaLeakTests.SelectMany(TypeScanner.Read)
             .Where(type => TypeScanner.InheritsFrom(type, typeof(Hub).FullName!))
             .SelectMany(type => type.Methods).Where(method => method.IsPublic && !method.IsConstructor)
             .SelectMany(method => method.Parameters

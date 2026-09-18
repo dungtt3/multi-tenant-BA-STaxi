@@ -1,4 +1,7 @@
 using Mono.Cecil;
+using Staxi.Admin.Application;
+using Staxi.Admin.Domain;
+using Staxi.Admin.Infrastructure;
 using Staxi.Platform.Tenancy;
 using Staxi.TenantLeakTests.Tests;
 
@@ -22,11 +25,37 @@ public sealed class AssemblyCatalog : IDisposable
 
     public AssemblyDefinition Platform => Get<TenantScope>();
 
-    public IReadOnlyList<AssemblyDefinition> PlatformAndLeakTests => [Platform, Get<PhamViCacheTests>()];
+    public IReadOnlyList<AssemblyDefinition> SanPham =>
+    [
+        Platform,
+        Get<LoaiXe>(),
+        Get<ILoaiXeRepository>(),
+        Get<LoaiXeRepository>(),
+        GetTheoTen("Staxi.Admin.Api"),
+    ];
 
-    public AssemblyDefinition Get<T>()
+    public IReadOnlyList<AssemblyDefinition> SanPhamVaLeakTests => [.. SanPham, Get<PhamViCacheTests>()];
+
+    public AssemblyDefinition AdminDomain => Get<LoaiXe>();
+
+    public AssemblyDefinition GetTheoTen(string tenAssembly)
     {
-        var path = typeof(T).Assembly.Location;
+        var path = Path.Combine(AppContext.BaseDirectory, tenAssembly + ".dll");
+
+        if (!File.Exists(path))
+        {
+            throw new InvalidOperationException(
+                $"Không tìm thấy assembly '{path}'. Bài kiểm kiến trúc phải quét được assembly sản phẩm này, "
+                + "nên project test phải tham chiếu tới nó.");
+        }
+
+        return Doc(path);
+    }
+
+    public AssemblyDefinition Get<T>() => Doc(typeof(T).Assembly.Location);
+
+    private AssemblyDefinition Doc(string path)
+    {
         if (!_assemblies.TryGetValue(path, out var assembly))
         {
             assembly = AssemblyDefinition.ReadAssembly(path, new ReaderParameters { AssemblyResolver = _resolver });

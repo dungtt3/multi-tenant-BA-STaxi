@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Staxi.Contracts</RootNamespace>
+    <AssemblyName>Staxi.Contracts</AssemblyName>
+  </PropertyGroup>
+
+</Project>

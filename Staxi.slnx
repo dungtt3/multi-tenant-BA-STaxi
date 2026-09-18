@@ -1,5 +1,10 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/Staxi.Admin.Api/Staxi.Admin.Api.csproj" />
+    <Project Path="src/Staxi.Admin.Application/Staxi.Admin.Application.csproj" />
+    <Project Path="src/Staxi.Admin.Domain/Staxi.Admin.Domain.csproj" />
+    <Project Path="src/Staxi.Admin.Infrastructure/Staxi.Admin.Infrastructure.csproj" />
+    <Project Path="src/Staxi.Contracts/Staxi.Contracts.csproj" />
     <Project Path="src/Staxi.Platform/Staxi.Platform.csproj" />
   </Folder>
   <Folder Name="/tests/">

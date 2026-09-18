@@ -12,15 +12,15 @@ public sealed class HttpContextAdapterTests(AssemblyCatalog assemblies)
     {
         const string adapterNamespace = "Staxi.Platform.AspNetCore";
         const string contextType = "Microsoft.AspNetCore.Http.HttpContext";
-        var signatures = TypeScanner.Read(assemblies.Platform)
+        var signatures = assemblies.SanPham.SelectMany(TypeScanner.Read)
             .Where(type => TypeScanner.NamespaceOf(type) != adapterNamespace).SelectMany(type => type.Methods)
             .Where(method => TypeReferenceScanner.References(method, contextType))
             .Select(method => $"{method.DeclaringType.FullName}.{method.Name} (chữ ký: {method.FullName})");
-        var fields = FieldScanner.Read(assemblies.Platform)
+        var fields = assemblies.SanPham.SelectMany(FieldScanner.Read)
             .Where(field => TypeScanner.NamespaceOf(field.DeclaringType) != adapterNamespace
                 && TypeReferenceScanner.Contains(field.FieldType, contextType))
             .Select(field => $"{field.DeclaringType.FullName}.{field.Name} (trường: {field.FieldType.FullName})");
-        var calls = MethodCallScanner.Read(assemblies.Platform)
+        var calls = assemblies.SanPham.SelectMany(MethodCallScanner.Read)
             .Where(call => TypeScanner.NamespaceOf(call.Caller.DeclaringType) != adapterNamespace
                 && TypeReferenceScanner.References(call.Target, contextType))
             .Select(call => $"{call.Location} → {call.Target.FullName}");

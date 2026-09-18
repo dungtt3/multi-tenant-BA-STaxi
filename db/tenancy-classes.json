@@ -25,8 +25,8 @@
   ],
   "thongKe": {
     "tongSoBangTrongSo": 279,
-    "daDuyet": 0,
-    "chuaDuyet": 279,
+    "daDuyet": 1,
+    "chuaDuyet": 278,
     "theoHang": {
       "Global": 0,
       "PerTenant": 115,
@@ -108,12 +108,14 @@
     },
     {
       "ten": "[Admin.CarTypes]",
-      "thucThe": "AdminCarType",
+      "thucThe": "AdminCarType, LoaiXe",
       "hang": "PerCompany",
-      "trangThai": "chuaDuyet",
-      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "trangThai": "daDuyet",
+      "chungCu": "Phan quyet cua chu san pham 18-09-2026: CompanyId la khoa so huu that. Moi truy van phai loc CompanyId. Dong co CompanyId NULL KHONG thuoc ve cong ty nao va khong hien cho cong ty nao - loc chat bang 'CompanyId = @CompanyId'.",
       "canhBao": [
-        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+        "Khoa cong ty nullable: da chot dong NULL khong thuoc ve cong ty nao, bi loai khoi moi truy van co pham vi",
+        "Web cu doc bang nay bang GetAll() khong loc cong ty (ConfigurationController.GetListVehicleType) - duoi phan quyet PerCompany thi do la ro ri du lieu giua cac cong ty o web cu, can xac minh va va rieng",
+        "Quan he loai xe <-> cong ty con duoc bieu dien o bang noi [Admin.CarTypesInCompany]; khi man hinh nao cham bang noi do thi phai duyet rieng bang do"
       ]
     },
     {

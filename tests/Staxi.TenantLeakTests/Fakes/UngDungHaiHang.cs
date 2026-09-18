@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Staxi.Admin.Application;
+using Staxi.Admin.Infrastructure;
 using Staxi.Platform.Caching;
 using Staxi.Platform.Data;
 using Staxi.Platform.DependencyInjection;
@@ -62,6 +64,8 @@ public sealed class UngDungHaiHang : IAsyncDisposable
 
         services.AddStaxiPlatform();
         services.AddScoped<LoaiXeRepository>();
+        services.AddScoped<ILoaiXeRepository, Staxi.Admin.Infrastructure.LoaiXeRepository>();
+        services.AddScoped<LayDanhSachLoaiXe>();
         services.AddSignalR();
         services.AddSingleton<ITenantNotifier, SignalRTenantNotifier<ThongBaoHub>>();
         services.AddAuthorization();

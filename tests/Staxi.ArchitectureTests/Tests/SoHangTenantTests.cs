@@ -32,7 +32,7 @@ public sealed class SoHangTenantTests(AssemblyCatalog assemblies)
             .GroupBy(cap => cap.Ten, cap => cap.Muc, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(nhom => nhom.Key, nhom => nhom.ToArray(), StringComparer.OrdinalIgnoreCase);
 
-        var violations = TypeScanner.Read(assemblies.Platform)
+        var violations = assemblies.SanPham.SelectMany(TypeScanner.Read)
             .Where(type => type.Interfaces.Any(giaoDien => giaoDien.InterfaceType.FullName == TenantOwned))
             .Select(type => KiemTraThucThe(type, theoThucThe))
             .OfType<string>();
@@ -52,7 +52,7 @@ public sealed class SoHangTenantTests(AssemblyCatalog assemblies)
             .GroupBy(muc => SqlTableNameReader.ChuanHoa(muc.Ten), StringComparer.OrdinalIgnoreCase)
             .ToDictionary(nhom => nhom.Key, nhom => nhom.First(), StringComparer.OrdinalIgnoreCase);
 
-        var violations = StringLiteralScanner.Read(assemblies.Platform)
+        var violations = assemblies.SanPham.SelectMany(StringLiteralScanner.Read)
             .SelectMany(hang => SqlTableNameReader.Read(hang.Value)
                 .Select(ten => KiemTraBang(hang.Method, ten, theoTen)))
             .OfType<string>();

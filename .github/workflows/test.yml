@@ -17,8 +17,8 @@ permissions:
   contents: read
 
 env:
-  MINIMUM_TENANT_LEAK_TESTS: "45"
-  MINIMUM_ARCHITECTURE_TESTS: "14"
+  MINIMUM_TENANT_LEAK_TESTS: "50"
+  MINIMUM_ARCHITECTURE_TESTS: "15"
 
 # Không chia shard hay matrix: 45 bài chạy ~9 giây, chỉ tốn thêm thời gian khởi động runner; xem lại khi bộ test vượt 5 phút.
 jobs:

@@ -11,7 +11,7 @@ public sealed class KetNoiDatabaseTests(AssemblyCatalog assemblies)
     [Fact(DisplayName = "R1: Chỉ SqlServerConnectionSource được tạo SqlConnection, kể cả trong leak test (AD-2)")]
     public void TaoSqlConnection_ChiDuocTrongConnectionSource()
     {
-        var violations = assemblies.PlatformAndLeakTests.SelectMany(MethodCallScanner.Read)
+        var violations = assemblies.SanPhamVaLeakTests.SelectMany(MethodCallScanner.Read)
             .Where(call => call.Target.Name == ".ctor" && call.Target.DeclaringType.Name == "SqlConnection"
                 && call.Caller.DeclaringType.FullName != "Staxi.Platform.Data.SqlServerConnectionSource")
             .Select(call => $"{call.Location} → {call.Target.FullName}");
