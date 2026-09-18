@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Staxi.Platform.Caching;
 using Staxi.Platform.Data;
+using Staxi.Platform.Errors;
 using Staxi.Platform.Tenancy;
 
-namespace Staxi.Platform.Errors;
+namespace Staxi.Platform.AspNetCore;
 
 public sealed class PlatformProblemDetailsMiddleware(RequestDelegate next, ILogger<PlatformProblemDetailsMiddleware> logger)
 {

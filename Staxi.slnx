@@ -3,6 +3,7 @@
     <Project Path="src/Staxi.Platform/Staxi.Platform.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Staxi.ArchitectureTests/Staxi.ArchitectureTests.csproj" />
     <Project Path="tests/Staxi.TenantLeakTests/Staxi.TenantLeakTests.csproj" />
   </Folder>
 </Solution>
