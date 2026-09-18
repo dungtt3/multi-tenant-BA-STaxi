@@ -28,3 +28,6 @@ secrets/
 Thumbs.db
 .DS_Store
 *.log
+
+# Cau hinh Claude Code rieng cua tung may
+.claude/settings.local.json

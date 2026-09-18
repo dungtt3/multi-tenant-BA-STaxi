@@ -24,3 +24,13 @@ csharp_style_var_when_type_is_apparent = true:suggestion
 
 [*.{sln,slnx,csproj,props,targets}]
 indent_size = 2
+
+[*.cs]
+# CA1848 - LoggerMessage delegate cho MOI cho ghi log. Ha xuong goi y co chu y:
+# nen tang moi co vai cho ghi log va deu o duong nguoi hoac duong loi, chua do duoc cai gia thuc.
+# Xem lai khi co so do hieu nang thuc te.
+dotnet_diagnostic.CA1848.severity = suggestion
+
+[tests/**/*.cs]
+# Ten bai test dung gach duoi de doc duoc dang "TinhHuong_KetQua" - quy uoc cua xUnit, khong phai API cong khai.
+dotnet_diagnostic.CA1707.severity = none

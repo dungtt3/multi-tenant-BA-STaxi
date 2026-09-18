@@ -1,0 +1,28 @@
+<Project>
+
+  <!-- Quan ly phien ban tap trung. Bang Stack trong docs/ARCHITECTURE-SPINE.md la nguon.
+       DUNG TU NANG - moi dong ghim deu co ly do viet ngay duoi bang Stack. -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Truy cap du lieu -->
+    <PackageVersion Include="Dapper" Version="2.1.86" />
+    <!-- Encrypt=true la mac dinh tu ban 4.0: xem ghi chu Stack truoc khi noi 18 SQL Server -->
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.3" />
+
+    <!-- Microsoft.Extensions.* khong khai o day: chung di kem FrameworkReference Microsoft.AspNetCore.App -->
+
+    <!-- Chi dung trong test -->
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+</Project>
