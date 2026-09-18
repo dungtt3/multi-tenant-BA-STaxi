@@ -17,11 +17,11 @@ public sealed class SqliteConnectionSource : IDbConnectionSource
 
 public sealed class SqliteConnectionScopeVerifier : IConnectionScopeVerifier
 {
-    public async Task VerifyAsync(DbConnection connection, TenantRegistryEntry entry, TenantScope scope, CancellationToken ct = default)
+    public async Task VerifyAsync(DbConnection connection, TenantRegistryEntry entry, string nhanPhamVi, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(connection);
         ArgumentNullException.ThrowIfNull(entry);
-        ArgumentNullException.ThrowIfNull(scope);
+        ArgumentException.ThrowIfNullOrWhiteSpace(nhanPhamVi);
 
         await using var command = connection.CreateCommand();
         command.CommandText = "SELECT file FROM pragma_database_list WHERE name = 'main';";
@@ -31,7 +31,7 @@ public sealed class SqliteConnectionScopeVerifier : IConnectionScopeVerifier
 
         if (!string.Equals(tenFile, entry.DatabaseName, StringComparison.OrdinalIgnoreCase))
         {
-            throw new TenantConnectionMismatchException(scope, entry.DatabaseName, tenFile);
+            throw new TenantConnectionMismatchException(nhanPhamVi, entry.DatabaseName, tenFile);
         }
     }
 }

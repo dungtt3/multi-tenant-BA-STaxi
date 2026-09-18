@@ -15,11 +15,11 @@ public sealed class SqlServerConnectionSource : IDbConnectionSource
 
 public sealed class SqlServerConnectionScopeVerifier : IConnectionScopeVerifier
 {
-    public async Task VerifyAsync(DbConnection connection, TenantRegistryEntry entry, Tenancy.TenantScope scope, CancellationToken ct = default)
+    public async Task VerifyAsync(DbConnection connection, TenantRegistryEntry entry, string nhanPhamVi, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(connection);
         ArgumentNullException.ThrowIfNull(entry);
-        ArgumentNullException.ThrowIfNull(scope);
+        ArgumentException.ThrowIfNullOrWhiteSpace(nhanPhamVi);
 
         await using var command = connection.CreateCommand();
         command.CommandText = "SELECT DB_NAME();";
@@ -28,7 +28,7 @@ public sealed class SqlServerConnectionScopeVerifier : IConnectionScopeVerifier
 
         if (!string.Equals(databaseThucTe, entry.DatabaseName, StringComparison.OrdinalIgnoreCase))
         {
-            throw new Tenancy.TenantConnectionMismatchException(scope, entry.DatabaseName, databaseThucTe);
+            throw new Tenancy.TenantConnectionMismatchException(nhanPhamVi, entry.DatabaseName, databaseThucTe);
         }
     }
 }

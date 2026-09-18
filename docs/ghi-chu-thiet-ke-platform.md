@@ -224,3 +224,29 @@ Mọi thứ còn lại trong bộ test là mã production.
 - `CA1848` (LoggerMessage delegate) hạ xuống `suggestion`. Nền tảng có vài chỗ ghi log và đều ở đường người
   hoặc đường lỗi; chưa đo được cái giá thực. Xem lại khi có số đo hiệu năng.
 - `CA1707` tắt trong `tests/` — tên bài test dùng gạch dưới để đọc được dạng `TinhHuong_KetQua`.
+
+---
+
+## `IAuthenticationConnectionFactory` — vì sao phải có một đường thứ hai
+
+`ITenantConnectionFactory` đòi phải có `TenantScope`. Nhưng **xác thực diễn ra trước khi phạm vi tồn tại**:
+lúc người dùng mới gõ mã hãng và mật khẩu, chưa có gì để dựng ra một `TenantScope` hợp lệ — `companyId`
+còn chưa biết.
+
+Nếu không có đường riêng, người viết `Staxi.Auth` chỉ còn hai lựa chọn, và cả hai đều tệ:
+
+- Phá `AD-2` bằng cách tự `new SqlConnection` — mất luôn phần kiểm tại kết nối vật lý của `AD-18`.
+- Bịa một `TenantScope` giả với `companyId` bất kỳ — tức nói dối chính cái kiểu mà cả hệ thống dựa vào.
+
+Nên đường thứ hai là **có chủ ý**, và được siết bằng ba thứ:
+
+1. **Tên gọi tự tố cáo.** `OpenForAuthenticationAsync` không phải thứ ai đó gọi nhầm rồi bảo không biết.
+2. **Bắt khai lý do**, giống `AcrossTenants(lyDo)` — grep ra được, và ghi log ở mức `Information` chứ không `Debug`.
+3. **Luật `R16` trong `Staxi.ArchitectureTests`:** chỉ assembly `Staxi.Auth.*` được gọi. Gọi từ chỗ khác là build đỏ.
+
+Nó **vẫn** đi qua sổ đăng ký hãng và **vẫn** kiểm tại kết nối vật lý — chỉ bỏ đúng một thứ là `TenantScope`,
+vì thứ đó chưa thể tồn tại. Nhãn phạm vi truyền cho bộ kiểm là `xác thực:{tenantCode}`, nên nếu kết nối mở
+nhầm database thì lỗi vẫn nói rõ chuyện gì xảy ra.
+
+Đó cũng là lý do `IConnectionScopeVerifier` nhận **một nhãn chuỗi** thay vì nhận `TenantScope`: nó chỉ cần
+biết gọi tên chỗ sai trong thông điệp lỗi, không cần biết phạm vi.

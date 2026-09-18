@@ -27,15 +27,15 @@ public sealed class TenantScopeConflictException : InvalidOperationException
 
 public sealed class TenantConnectionMismatchException : InvalidOperationException
 {
-    public TenantConnectionMismatchException(TenantScope scope, string databaseMongDoi, string databaseThucTe)
-        : base($"Rò rỉ phạm vi: hãng '{scope.TenantCode}' mong đợi database '{databaseMongDoi}' nhưng kết nối vật lý đang ở '{databaseThucTe}' (AD-18).")
+    public TenantConnectionMismatchException(string nhanPhamVi, string databaseMongDoi, string databaseThucTe)
+        : base($"Rò rỉ phạm vi: '{nhanPhamVi}' mong đợi database '{databaseMongDoi}' nhưng kết nối vật lý đang ở '{databaseThucTe}' (AD-18).")
     {
-        Scope = scope;
+        NhanPhamVi = nhanPhamVi;
         DatabaseMongDoi = databaseMongDoi;
         DatabaseThucTe = databaseThucTe;
     }
 
-    public TenantScope Scope { get; }
+    public string NhanPhamVi { get; }
 
     public string DatabaseMongDoi { get; }
 

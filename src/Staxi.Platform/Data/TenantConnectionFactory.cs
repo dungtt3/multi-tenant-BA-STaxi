@@ -23,7 +23,7 @@ public sealed class TenantConnectionFactory(
         {
             await connection.OpenAsync(ct).ConfigureAwait(false);
 
-            await verifier.VerifyAsync(connection, entry, scope, ct).ConfigureAwait(false);
+            await verifier.VerifyAsync(connection, entry, scope.Prefix, ct).ConfigureAwait(false);
         }
         catch
         {

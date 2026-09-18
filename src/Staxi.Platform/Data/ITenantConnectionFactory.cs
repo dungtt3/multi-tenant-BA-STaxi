@@ -14,5 +14,5 @@ public interface IDbConnectionSource
 
 public interface IConnectionScopeVerifier
 {
-    public Task VerifyAsync(DbConnection connection, TenantRegistryEntry entry, Tenancy.TenantScope scope, CancellationToken ct = default);
+    public Task VerifyAsync(DbConnection connection, TenantRegistryEntry entry, string nhanPhamVi, CancellationToken ct = default);
 }

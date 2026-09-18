@@ -33,6 +33,7 @@ public static class PlatformServiceCollectionExtensions
         services.TryAddSingleton<IDbConnectionSource, SqlServerConnectionSource>();
         services.TryAddSingleton<IConnectionScopeVerifier, SqlServerConnectionScopeVerifier>();
         services.TryAddScoped<ITenantConnectionFactory, TenantConnectionFactory>();
+        services.TryAddScoped<IAuthenticationConnectionFactory, AuthenticationConnectionFactory>();
 
         services.TryAddSingleton<ScopeParameterGuardOptions>();
 
