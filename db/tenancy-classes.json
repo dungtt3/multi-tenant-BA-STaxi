@@ -111,11 +111,14 @@
       "thucThe": "AdminCarType, LoaiXe",
       "hang": "PerCompany",
       "trangThai": "daDuyet",
-      "chungCu": "Phan quyet cua chu san pham 18-09-2026: CompanyId la khoa so huu that. Moi truy van phai loc CompanyId. Dong co CompanyId NULL KHONG thuoc ve cong ty nao va khong hien cho cong ty nao - loc chat bang 'CompanyId = @CompanyId'.",
+      "chungCu": "Phan quyet cua chu san pham 18-09-2026, giu nguyen sau khi doi chieu DB that: CompanyId la khoa so huu that. Moi truy van loc chat 'CompanyId = @CompanyId'. Dong CompanyId NULL khong thuoc ve cong ty nao va khong hien cho ai.",
       "canhBao": [
-        "Khoa cong ty nullable: da chot dong NULL khong thuoc ve cong ty nao, bi loai khoi moi truy van co pham vi",
-        "Web cu doc bang nay bang GetAll() khong loc cong ty (ConfigurationController.GetListVehicleType) - duoi phan quyet PerCompany thi do la ro ri du lieu giua cac cong ty o web cu, can xac minh va va rieng",
-        "Quan he loai xe <-> cong ty con duoc bieu dien o bang noi [Admin.CarTypesInCompany]; khi man hinh nao cham bang noi do thi phai duyet rieng bang do"
+        "DO TREN DB DEV TestG7 ngay 18-09-2026: 56/56 dong co CompanyId NULL. Cau truy van theo phan quyet nay tra ve 0 dong cho moi cong ty. Chu san pham ket luan day la DU LIEU BAN, phai lam sach truoc khi man hinh dung duoc.",
+        "Truoc khi lam sach: quan he loai xe <-> cong ty dang nam o bang noi [Admin.CarTypesInCompany] (FK_CompanyId, FK_VehicleTypeID) - do duoc 130 dong tren 18 cong ty, 59 loai xe duoc noi.",
+        "HAU QUA CAN BIET KHI LAM SACH: mot loai xe dang duoc noi toi TOI DA 17 cong ty, trung binh 2.2. Mot cot CompanyId don tri chi giu duoc mot gia tri, nen lam sach nghia la NHAN BAN dong danh muc theo tung cong ty.",
+        "Bang con co cot ForAllCompany (5 dong dang bat) - phan quyet hien tai khong dung toi cot nay.",
+        "Web cu doc bang nay bang GetAll() khong loc cong ty (ConfigurationController.GetListVehicleType) - duoi phan quyet PerCompany thi do la ro ri du lieu giua cac cong ty o web cu, can xac minh va va rieng.",
+        "CHUA KIEM TREN DB KHACH THAT: TestG7 la DB dev, co the khong dai dien cho 18 DB production."
       ]
     },
     {
