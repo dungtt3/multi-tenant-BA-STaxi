@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Staxi.Platform</RootNamespace>
+    <AssemblyName>Staxi.Platform</AssemblyName>
+  </PropertyGroup>
+
+  <!-- AD-8/AD-13: ProblemDetails, corrId, tracing song trong Platform nen Platform tham chieu
+       khung ASP.NET Core. Day la project DUY NHAT trong nen tang duoc cham HttpContext,
+       va chi trong dung mot adapter: AspNetCore/HttpContextTenantScopeAdapter.cs (AD-15). -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Staxi.TenantLeakTests" />
+    <InternalsVisibleTo Include="Staxi.ArchitectureTests" />
+  </ItemGroup>
+
+</Project>
