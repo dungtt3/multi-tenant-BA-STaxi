@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kiến trúc WEB2</title>
+<style>
+:root{
+  --bg:#f6f7f9;
+  --surface:#ffffff;
+  --surface-2:#eef1f5;
+  --text:#14181f;
+  --muted:#5b6673;
+  --line:#d3d9e0;
+  --line-strong:#a9b3bf;
+  --accent:#1c5ed6;
+  --accent-soft:#e3ecfb;
+  --warn:#9a5b00;
+  --warn-soft:#fdf1dc;
+  --danger:#b3261e;
+  --danger-soft:#fbe4e2;
+  --ok:#1f6b45;
+  --ok-soft:#e0f0e7;
+  --code-bg:#eceff3;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 6px 18px rgba(16,24,40,.06);
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1116;
+    --surface:#161b22;
+    --surface-2:#1d242e;
+    --text:#e6ebf2;
+    --muted:#9aa7b6;
+    --line:#2b333e;
+    --line-strong:#3d4856;
+    --accent:#6ea8ff;
+    --accent-soft:#16233a;
+    --warn:#e6a94a;
+    --warn-soft:#2a2113;
+    --danger:#ff8a80;
+    --danger-soft:#33191a;
+    --ok:#6fd39b;
+    --ok-soft:#14261d;
+    --code-bg:#1d242e;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1116; --surface:#161b22; --surface-2:#1d242e; --text:#e6ebf2; --muted:#9aa7b6;
+  --line:#2b333e; --line-strong:#3d4856; --accent:#6ea8ff; --accent-soft:#16233a;
+  --warn:#e6a94a; --warn-soft:#2a2113; --danger:#ff8a80; --danger-soft:#33191a;
+  --ok:#6fd39b; --ok-soft:#14261d; --code-bg:#1d242e;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.55;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+
+/* ---------- chrome ---------- */
+#top{position:fixed;top:0;left:0;right:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line)}
+#bar{height:3px;background:var(--surface-2)}
+#bar>i{display:block;height:100%;width:0;background:var(--accent);transition:width .18s ease}
+#topline{display:flex;align-items:center;gap:10px;padding:6px 16px;font-size:12px;color:var(--muted)}
+#topline .sec{font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#topline .grow{flex:1}
+#count{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{
+  font:inherit;font-size:12px;line-height:1;padding:7px 10px;border:1px solid var(--line-strong);
+  background:var(--surface);color:var(--text);border-radius:6px;cursor:pointer;white-space:nowrap;
+}
+.btn:hover{background:var(--surface-2)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+#bottom{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--bg);border-top:1px solid var(--line);
+  display:flex;gap:8px;align-items:center;padding:8px 16px}
+#bottom .hint{flex:1;font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:600px){#bottom .hint{display:none}}
+
+main{max-width:1060px;margin:0 auto;padding:78px 16px 74px}
+
+/* ---------- slides ---------- */
+.slide{display:none}
+.slide.on{display:block;animation:in .16s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+h1{font-size:clamp(26px,5.4vw,42px);line-height:1.16;margin:0 0 12px;letter-spacing:-.02em}
+h2{font-size:clamp(21px,4.2vw,31px);line-height:1.2;margin:0 0 14px;letter-spacing:-.015em}
+h3{font-size:15.5px;margin:22px 0 8px;letter-spacing:-.005em}
+p{margin:0 0 12px}
+.lead{font-size:clamp(15px,2.4vw,18px);color:var(--muted);margin:0 0 20px;max-width:70ch}
+ul,ol{margin:0 0 12px;padding-left:20px}
+li{margin:0 0 7px}
+code,kbd{font-family:var(--mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px;
+  border:1px solid var(--line);word-break:break-word}
+kbd{font-size:.8em;padding:1px 5px}
+b,strong{font-weight:650}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+small{font-size:12.5px;color:var(--muted)}
+
+/* ---------- blocks ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:820px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.g2,.g3,.g4{grid-template-columns:minmax(0,1fr)}}
+
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 14px;border-radius:0 8px 8px 0;margin:0 0 14px}
+.warn{border-left:3px solid var(--warn);background:var(--warn-soft);padding:12px 14px;border-radius:0 8px 8px 0;margin:0 0 14px}
+.bad{border-left:3px solid var(--danger);background:var(--danger-soft);padding:12px 14px;border-radius:0 8px 8px 0;margin:0 0 14px}
+.good{border-left:3px solid var(--ok);background:var(--ok-soft);padding:12px 14px;border-radius:0 8px 8px 0;margin:0 0 14px}
+.note :last-child,.warn :last-child,.bad :last-child,.good :last-child{margin-bottom:0}
+
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:999px;
+  border:1px solid var(--line-strong);color:var(--muted);background:var(--surface-2);white-space:nowrap}
+.tag.a{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.tag.d{color:var(--danger);border-color:var(--danger);background:var(--danger-soft)}
+.tag.w{color:var(--warn);border-color:var(--warn);background:var(--warn-soft)}
+.tag.o{color:var(--ok);border-color:var(--ok);background:var(--ok-soft)}
+
+/* ---------- tables ---------- */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;border-bottom:1px solid var(--line)}
+th{background:var(--surface-2);font-weight:650;font-size:12px;letter-spacing:.02em;position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.mono,th.mono{font-family:var(--mono);font-size:12.5px}
+.tight td,.tight th{padding:6px 10px}
+
+/* ---------- numbers ---------- */
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;box-shadow:var(--shadow)}
+.stat .n{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(26px,6.5vw,40px);
+  line-height:1.02;letter-spacing:-.03em;font-weight:600}
+.stat .n.sm{font-size:clamp(20px,4.6vw,28px)}
+.stat .l{font-size:12.5px;color:var(--muted);margin-top:6px}
+.stat.hot .n{color:var(--danger)}
+.stat.cool .n{color:var(--accent)}
+
+.big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(34px,9vw,64px);
+  line-height:1;letter-spacing:-.04em;font-weight:650}
+
+/* ---------- figures ---------- */
+.fig{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--surface);border:1px solid var(--line);
+  border-radius:10px;padding:10px;margin:0 0 14px;box-shadow:var(--shadow)}
+.fig svg{display:block;width:100%;height:auto}
+.fig.w720 svg{min-width:640px}
+.fig.w860 svg{min-width:720px}
+.cap{font-size:12px;color:var(--muted);margin:-6px 0 16px;padding:0 2px}
+
+svg .bx{fill:var(--surface-2);stroke:var(--line-strong);stroke-width:1.2}
+svg .bx-a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.4}
+svg .bx-d{fill:var(--danger-soft);stroke:var(--danger);stroke-width:1.4}
+svg .bx-w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.4}
+svg .bx-o{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.4}
+svg .t{fill:var(--text);font-family:var(--sans);font-size:14px}
+svg .tm{fill:var(--text);font-family:var(--mono);font-size:12.5px}
+svg .ts{fill:var(--muted);font-family:var(--sans);font-size:12px}
+svg .tb{fill:var(--text);font-family:var(--sans);font-size:15px;font-weight:650}
+svg .ln{stroke:var(--line-strong);stroke-width:1.4;fill:none}
+svg .ln-a{stroke:var(--accent);stroke-width:1.8;fill:none}
+svg .ln-d{stroke:var(--danger);stroke-width:1.8;fill:none}
+svg .ln-o{stroke:var(--ok);stroke-width:1.8;fill:none}
+svg .dash{stroke-dasharray:5 4}
+svg .fa{fill:var(--line-strong)}
+svg .fa-a{fill:var(--accent)}
+svg .fa-d{fill:var(--danger)}
+svg .fa-o{fill:var(--ok)}
+
+/* ---------- index overlay ---------- */
+#ovl{position:fixed;inset:0;z-index:60;background:var(--bg);display:none;overflow-y:auto;padding:16px 16px 40px}
+#ovl.on{display:block}
+#ovl .wrap{max-width:1060px;margin:0 auto}
+#ovl h2{margin-top:6px}
+.idxgroup{margin:0 0 18px}
+.idxgroup>.h{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--line);padding-bottom:5px;margin-bottom:8px}
+.idx{display:grid;gap:6px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:640px){.idx{grid-template-columns:minmax(0,1fr)}}
+.idx button{display:flex;gap:10px;align-items:baseline;text-align:left;font:inherit;font-size:13.5px;
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;color:var(--text)}
+.idx button:hover{border-color:var(--accent);background:var(--accent-soft)}
+.idx button.cur{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+.idx button .num{font-family:var(--mono);font-size:11.5px;color:var(--muted);min-width:22px}
+
+.ad{border:1px solid var(--line);border-radius:9px;background:var(--surface);padding:11px 13px}
+.ad .id{font-family:var(--mono);font-size:11.5px;color:var(--accent);font-weight:600}
+.ad .ti{font-size:13.5px;font-weight:600;margin:2px 0 4px}
+.ad .dx{font-size:12.5px;color:var(--muted);line-height:1.45}
+
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px}
+.kv dt{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.kv dd{margin:0}
+
+ol.steps{counter-reset:s;list-style:none;padding:0}
+ol.steps>li{counter-increment:s;position:relative;padding-left:38px;margin-bottom:12px}
+ol.steps>li::before{content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:7px;
+  background:var(--accent-soft);border:1px solid var(--accent);color:var(--accent);font-family:var(--mono);
+  font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:700}
+</style>
+</head>
+<body>
+
+<div id="top">
+  <div id="bar"><i id="barfill"></i></div>
+  <div id="topline">
+    <span class="sec" id="secname">WEB2</span>
+    <span class="grow"></span>
+    <span id="count">01 / 27</span>
+    <button class="btn" id="btnIdx">Mục lục</button>
+  </div>
+</div>
+
+<main id="deck">
+
+<!-- 1 -->
+<section class="slide on" data-sec="Mở đầu" data-title="Trang bìa">
+  <p class="kicker">Architecture Spine · build-substrate · initiative</p>
+  <h1>WEB2 — nền tảng admin multi-tenant BA STaxi</h1>
+  <p class="lead">React + .NET 10 + YARP, chạy <b>song song</b> với <code>BA.STaxi.Web</code>, dùng chung <b>18 database khách hàng</b>. Bản trình bày này là bản dịch trực tiếp của <code>ARCHITECTURE-SPINE.md</code> — không thêm quyết định nào.</p>
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="stat cool"><div class="n">24</div><div class="l">quyết định kiến trúc (AD)</div></div>
+    <div class="stat cool"><div class="n">18</div><div class="l">database khách hàng</div></div>
+    <div class="stat hot"><div class="n">9</div><div class="l">câu hỏi còn mở</div></div>
+    <div class="stat"><div class="n sm">draft</div><div class="l">trạng thái · 2026-09-17</div></div>
+  </div>
+  <div class="warn">
+    <p><b>Trạng thái là <code>draft</code>.</b> Một trụ cột của spine (AD-19 — mỗi hãng một login SQL) <b>chưa được DBA xác nhận</b>. Đọc tới slide đó rồi hãy quyết định tin phần nào.</p>
+  </div>
+  <p><small>Điều hướng: <kbd>←</kbd> <kbd>→</kbd> chuyển slide · <kbd>Home</kbd>/<kbd>End</kbd> về đầu/cuối · <kbd>i</kbd> mở mục lục · nút Trước/Sau ở cuối trang.</small></p>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-sec="Mở đầu" data-title="Đọc deck này thế nào">
+  <p class="kicker">Cách đọc</p>
+  <h2>Deck này nói gì, và không nói gì</h2>
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0">Nói</h3>
+      <ul>
+        <li><b>Hai mô hình</b> chi phối mọi thứ: Strangler Fig ở cấp hệ thống, Clean Architecture bên trong mỗi dịch vụ.</li>
+        <li><b>Từ vựng</b> — ba từ mà nếu dùng lẫn lộn thì mọi AD phía sau vô nghĩa.</li>
+        <li><b>24 AD</b> nhóm theo chủ đề, kèm 5 quyết định có hậu quả nặng nhất được mổ riêng.</li>
+        <li><b>Bảng ép</b> của AD-15: mỗi điều cấm ⇄ một cơ chế làm đỏ build.</li>
+        <li><b>Cái chưa biết</b>: 9 câu hỏi mở và các rủi ro đã chấp nhận có ý thức.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Không nói</h3>
+      <ul>
+        <li>Không phải kế hoạch dự án, không có ngày tháng, không có ước lượng.</li>
+        <li>Không phải đặc tả tính năng — spine là <b>nền để xây</b>, không phải danh sách màn hình.</li>
+        <li>Không mô tả lại web cũ: các bạn đã biết nó. Web cũ chỉ xuất hiện khi nó <b>ràng buộc</b> WEB2.</li>
+        <li>Không có con số nào ngoài số đã đo trong spine.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note" style="margin-top:14px">
+    <p><b>Quy ước một câu:</b> mỗi AD gồm <i>Binds</i> (ràng buộc ai), <i>Prevents</i> (ngăn sai lầm nào) và <i>Rule</i> (luật). Nếu một AD không ngăn được sai lầm cụ thể nào, nó không nên có mặt trong spine.</p>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-sec="Paradigm" data-title="Hai mô hình, hai cấp">
+  <p class="kicker">Design paradigm</p>
+  <h2>Hai mô hình, hai cấp</h2>
+  <p class="lead">Chúng không cạnh tranh nhau. Một cái nói WEB2 <b>sống cạnh</b> hệ cũ ra sao; cái kia nói <b>bên trong</b> một dịch vụ được xếp thế nào.</p>
+  <div class="fig w860">
+    <svg viewBox="0 0 860 300" role="img" aria-label="Sơ đồ hai cấp: Strangler Fig ở cấp hệ thống và Clean Architecture bên trong dịch vụ">
+      <text x="0" y="16" class="tb">Cấp hệ thống — Strangler Fig</text>
+      <rect x="0" y="34" width="150" height="46" rx="8" class="bx"/>
+      <text x="75" y="55" class="t" text-anchor="middle">Trình duyệt</text>
+      <text x="75" y="71" class="ts" text-anchor="middle">domain cũ</text>
+      <rect x="0" y="100" width="150" height="46" rx="8" class="bx"/>
+      <text x="75" y="121" class="t" text-anchor="middle">Trình duyệt</text>
+      <text x="75" y="137" class="ts" text-anchor="middle">domain WEB2 mới</text>
+
+      <rect x="190" y="30" width="170" height="54" rx="8" class="bx"/>
+      <text x="275" y="52" class="t" text-anchor="middle">BA.STaxi.Web</text>
+      <text x="275" y="70" class="ts" text-anchor="middle">18 site IIS, MVC 5</text>
+      <rect x="190" y="98" width="170" height="54" rx="8" class="bx-a"/>
+      <text x="275" y="120" class="t" text-anchor="middle">WEB2</text>
+      <text x="275" y="138" class="ts" text-anchor="middle">1 deployment, mọi hãng</text>
+
+      <path class="ln" d="M150 57 H186"/><polygon class="fa" points="186,57 178,53 178,61"/>
+      <path class="ln-a" d="M150 123 H186"/><polygon class="fa-a" points="186,123 178,119 178,127"/>
+
+      <rect x="400" y="62" width="150" height="60" rx="8" class="bx-w"/>
+      <text x="475" y="88" class="t" text-anchor="middle">18 database</text>
+      <text x="475" y="106" class="ts" text-anchor="middle">thứ duy nhất dùng chung</text>
+      <path class="ln" d="M360 62 L396 84"/><polygon class="fa" points="396,84 387,82 390,75"/>
+      <path class="ln-a" d="M360 122 L396 100"/><polygon class="fa-a" points="396,100 390,107 387,100"/>
+
+      <text x="400" y="150" class="ts">Không chung phiên · không chung cookie · không cầu SSO</text>
+      <text x="400" y="168" class="ts">Từng màn hình chuyển sang khi sẵn sàng; web cũ chạy tới khi rỗng</text>
+
+      <line x1="0" y1="196" x2="860" y2="196" class="ln dash"/>
+
+      <text x="0" y="222" class="tb">Cấp dịch vụ — Clean Architecture 4 lớp</text>
+      <rect x="0" y="238" width="140" height="44" rx="8" class="bx"/>
+      <text x="70" y="259" class="tm" text-anchor="middle">Api</text>
+      <text x="70" y="275" class="ts" text-anchor="middle">endpoint, filter</text>
+      <rect x="182" y="238" width="160" height="44" rx="8" class="bx"/>
+      <text x="262" y="259" class="tm" text-anchor="middle">Infrastructure</text>
+      <text x="262" y="275" class="ts" text-anchor="middle">Dapper, Redis, SignalR</text>
+      <rect x="392" y="238" width="160" height="44" rx="8" class="bx-a"/>
+      <text x="472" y="259" class="tm" text-anchor="middle">Application</text>
+      <text x="472" y="275" class="ts" text-anchor="middle">use case, quyền, DTO</text>
+      <rect x="600" y="238" width="150" height="44" rx="8" class="bx-o"/>
+      <text x="675" y="259" class="tm" text-anchor="middle">Domain</text>
+      <text x="675" y="275" class="ts" text-anchor="middle">thực thể, bất biến</text>
+
+      <path class="ln-a" d="M140 252 H178"/><polygon class="fa-a" points="178,252 170,248 170,256"/>
+      <path class="ln-a" d="M342 260 H388"/><polygon class="fa-a" points="388,260 380,256 380,264"/>
+      <path class="ln-a" d="M552 260 H596"/><polygon class="fa-a" points="596,260 588,256 588,264"/>
+      <text x="770" y="256" class="ts">Phụ thuộc chỉ</text>
+      <text x="770" y="272" class="ts">đi vào trong</text>
+    </svg>
+  </div>
+  <div class="bad">
+    <p><b>Giới hạn đã biết của paradigm —</b> tầng <code>Domain</code> <b>không</b> ép được bất biến khi <code>BA.STaxi.Web</code> ghi song song vào cùng database. Bất biến sống còn phải nằm <b>trong DB</b> bằng constraint. Xem AD-11.</p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-sec="Paradigm" data-title="Bốn lớp và namespace">
+  <p class="kicker">Cấp dịch vụ</p>
+  <h2>Bốn lớp, tên đặt sẵn</h2>
+  <div class="scroll" style="margin-bottom:14px">
+    <table>
+      <thead><tr><th>Lớp</th><th class="mono">Namespace</th><th>Chứa</th></tr></thead>
+      <tbody>
+        <tr><td>Domain</td><td class="mono">Staxi.{Service}.Domain</td><td>Thực thể, kiểu giá trị, <code>ITenantOwned</code>, bất biến thuần</td></tr>
+        <tr><td>Application</td><td class="mono">Staxi.{Service}.Application</td><td>Use case, abstraction, sổ đăng ký quyền, DTO</td></tr>
+        <tr><td>Infrastructure</td><td class="mono">Staxi.{Service}.Infrastructure</td><td>Dapper, Redis, SignalR, secret, adapter ngoài</td></tr>
+        <tr><td>Api</td><td class="mono">Staxi.{Service}.Api</td><td>Endpoint, filter, ánh xạ ProblemDetails</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid g2">
+    <div class="note"><p><b>Quy tắc duy nhất phải nhớ:</b> <code>Domain</code> không tham chiếu gì cả. <code>Api</code> và <code>Infrastructure</code> đều trỏ vào <code>Application</code>; <code>Application</code> trỏ vào <code>Domain</code>.</p></div>
+    <div class="card">
+      <h3 style="margin-top:0">Hai project nằm ngoài khuôn</h3>
+      <dl class="kv">
+        <dt>Staxi.Contracts</dt><dd>Hình dạng dây dùng chung — DTO, enum, ngày, tiền, phân trang. Định nghĩa <b>một lần</b> (AD-8).</dd>
+        <dt>Staxi.Platform</dt><dd><code>TenantScope</code>, <code>ITenantConnectionFactory</code>, <code>CacheKey</code>, ProblemDetails, tracing. Đây là thứ phải viết trước.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- 5 — VOCAB -->
+<section class="slide" data-sec="Từ vựng" data-title="★ Hãng · Công ty · TenantScope">
+  <p class="kicker">Đọc trước mọi AD · slide quan trọng nhất</p>
+  <h2>Ba từ. Dùng lẫn lộn là tái tạo đúng lỗ hổng <code>ChangeCompany</code>.</h2>
+  <div class="fig w860">
+    <svg viewBox="0 0 860 306" role="img" aria-label="Sơ đồ quan hệ giữa hãng, công ty và TenantScope">
+      <text x="0" y="16" class="ts">Sổ đăng ký hãng (DB quản trị riêng) — mỗi dòng: tenantCode → connection string</text>
+
+      <rect x="0" y="32" width="330" height="184" rx="10" class="bx-a"/>
+      <text x="16" y="56" class="tb">Hãng A</text>
+      <text x="16" y="76" class="tm">tenantCode = "a7k3"  ·  string</text>
+      <text x="16" y="94" class="ts">= một khách hàng = MỘT DATABASE RIÊNG</text>
+      <rect x="16" y="106" width="140" height="44" rx="7" class="bx"/>
+      <text x="86" y="127" class="tm" text-anchor="middle">companyId = 1</text>
+      <text x="86" y="143" class="ts" text-anchor="middle">Công ty</text>
+      <rect x="174" y="106" width="140" height="44" rx="7" class="bx"/>
+      <text x="244" y="127" class="tm" text-anchor="middle">companyId = 2</text>
+      <text x="244" y="143" class="ts" text-anchor="middle">Công ty</text>
+      <rect x="16" y="158" width="140" height="44" rx="7" class="bx"/>
+      <text x="86" y="179" class="tm" text-anchor="middle">companyId = 3</text>
+      <text x="86" y="195" class="ts" text-anchor="middle">Công ty</text>
+      <text x="174" y="180" class="ts">cột CompanyId sẵn có</text>
+      <text x="174" y="196" class="ts">trong database của hãng A</text>
+
+      <rect x="360" y="32" width="200" height="184" rx="10" class="bx"/>
+      <text x="376" y="56" class="tb">Hãng B</text>
+      <text x="376" y="76" class="tm">tenantCode = "q29z"</text>
+      <text x="376" y="94" class="ts">database khác hoàn toàn</text>
+      <rect x="376" y="106" width="76" height="44" rx="7" class="bx"/>
+      <text x="414" y="132" class="tm" text-anchor="middle">id = 1</text>
+      <rect x="464" y="106" width="76" height="44" rx="7" class="bx"/>
+      <text x="502" y="132" class="tm" text-anchor="middle">id = 2</text>
+      <text x="376" y="176" class="ts">companyId = 1 của hãng B</text>
+      <text x="376" y="192" class="ts">KHÔNG liên quan gì tới</text>
+      <text x="376" y="208" class="ts">companyId = 1 của hãng A</text>
+
+      <rect x="596" y="32" width="264" height="184" rx="10" class="bx-o"/>
+      <text x="612" y="56" class="tb">TenantScope</text>
+      <text x="612" y="78" class="tm">( tenantCode , companyId )</text>
+      <text x="612" y="100" class="ts">Cặp BẤT BIẾN của request hiện tại.</text>
+      <text x="612" y="118" class="ts">Đây — và chỉ đây — là thứ mà mọi AD</text>
+      <text x="612" y="136" class="ts">gọi là "tenant".</text>
+      <text x="612" y="162" class="ts">Chỉ đến từ token đã ký (AD-4).</text>
+      <text x="612" y="180" class="ts">Không có nó ⇒ factory ném lỗi (AD-2).</text>
+      <text x="612" y="198" class="ts">Không có đường mặc định.</text>
+
+      <path class="ln-o dash" d="M156 128 C 400 250, 470 250, 640 220"/>
+      <path class="ln-o dash" d="M60 32 C 120 -6, 560 -6, 700 26"/>
+    </svg>
+  </div>
+  <div class="scroll" style="margin-bottom:14px">
+    <table>
+      <thead><tr><th>Từ</th><th>Nghĩa chính xác</th><th class="mono">Kiểu</th></tr></thead>
+      <tbody>
+        <tr><td><b>Hãng</b> <code>tenantCode</code></td><td>Một khách hàng = <b>một database riêng</b>. Gõ ở màn đăng nhập.</td><td class="mono">string</td></tr>
+        <tr><td><b>Công ty</b> <code>companyId</code></td><td>Một đơn vị <b>bên trong</b> một hãng — cột <code>CompanyId</code> sẵn có.</td><td class="mono">int</td></tr>
+        <tr><td><b><code>TenantScope</code></b></td><td>Cặp bất biến <code>(tenantCode, companyId)</code> của request hiện tại. <b>Đây</b> là "tenant" trong mọi AD.</td><td class="mono">kiểu riêng</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bad">
+    <p><b>Hậu quả thực tế của việc dùng lẫn:</b> một đội hiểu "lọc theo tenant" là <i>không lọc gì vì đã chọn đúng database</i>, đội kia hiểu là <i>lọc <code>CompanyId</code></i>. Cả hai đều "đúng" theo cách hiểu của mình, và mỗi bảng trong 565 bảng sẽ bị hai đội đọc theo hai nghĩa. Đó là lý do AD-5 tồn tại.</p>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-sec="Hiện trạng" data-title="Số đo trên hệ đang chạy">
+  <p class="kicker">Structural seed · database</p>
+  <h2>Schema là <b>kế thừa</b>, không phải thiết kế mới</h2>
+  <div class="grid g4" style="margin-bottom:12px">
+    <div class="stat"><div class="n">565</div><div class="l">bảng trên DB đang chạy</div></div>
+    <div class="stat"><div class="n">10.100</div><div class="l">cột</div></div>
+    <div class="stat"><div class="n">2.003</div><div class="l">stored procedure</div></div>
+    <div class="stat cool"><div class="n">279</div><div class="l">proc thực sự được mã nguồn hiện tại gọi tới</div></div>
+  </div>
+  <div class="grid g3" style="margin-bottom:14px">
+    <div class="stat hot"><div class="n">350</div><div class="l">bảng <b>chưa rõ hạng tenant</b> — chỉ 215/565 bảng có cột <code>CompanyId</code></div></div>
+    <div class="stat"><div class="n sm">27.684</div><div class="l">dòng trong 279 proc đó · 0 cursor · 158 chỉ đọc / 121 có ghi</div></div>
+    <div class="stat"><div class="n sm">18 / 6</div><div class="l">database khách hàng trên 6 máy sẵn có</div></div>
+  </div>
+  <div class="warn">
+    <p><b>Đọc con số 350 cho đúng.</b> Nó không phải nợ kỹ thuật để dọn sau. Phân hạng tenant cho 350 bảng đó (AD-5) là <b>điều kiện tiên quyết</b> của mỗi vùng nghiệp vụ được chuyển sang — bảng chưa phân hạng làm <b>đỏ build</b>. Đợt đầu chỉ chạm một phần nhỏ, nên việc này được hoãn <i>theo vùng</i>, không hoãn <i>toàn bộ</i>.</p>
+  </div>
+  <div class="note">
+    <p><b>Đọc con số 279/2.003 cho đúng.</b> 1.724 proc còn lại không được repo này gọi tới — nhưng "không được gọi từ repo này" ≠ "không ai gọi". Chúng vẫn là một phần của schema, và AD-9 yêu cầu mọi proc còn giữ phải <b>đăng ký kèm hạng tenant</b> của dữ liệu nó chạm.</p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-sec="Hiện trạng" data-title="Topo triển khai">
+  <p class="kicker">Structural seed</p>
+  <h2>Topo triển khai</h2>
+  <div class="fig w860">
+    <svg viewBox="0 0 860 470" role="img" aria-label="Sơ đồ topo triển khai từ trình duyệt qua HAProxy, YARP gateway tới các dịch vụ và database">
+      <rect x="330" y="0" width="180" height="40" rx="8" class="bx"/>
+      <text x="420" y="25" class="t" text-anchor="middle">Trình duyệt</text>
+      <path class="ln" d="M420 40 V62"/><polygon class="fa" points="420,62 416,54 424,54"/>
+
+      <rect x="300" y="62" width="240" height="46" rx="8" class="bx-w"/>
+      <text x="420" y="82" class="t" text-anchor="middle">HAProxy</text>
+      <text x="420" y="99" class="ts" text-anchor="middle">TLS · health · phân tải</text>
+      <text x="556" y="80" class="ts">Q9: hiện là</text>
+      <text x="556" y="96" class="ts">điểm chết đơn lẻ</text>
+
+      <path class="ln dash" d="M300 85 H150 V128"/><polygon class="fa" points="150,128 146,120 154,120"/>
+      <text x="152" y="80" class="ts">domain cũ, chưa chuyển</text>
+      <rect x="40" y="128" width="220" height="46" rx="8" class="bx"/>
+      <text x="150" y="148" class="t" text-anchor="middle">18 site IIS</text>
+      <text x="150" y="165" class="ts" text-anchor="middle">BA.STaxi.Web (MVC 5)</text>
+
+      <path class="ln-a" d="M420 108 V130"/><polygon class="fa-a" points="420,130 416,122 424,122"/>
+      <rect x="300" y="130" width="240" height="46" rx="8" class="bx-a"/>
+      <text x="420" y="150" class="t" text-anchor="middle">YARP Gateway</text>
+      <text x="420" y="167" class="ts" text-anchor="middle">xoá mọi header X-Tenant* từ ngoài</text>
+
+      <path class="ln-a" d="M330 176 L250 210"/><polygon class="fa-a" points="250,210 256,203 259,210"/>
+      <path class="ln-a" d="M420 176 V210"/><polygon class="fa-a" points="420,210 416,202 424,202"/>
+      <path class="ln-a" d="M510 176 L620 210"/><polygon class="fa-a" points="620,210 612,209 615,202"/>
+
+      <rect x="160" y="210" width="170" height="46" rx="8" class="bx"/>
+      <text x="245" y="230" class="t" text-anchor="middle">React tĩnh</text>
+      <text x="245" y="247" class="ts" text-anchor="middle">CDN</text>
+
+      <rect x="348" y="210" width="150" height="46" rx="8" class="bx-a"/>
+      <text x="423" y="230" class="t" text-anchor="middle">web-bff</text>
+      <text x="423" y="247" class="ts" text-anchor="middle">chỉ gom, không nghiệp vụ</text>
+
+      <rect x="600" y="210" width="200" height="46" rx="8" class="bx-a"/>
+      <text x="700" y="230" class="t" text-anchor="middle">notification</text>
+      <text x="700" y="247" class="ts" text-anchor="middle">SignalR · session affinity</text>
+
+      <path class="ln-a" d="M423 256 V292"/><polygon class="fa-a" points="423,292 419,284 427,284"/>
+      <rect x="330" y="292" width="190" height="46" rx="8" class="bx-a"/>
+      <text x="425" y="312" class="t" text-anchor="middle">API nghiệp vụ</text>
+      <text x="425" y="329" class="ts" text-anchor="middle">Dapper · repository có phạm vi</text>
+
+      <path class="ln" d="M520 306 H640"/><polygon class="fa" points="640,306 632,302 632,310"/>
+      <path class="ln" d="M700 256 V292"/><polygon class="fa" points="700,292 696,284 704,284"/>
+      <rect x="640" y="292" width="180" height="46" rx="8" class="bx"/>
+      <text x="730" y="312" class="t" text-anchor="middle">Redis</text>
+      <text x="730" y="329" class="ts" text-anchor="middle">backplane + cache</text>
+
+      <path class="ln-a" d="M425 338 V368"/><polygon class="fa-a" points="425,368 421,360 429,360"/>
+      <rect x="300" y="368" width="250" height="46" rx="8" class="bx-o"/>
+      <text x="425" y="388" class="tm" text-anchor="middle">ITenantConnectionFactory</text>
+      <text x="425" y="405" class="ts" text-anchor="middle">đường DUY NHẤT tới dữ liệu</text>
+
+      <path class="ln-o" d="M320 414 L190 440"/><polygon class="fa-o" points="190,440 198,439 196,432"/>
+      <path class="ln-o" d="M470 414 L560 440"/><polygon class="fa-o" points="560,440 552,439 555,432"/>
+      <rect x="40" y="424" width="220" height="44" rx="8" class="bx"/>
+      <text x="150" y="444" class="t" text-anchor="middle">DB quản trị</text>
+      <text x="150" y="460" class="ts" text-anchor="middle">sổ đăng ký hãng (AD-14)</text>
+
+      <rect x="440" y="424" width="200" height="44" rx="8" class="bx-w"/>
+      <text x="540" y="444" class="t" text-anchor="middle">18 DB khách hàng</text>
+      <text x="540" y="460" class="ts" text-anchor="middle">web cũ cũng ghi vào đây</text>
+
+      <path class="ln dash" d="M150 174 V424"/>
+      <path class="ln dash" d="M150 300 H 130"/>
+
+      <rect x="670" y="424" width="180" height="44" rx="8" class="bx"/>
+      <text x="760" y="444" class="t" text-anchor="middle">Kho ghi vết</text>
+      <text x="760" y="460" class="ts" text-anchor="middle">chỉ ghi thêm (AD-18)</text>
+      <path class="ln" d="M550 330 C 700 340, 740 380, 755 420"/><polygon class="fa" points="757,424 749,418 756,414"/>
+    </svg>
+  </div>
+  <p class="cap">Đường nét đứt bên trái: web cũ đi thẳng xuống 18 DB khách hàng, không qua gateway. Đó là toàn bộ "chung" giữa hai hệ.</p>
+  <div class="grid g2">
+    <div class="note"><p><b>Một deployment phục vụ mọi hãng.</b> Thêm hãng = thêm <b>một dòng</b> trong sổ đăng ký. Không dựng thêm site, không thêm máy.</p></div>
+    <div class="warn"><p><b>Envelope vận hành (AD-21):</b> 4 môi trường dev · devtest · staging · production. Triển khai trên 6 máy sẵn có, IIS qua ASP.NET Core Module, Jenkins. Agent Jenkins cần .NET runtime để chạy grate.</p></div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-sec="Hiện trạng" data-title="Luồng đăng nhập">
+  <p class="kicker">Structural seed · AD-3 + AD-4</p>
+  <h2>Luồng đăng nhập — tenant phân giải <b>trước</b> khi xác thực</h2>
+  <div class="fig w860">
+    <svg viewBox="0 0 860 400" role="img" aria-label="Sơ đồ tuần tự luồng đăng nhập từ React qua gateway, Auth API, sổ đăng ký tới database của hãng">
+      <g class="ts" text-anchor="middle">
+        <rect x="10" y="0" width="120" height="34" rx="7" class="bx"/><text x="70" y="22" class="t">React</text>
+        <rect x="180" y="0" width="120" height="34" rx="7" class="bx-a"/><text x="240" y="22" class="t">Gateway</text>
+        <rect x="350" y="0" width="120" height="34" rx="7" class="bx-a"/><text x="410" y="22" class="t">Auth API</text>
+        <rect x="520" y="0" width="140" height="34" rx="7" class="bx-o"/><text x="590" y="22" class="t">Sổ đăng ký</text>
+        <rect x="710" y="0" width="140" height="34" rx="7" class="bx-w"/><text x="780" y="22" class="t">DB của hãng</text>
+      </g>
+      <g class="ln dash">
+        <line x1="70" y1="34" x2="70" y2="396"/>
+        <line x1="240" y1="34" x2="240" y2="396"/>
+        <line x1="410" y1="34" x2="410" y2="396"/>
+        <line x1="590" y1="34" x2="590" y2="230"/>
+        <line x1="780" y1="34" x2="780" y2="396"/>
+      </g>
+
+      <path class="ln-a" d="M70 66 H234"/><polygon class="fa-a" points="238,66 230,62 230,70"/>
+      <text x="76" y="60" class="ts">mã hãng + username + mật khẩu</text>
+
+      <path class="ln-a" d="M240 104 H404"/><polygon class="fa-a" points="408,104 400,100 400,108"/>
+      <text x="246" y="98" class="ts">chuyển tiếp — đã xoá mọi header tenant từ ngoài</text>
+
+      <path class="ln-o" d="M410 142 H584"/><polygon class="fa-o" points="588,142 580,138 580,146"/>
+      <text x="416" y="136" class="ts">tra mã hãng</text>
+      <path class="ln-o dash" d="M590 176 H416"/><polygon class="fa-o" points="412,176 420,172 420,180"/>
+      <text x="424" y="170" class="ts">connection string (mã hoá phong bì)</text>
+
+      <path style="stroke:var(--warn);stroke-width:1.8;fill:none" d="M410 214 H774"/><polygon points="778,214 770,210 770,218" style="fill:var(--warn)"/>
+      <text x="416" y="208" class="ts">xác thực trên bảng user của chính DB đó</text>
+      <path class="ln dash" d="M780 248 H416"/><polygon class="fa" points="412,248 420,244 420,252"/>
+      <text x="424" y="242" class="ts">user + danh sách công ty</text>
+
+      <rect x="40" y="268" width="800" height="120" rx="8" style="fill:none;stroke:var(--line-strong);stroke-width:1.2;stroke-dasharray:4 3"/>
+      <rect x="40" y="268" width="150" height="22" rx="0" class="bx"/>
+      <text x="50" y="284" class="tm">alt — số công ty</text>
+
+      <text x="50" y="308" class="ts">[một công ty]</text>
+      <path class="ln-o" d="M404 316 H76"/><polygon class="fa-o" points="72,316 80,312 80,320"/>
+      <text x="90" y="310" class="ts">token đầy đủ</text>
+
+      <line x1="40" y1="326" x2="840" y2="326" class="ln dash"/>
+      <text x="50" y="344" class="ts">[nhiều công ty]</text>
+      <path class="ln" d="M404 352 H76"/><polygon class="fa" points="72,352 80,348 80,356"/>
+      <text x="90" y="346" class="ts">token TẠM + danh sách công ty</text>
+      <path class="ln-a" d="M70 372 H404"/><polygon class="fa-a" points="408,372 400,368 400,376"/>
+      <text x="90" y="366" class="ts">select-company → Auth kiểm tra lại quyền từ DB → token MỚI</text>
+      <text x="470" y="384" class="tm">tenantCode + companyId + permissionVersion + securityStamp</text>
+    </svg>
+  </div>
+  <div class="grid g2">
+    <div class="bad">
+      <p><b>Ba điều cấm ở màn đăng nhập (AD-3).</b> Không endpoint nào liệt kê hãng khi chưa xác thực. Mã hãng sai và mật khẩu sai trả <b>cùng thông báo, cùng thời gian phản hồi</b>. Rate limit tính cả mã hãng không tồn tại — nếu không, dò mã hãng là miễn phí.</p>
+    </div>
+    <div class="good">
+      <p><b>Ba vấn đề biến mất nhờ chọn hãng trước khi đăng nhập:</b> không cần identity store trung tâm; username chỉ cần duy nhất <i>trong một hãng</i> (vốn đã đúng từ trước); và <code>ITenantConnectionFactory</code> không phải đổi database nóng.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-sec="24 AD" data-title="Bản đồ 24 AD">
+  <p class="kicker">Invariants &amp; rules</p>
+  <h2>24 AD, 5 chủ đề</h2>
+  <p class="lead">Đừng đọc tuần tự 24 lần. Mỗi AD trả lời một câu hỏi thuộc một trong năm chủ đề dưới đây.</p>
+  <div class="grid g2">
+    <div class="card">
+      <span class="tag a">Chủ đề 1 · 6 AD</span>
+      <h3>Cách ly tenant — lý do tồn tại của cả spine</h3>
+      <p><small>AD-2 · AD-3 · AD-4 · AD-5 · AD-6 · AD-7</small></p>
+      <p style="margin:0"><small>Một đường duy nhất tới dữ liệu; tenant phân giải trước xác thực; phạm vi chỉ từ token đã ký; mỗi bảng đúng một hạng; cache key mang đủ phạm vi; SignalR phân giải lại mỗi lần gọi.</small></p>
+    </div>
+    <div class="card">
+      <span class="tag">Chủ đề 2 · 5 AD</span>
+      <h3>Hợp đồng và đường biên</h3>
+      <p><small>AD-8 · AD-9 · AD-12 · AD-16 · AD-17</small></p>
+      <p style="margin:0"><small>Mã trạng thái thật + ProblemDetails + corrId; biên proc ↔ .NET phân theo tác dụng phụ; BFF gom chứ không chứa nghiệp vụ; thời gian; quyền là dữ liệu có phiên bản.</small></p>
+    </div>
+    <div class="card">
+      <span class="tag w">Chủ đề 3 · 4 AD</span>
+      <h3>Sống chung một database với web cũ</h3>
+      <p><small>AD-10 · AD-11 · AD-18 · AD-20</small></p>
+      <p style="margin:0"><small>Schema tương thích ngược, một sổ cái, một công cụ; last-write-wins; ghi vết đo tại kết nối vật lý; sổ chủ sở hữu màn hình.</small></p>
+    </div>
+    <div class="card">
+      <span class="tag">Chủ đề 4 · 5 AD</span>
+      <h3>Vận hành, bí mật, quan trắc</h3>
+      <p><small>AD-13 · AD-14 · AD-21 · AD-22 · AD-23</small></p>
+      <p style="margin:0"><small>OpenTelemetry và kho log là dữ liệu nhạy cảm; sổ đăng ký hãng + vòng đời bí mật; bốn môi trường và thứ tự triển khai; khoá xoay được; tư thế bảo mật trình duyệt.</small></p>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <span class="tag o">Chủ đề 5 · 4 AD</span>
+      <h3>Nền và cách chứng minh rằng bốn chủ đề trên là thật</h3>
+      <p><small>AD-1 · AD-15 · AD-19 · AD-24</small></p>
+      <p style="margin:0"><small>.NET 10 LTS + FE build tĩnh; <b>mỗi điều cấm phải có một cơ chế ép</b>; mỗi hãng một login SQL riêng; <b>bài test rò rỉ hai tenant là test đầu tiên của dự án</b>. Ba AD sau là phần khiến spine này khác một bộ hướng dẫn.</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-sec="24 AD" data-title="Chủ đề 1 — Cách ly tenant">
+  <p class="kicker">Chủ đề 1 · 6 AD</p>
+  <h2>Cách ly tenant</h2>
+  <div class="grid g2">
+    <div class="ad"><span class="id">AD-2</span><div class="ti">Một deployment, DB tách riêng, một đường duy nhất tới dữ liệu</div>
+      <div class="dx"><code>ITenantConnectionFactory</code> là đường <b>duy nhất</b> lấy connection. Cấm <code>new SqlConnection(...)</code>, cấm đọc connection string trong code nghiệp vụ. Factory <b>không nhận tham số tenant</b> — nó đọc <code>TenantScope</code> của request. Không có scope ⇒ <b>ném lỗi</b>. <code>ValidateScopes</code> bật ở mọi môi trường, kể cả production.</div></div>
+    <div class="ad"><span class="id">AD-3</span><div class="ti">Tenant phân giải trước khi xác thực</div>
+      <div class="dx">Gõ mã hãng ở màn đăng nhập, nhớ trong <code>localStorage</code>. Mã hãng → sổ đăng ký → connection string → xác thực trên bảng user của chính DB hãng đó. Gateway <b>xoá mọi header</b> <code>X-Tenant*</code> / <code>X-Company*</code> đến từ ngoài.</div></div>
+    <div class="ad"><span class="id">AD-4</span><div class="ti">Phạm vi chỉ đến từ token đã ký</div>
+      <div class="dx">Token mang <code>tenantCode</code> + <code>companyId</code> + <code>permissionVersion</code> + <code>securityStamp</code>. Cấm suy phạm vi từ bất kỳ dữ liệu nào client gửi — query, body, header, form, route, tham số hub — <b>bất kể đặt tên là gì</b>. Lệnh cấm theo <b>khái niệm</b>, không theo tên biến.</div></div>
+    <div class="ad"><span class="id">AD-5</span><div class="ti">Mỗi bảng có đúng một hạng tenant</div>
+      <div class="dx"><code>Global</code> · <code>PerTenant</code> · <code>PerCompany</code> · <code>CrossLink</code>, khai báo trong sổ <code>tenancy-classes.json</code>. Vượt phạm vi phải gọi tường minh <code>.AcrossTenants(lýDo)</code> — có quyền riêng, có ghi vết, và <b>grep ra được</b>. Bảng chưa phân hạng ⇒ build đỏ.</div></div>
+    <div class="ad"><span class="id">AD-6</span><div class="ti">Cache key mang đủ phạm vi; dữ liệu dùng chung phải có sổ</div>
+      <div class="dx">Khuôn <code>{tenantCode}:{companyId}:{vùng}:{khoá}</code>. <b>Không có ngoại lệ "dữ liệu tham chiếu" tuỳ nghi</b> — mỗi hãng có DB riêng nên tỉnh thành, loại xe, mã lỗi ở hãng A có id khác hãng B. Chỉ dữ liệu trong sổ <code>SharedReferenceData</code> mới được dùng key không tenant, và phải nạp từ <b>nguồn thẩm quyền riêng</b>.</div></div>
+    <div class="ad"><span class="id">AD-7</span><div class="ti">SignalR: phân giải lại phạm vi ở mỗi lần gọi</div>
+      <div class="dx">Handshake ghi <code>TenantScope</code> vào <code>Context.Items</code>; <b>mỗi lần gọi hub method phân giải lại từ đó</b> — vì mỗi lần gọi là một DI scope mới. Cấm <code>Clients.All</code> / <code>Others</code> / <code>AllExcept</code>: bọc <code>IHubContext</code> sau một lớp chỉ nhận <code>TenantScope</code>. Backplane Redis có tiền tố <code>{môi-trường}:{tenantCode}</code>.</div></div>
+  </div>
+  <div class="bad" style="margin-top:14px">
+    <p><b>Vì sao AD-7 được viết riêng thay vì gộp vào AD-4:</b> một bản tin SignalR phát nhầm hãng <b>không để lại log, không có mã lỗi, không ai báo</b>. Khách chỉ thấy xe của hãng khác nhảy trên bản đồ của mình. Đây là khe rò rỉ duy nhất không tự lộ ra.</p>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-sec="24 AD" data-title="Chủ đề 2 — Hợp đồng và đường biên">
+  <p class="kicker">Chủ đề 2 · 5 AD</p>
+  <h2>Hợp đồng và đường biên</h2>
+  <div class="grid g2">
+    <div class="ad"><span class="id">AD-8</span><div class="ti">Mã trạng thái thật + ProblemDetails + corrId</div>
+      <div class="dx">REST, mã HTTP đúng nghĩa. Lỗi trả <b>RFC 9457 ProblemDetails</b> mở rộng trường <code>corrId</code>; <b>mọi</b> phản hồi mang header <code>corrId</code>. <b>Cấm trả HTTP 200 cho một lỗi</b> — đây là sai lầm lớn nhất của web cũ, đừng mang sang. Hình dạng dây định nghĩa một lần trong <code>Staxi.Contracts</code>.</div></div>
+    <div class="ad"><span class="id">AD-9</span><div class="ti">Biên proc ↔ .NET phân theo <b>tác dụng phụ</b>, không theo hình dạng truy vấn</div>
+      <div class="dx">Proc <b>có ghi</b> (<code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>/<code>MERGE</code>) ⇒ <b>phải viết lại trong .NET</b>, dù có <code>GROUP BY</code> hay không, không ngoại lệ. Proc <b>chỉ đọc + gom</b> ⇒ giữ trong SQL, bọc Dapper, trả DTO. Proc chỉ đọc đơn giản ⇒ viết lại. Dynamic SQL ⇒ query builder có kiểu, ưu tiên cao.</div></div>
+    <div class="ad"><span class="id">AD-12</span><div class="ti">BFF gom dữ liệu, không chứa nghiệp vụ</div>
+      <div class="dx">React chỉ gọi <b>web-bff</b> qua gateway. BFF chỉ gom, chiếu, định hình cho <b>một màn hình</b> — cấm chứa quy tắc nghiệp vụ, cấm truy cập database trực tiếp (không tham chiếu <code>ITenantConnectionFactory</code>). Một màn hình nên là <b>một</b> lời gọi BFF.</div></div>
+    <div class="ad"><span class="id">AD-17</span><div class="ti">Quyền là dữ liệu, trong sổ đăng ký bằng code, có phiên bản</div>
+      <div class="dx">Một hằng cho mỗi quyền, khuôn <code>{TàiNguyên}.{HànhĐộng}</code>, đồng bộ xuống bảng lúc khởi động. Endpoint khai báo <code>[HasPermission(...)]</code>; <b>UI ẩn/hiện nút đọc cùng khai báo đó</b>, không có danh sách thứ hai. Thay cho enum <code>UrlNumberCode</code> <b>5.212 dòng</b>.</div></div>
+    <div class="ad" style="grid-column:1/-1;border-color:var(--warn)"><span class="id" style="color:var(--warn)">AD-17 · vấn đề xuyên hai hệ</span>
+      <div class="ti">Web cũ không biết <code>permissionVersion</code> tồn tại</div>
+      <div class="dx">Sửa quyền ở web cũ mà không bump phiên bản ⇒ <b>token WEB2 vẫn giữ quyền cũ</b>, thu hồi quyền không có hiệu lực. Bắt buộc: bump <code>permissionVersion</code> bằng <b>trigger trên bảng quyền/role</b>, không bằng code ứng dụng — vì chỉ trigger mới thấy được cả hai hệ. Ánh xạ từ <code>UrlNumberCode</code> / <code>PermissionTree.cs</code> sang sổ mới phải tồn tại và có test, chừng nào hai web còn chạy.</div></div>
+  </div>
+  <p style="margin-top:12px"><small>AD-16 (thời gian) cũng thuộc chủ đề này nhưng có slide riêng — nó là quyết định dễ làm hỏng dữ liệu nhất trong cả spine.</small></p>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-sec="24 AD" data-title="Chủ đề 3 — Chung DB với web cũ">
+  <p class="kicker">Chủ đề 3 · 4 AD</p>
+  <h2>Sống chung một database với web cũ</h2>
+  <div class="grid g2" style="margin-bottom:12px">
+    <div class="ad"><span class="id">AD-10</span><div class="ti">Schema tương thích ngược, một sổ cái, một công cụ</div>
+      <div class="dx">DDL sống trong git, chạy bằng <b>grate</b>. Thư mục đặt đúng tên grate dùng (<code>up</code>, <code>views</code>, <code>sprocs</code>, <code>functions</code>…); <code>Once</code>/<code>AnyTime</code>/<code>EveryTime</code> là <b>loại script gán cho thư mục</b>, không phải tên thư mục.</div></div>
+    <div class="ad"><span class="id">AD-20</span><div class="ti">Một màn hình, một chủ sở hữu, ghi trong sổ</div>
+      <div class="dx"><code>screen-owners.json</code> trong git: mỗi màn hình ghi <code>web-cũ</code> / <code>đang-chuyển</code> / <code>WEB2</code>, kèm hãng nào đã cắt sang. Đây là nguồn sự thật cho câu hỏi "hãng X đang dùng gì" — và là thứ quyết định khi nào luật tương thích ngược được nới cho một bảng.</div></div>
+  </div>
+  <h3>Luật schema trong suốt giai đoạn song song</h3>
+  <div class="grid g2" style="margin-bottom:12px">
+    <div class="good"><p><b>Được</b><br>thêm cột <code>NULL</code>-able · bảng mới · index · proc mới</p></div>
+    <div class="bad"><p><b>Cấm</b><br>đổi tên cột · đổi kiểu · xoá cột · <b>đổi nghĩa giá trị</b> · sửa proc web cũ đang gọi theo cách đổi hình dạng kết quả</p></div>
+  </div>
+  <div class="warn">
+    <p><b>Chỉ một sổ cái.</b> <code>[Admin.DbMigrations]</code> <b>đã tồn tại trong DB</b> và đang được một hệ khác ghi — không một dòng nào trong repo này tham chiếu tới nó. Phải <b>tìm chủ sở hữu và hợp nhất trước</b> khi grate chạy lên bất kỳ DB nào. Hai công cụ cùng ghi hai sổ cái trên cùng 18 DB là cách hỏng không cứu được. (Câu hỏi mở Q3.)</p>
+  </div>
+  <p><small>AD-11 và AD-18 cũng thuộc chủ đề này — chúng có slide riêng ở phần sau.</small></p>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-sec="24 AD" data-title="Chủ đề 4 — Vận hành, bí mật, quan trắc">
+  <p class="kicker">Chủ đề 4 · 5 AD</p>
+  <h2>Vận hành, bí mật, quan trắc</h2>
+  <div class="grid g2">
+    <div class="ad"><span class="id">AD-14</span><div class="ti">Sổ đăng ký hãng: DB quản trị riêng, bí mật có vòng đời</div>
+      <div class="dx">Một bảng trong <b>DB quản trị riêng</b>, tách khỏi 18 DB khách. Connection string <b>mã hoá phong bì</b>, khoá nằm ngoài mã nguồn và ngoài DB đó. Thêm hãng = thêm một dòng. Vì là <b>điểm chết đơn lẻ</b>: cache cục bộ trong tiến trình + health check riêng + chạy tiếp được khi nó tạm mất.</div></div>
+    <div class="ad" style="border-color:var(--danger)"><span class="id" style="color:var(--danger)">AD-14 · hệ quả</span><div class="ti">Cache cục bộ nghĩa là 18 connection string đã giải mã nằm trong RAM mọi tiến trình</div>
+      <div class="dx"><b>Tắt crash dump trên production.</b> Ưu tiên phương án <b>không có mật khẩu</b> (Managed Identity / xác thực tích hợp) nếu hạ tầng cho phép. Khoá phải xoay được. Phải có <b>công tắc vô hiệu một hãng</b> cắt cả phiên đang chạy, không chỉ chặn đăng nhập mới.</div></div>
+    <div class="ad"><span class="id">AD-13</span><div class="ti">OpenTelemetry — và kho quan trắc là dữ liệu nhạy cảm</div>
+      <div class="dx">Truyền ngữ cảnh bằng <code>traceparent</code> W3C. Trace ghi <b>cả tenant thực thi lẫn tenant hiệu lực</b>. Lệnh ghi và đổi phạm vi lưu 100%, phần còn lại lấy mẫu. Kho log là <b>nơi duy nhất dữ liệu 18 hãng nằm chung</b> ⇒ trường được ghi là <b>danh sách trắng</b>, không phải đen; cấm ghi tham số truy vấn, thân request, PII, thông tin thẻ; truy cập có phân quyền và có vết.</div></div>
+    <div class="ad"><span class="id">AD-22</span><div class="ti">Khoá và bí mật</div>
+      <div class="dx">Khoá ký JWT và khoá mã hoá connection string lưu ngoài mã nguồn, ngoài git, <b>ngoài database chúng bảo vệ</b>. Cả hai phải <b>xoay được mà không cần dừng dịch vụ</b> — chấp nhận nhiều khoá cùng lúc trong thời gian chuyển tiếp. Token ngắn hạn + refresh thu hồi được; <code>securityStamp</code> kiểm lại mỗi request.</div></div>
+    <div class="ad"><span class="id">AD-23</span><div class="ti">Tư thế bảo mật phía trình duyệt</div>
+      <div class="dx">Token <b>không lưu trong <code>localStorage</code></b> — chỉ mã hãng được lưu ở đó. Refresh token trong cookie <code>HttpOnly</code> + <code>Secure</code> + <code>SameSite</code>. CORS danh sách trắng theo domain WEB2, CSP tường minh, bật HSTS. Màn lỗi hiện <code>corrId</code> cho người dùng đọc cho CSKH.</div></div>
+    <div class="ad"><span class="id">AD-21</span><div class="ti">Envelope vận hành</div>
+      <div class="dx">Migration chạy <b>trước</b> app và chỉ chứa thay đổi tương thích ngược — nhờ đó app cũ và app mới đều chạy được trên schema mới. <b>Rollback là quay lại bản app trước, không phải quay lại schema</b>; migration không có bước lùi, sửa sai bằng một migration tiến tới. DB sổ đăng ký phải có backup và quy trình khôi phục <b>được diễn tập</b> — mất nó là 18 hãng không đăng nhập được.</div></div>
+  </div>
+</section>
+
+<!-- 14 — AD-16 -->
+<section class="slide" data-sec="Quyết định nặng ký" data-title="★ AD-16 — Thời gian">
+  <p class="kicker">Quyết định nặng ký 1/5 · AD-16</p>
+  <h2>Ghi UTC vào cột kế thừa là hỏng dữ liệu <b>ngay ngày đầu</b></h2>
+  <div class="fig w720" style="margin-bottom:6px">
+    <svg viewBox="0 0 720 210" role="img" aria-label="Biểu đồ cột so sánh 1286 lần DateTime.Now với 8 lần UtcNow trong mã nguồn web cũ">
+      <text x="0" y="16" class="ts">Trong <tspan class="tm">BA.STaxi.Web</tspan> — cách lấy thời gian hiện tại</text>
+      <rect x="0" y="34" width="620" height="44" rx="6" style="fill:var(--danger-soft);stroke:var(--danger);stroke-width:1.4"/>
+      <text x="14" y="53" class="tm">DateTime.Now</text>
+      <text x="14" y="71" class="ts">giờ địa phương GMT+7</text>
+      <text x="636" y="63" class="big" style="font-size:30px;fill:var(--danger)">1.286</text>
+
+      <rect x="0" y="92" width="4" height="44" rx="2" style="fill:var(--ok)"/>
+      <rect x="0" y="92" width="620" height="44" rx="6" style="fill:none;stroke:var(--line);stroke-width:1"/>
+      <text x="14" y="111" class="tm">DateTime.UtcNow</text>
+      <text x="14" y="129" class="ts">UTC</text>
+      <text x="660" y="121" class="big" style="font-size:30px;fill:var(--ok)">8</text>
+
+      <text x="0" y="168" class="t">WEB2 ghi UTC vào đúng cột web cũ đọc là giờ địa phương</text>
+      <text x="0" y="192" class="tb" style="fill:var(--danger)">⇒ lệch 7 giờ trên database dùng chung, không có lỗi nào được ném ra</text>
+    </svg>
+  </div>
+  <p class="cap">Tỉ lệ 1.286 : 8 không phải một thói quen xấu cần sửa — nó là <b>ngữ nghĩa hiện hành của cột</b>. Và AD-10 cấm đổi nghĩa giá trị cột.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0">Luật</h3>
+      <ul style="margin-bottom:0">
+        <li><b>Cột kế thừa:</b> đọc và ghi <b>giờ địa phương GMT+7</b>, đúng như web cũ. <b>Không quy đổi.</b></li>
+        <li><b>Cột mới</b> do WEB2 tạo: <code>datetimeoffset</code> hoặc UTC, và <b>bắt buộc có hậu tố <code>Utc</code> trong tên cột</b>.</li>
+        <li><b>Trên dây (API, JSON):</b> luôn ISO-8601 <b>có offset tường minh</b>. Cấm gửi chuỗi ngày không offset.</li>
+        <li><b>Trong code:</b> cấm <code>DateTime.Now</code>/<code>UtcNow</code> trực tiếp — dùng <code>IClock</code> tiêm vào.</li>
+      </ul>
+    </div>
+    <div class="warn">
+      <h3 style="margin-top:0">Vì sao <code>IClock</code>, chứ không phải "cẩn thận khi viết"</h3>
+      <p>Hai lý do, cả hai đều không thương lượng được: (1) test được — bạn không thể viết test cho một quy tắc giờ mà không kiểm soát được đồng hồ; (2) chỗ quy đổi nằm <b>một nơi</b>, nên khi một hãng cắt hẳn sang WEB2 và ta muốn đổi cột sang UTC, chỉ có một chỗ phải sửa.</p>
+      <p style="margin-bottom:0"><small>Hậu tố <code>Utc</code> trong tên cột không phải quy ước thẩm mỹ: nó là cách duy nhất để người đọc một câu <code>SELECT</code> ba năm sau biết cột đó nghĩa là gì mà không phải đi tìm code.</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- 15 — AD-19 -->
+<section class="slide" data-sec="Quyết định nặng ký" data-title="★ AD-19 — Login SQL mỗi hãng">
+  <p class="kicker">Quyết định nặng ký 2/5 · AD-19 · <span class="tag d">CẦN XÁC NHẬN VỚI DBA</span></p>
+  <h2>Chốt chắn rẻ nhất và mạnh nhất — và nó <b>chưa được xác nhận</b></h2>
+  <div class="fig w860">
+    <svg viewBox="0 0 860 240" role="img" aria-label="So sánh một login SQL dùng chung với mỗi hãng một login riêng khi code có lỗi">
+      <text x="0" y="16" class="tb" style="fill:var(--danger)">Hôm nay nếu dùng chung một login SQL cho 18 DB</text>
+      <rect x="0" y="30" width="180" height="46" rx="8" class="bx-d"/>
+      <text x="90" y="50" class="t" text-anchor="middle">Một lỗi code</text>
+      <text x="90" y="67" class="ts" text-anchor="middle">quên lọc, sai scope</text>
+      <path class="ln-d" d="M180 53 H222"/><polygon class="fa-d" points="226,53 218,49 218,57"/>
+      <rect x="226" y="30" width="200" height="46" rx="8" class="bx"/>
+      <text x="326" y="50" class="t" text-anchor="middle">login dùng chung</text>
+      <text x="326" y="67" class="ts" text-anchor="middle">có quyền trên cả 18 DB</text>
+      <path class="ln-d" d="M426 53 H468"/><polygon class="fa-d" points="472,53 464,49 464,57"/>
+      <rect x="472" y="30" width="300" height="46" rx="8" class="bx-d"/>
+      <text x="622" y="58" class="tb" text-anchor="middle" style="fill:var(--danger)">Dữ liệu của khách khác trả về bình thường</text>
+
+      <line x1="0" y1="106" x2="860" y2="106" class="ln dash"/>
+
+      <text x="0" y="136" class="tb" style="fill:var(--ok)">Với AD-19 — mỗi hãng một login SQL riêng</text>
+      <rect x="0" y="150" width="180" height="46" rx="8" class="bx-d"/>
+      <text x="90" y="170" class="t" text-anchor="middle">Cùng lỗi code đó</text>
+      <text x="90" y="187" class="ts" text-anchor="middle">không sửa gì cả</text>
+      <path class="ln-o" d="M180 173 H222"/><polygon class="fa-o" points="226,173 218,169 218,177"/>
+      <rect x="226" y="150" width="200" height="46" rx="8" class="bx-o"/>
+      <text x="326" y="170" class="t" text-anchor="middle">login của riêng hãng A</text>
+      <text x="326" y="187" class="ts" text-anchor="middle">chỉ quyền trên DB hãng A</text>
+      <path class="ln-o" d="M426 173 H468"/><polygon class="fa-o" points="472,173 464,169 464,177"/>
+      <rect x="472" y="150" width="300" height="46" rx="8" class="bx-o"/>
+      <text x="622" y="178" class="tb" text-anchor="middle" style="fill:var(--ok)">Permission denied</text>
+      <text x="0" y="224" class="ts">Biên giới cuối cùng nằm ở tầng database — không phụ thuộc vào việc code viết đúng.</text>
+    </svg>
+  </div>
+  <div class="grid g2">
+    <div class="bad">
+      <h3 style="margin-top:0">Điều phải nói thẳng ra trong buổi này</h3>
+      <p style="margin-bottom:0">Cần DBA cấp <b>18 login</b>. <b>Chưa xác nhận khả thi.</b> Nếu Q1 trả lời là "không", spine không sập — nhưng <b>mọi cơ chế cách ly còn lại đều nằm trong code của chúng ta</b>, và một lỗi lập trình lại quay về nghĩa là dữ liệu của khách khác trả về bình thường. Đó là một dự án khác về mức rủi ro, và phải được nói ra <i>trước khi</i> viết dòng đầu tiên.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Vì sao "rẻ nhất"</h3>
+      <p>Nó không cần code. Không có thư viện phải học, không có test phải viết, không có kỷ luật phải duy trì qua thời gian và qua người mới. Nó là <b>18 lệnh <code>CREATE LOGIN</code> và một bảng phân quyền</b> — sau đó nó tự đúng mãi mãi.</p>
+      <p style="margin-bottom:0">Mọi chốt chắn khác trong spine đều là kỷ luật được mã hoá thành test. Đây là chốt duy nhất không phụ thuộc vào việc chúng ta viết đúng.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16 — AD-11 + AD-18 -->
+<section class="slide" data-sec="Quyết định nặng ký" data-title="★ AD-11 + AD-18 — Mất dữ liệu &amp; sổ vết">
+  <p class="kicker">Quyết định nặng ký 3/5 · AD-11 + AD-18</p>
+  <h2>Chấp nhận mất dữ liệu âm thầm — và trả giá bằng một sổ vết đo tại kết nối</h2>
+  <div class="grid g2" style="margin-bottom:12px">
+    <div class="bad">
+      <h3 style="margin-top:0">AD-11 — Last-write-wins</h3>
+      <p><b>Không thêm cơ chế tương tranh. Ai ghi sau thắng</b>, giống web cũ hôm nay. Đây là đánh đổi <b>đã chọn</b>, không phải chỗ chưa nghĩ tới. Hai ứng dụng cùng ghi vào một database ⇒ <b>mất dữ liệu âm thầm</b> là chuyện sẽ xảy ra.</p>
+      <p style="margin-bottom:0">Đổi lại, hai nghĩa vụ: (1) mọi lệnh ghi để lại vết theo AD-18; (2) <b>bất biến nghiệp vụ sống còn phải nằm trong database</b> — check constraint, unique index, foreign key.</p>
+    </div>
+    <div class="warn">
+      <h3 style="margin-top:0">Câu quan trọng nhất của AD-11</h3>
+      <p class="big" style="font-size:clamp(17px,3.4vw,23px);line-height:1.3;font-family:var(--sans);letter-spacing:-.01em">Bất biến chỉ tồn tại trong code .NET là bất biến <b>không có thật</b> trong giai đoạn song song.</p>
+      <p style="margin-bottom:0"><small>Tầng <code>Domain</code> của bạn không chạy khi <code>BA.STaxi.Web</code> ghi. Nếu quy tắc đó phải luôn đúng, nó phải là một constraint trong DB — hoặc nó không phải quy tắc.</small></p>
+    </div>
+  </div>
+  <h3>AD-18 — Vì sao sổ vết phải đo tại <b>kết nối vật lý</b></h3>
+  <div class="fig w860">
+    <svg viewBox="0 0 860 200" role="img" aria-label="Sơ đồ so sánh TenantScope của ứng dụng với DB_NAME và ORIGINAL_LOGIN tại kết nối vật lý">
+      <rect x="0" y="20" width="230" height="64" rx="8" class="bx-a"/>
+      <text x="115" y="44" class="t" text-anchor="middle">Ứng dụng nghĩ là</text>
+      <text x="115" y="66" class="tm" text-anchor="middle">TenantScope = A</text>
+      <text x="0" y="104" class="ts">nguồn CÓ THỂ ĐANG SAI</text>
+
+      <rect x="0" y="120" width="230" height="64" rx="8" class="bx-o"/>
+      <text x="115" y="144" class="t" text-anchor="middle">Kết nối vật lý nói là</text>
+      <text x="115" y="166" class="tm" text-anchor="middle">DB_NAME() · ORIGINAL_LOGIN()</text>
+
+      <path class="ln" d="M230 52 H330 V96"/>
+      <path class="ln" d="M230 152 H330 V108"/>
+      <path class="ln" d="M330 102 H378"/><polygon class="fa" points="382,102 374,98 374,106"/>
+      <rect x="382" y="76" width="150" height="52" rx="8" class="bx-w"/>
+      <text x="457" y="99" class="t" text-anchor="middle">So sánh</text>
+      <text x="457" y="117" class="ts" text-anchor="middle">trong trigger DB</text>
+
+      <path class="ln-o" d="M532 92 H600"/><polygon class="fa-o" points="604,92 596,88 596,96"/>
+      <rect x="604" y="66" width="250" height="26" rx="6" class="bx-o"/>
+      <text x="616" y="84" class="ts">khớp ⇒ ghi vết bình thường</text>
+      <path class="ln-d" d="M532 118 H600"/><polygon class="fa-d" points="604,118 596,114 596,122"/>
+      <rect x="604" y="104" width="250" height="34" rx="6" class="bx-d"/>
+      <text x="616" y="118" class="ts" style="fill:var(--danger)">lệch ⇒ CẢNH BÁO</text>
+      <text x="616" y="133" class="ts">đó chính là tín hiệu rò rỉ</text>
+      <text x="0" y="198" class="ts">Nếu sổ vết lấy tenant từ chính <tspan class="tm">TenantScope</tspan>, nó không thể phát hiện đúng lớp lỗi mà nó tồn tại để bù.</text>
+    </svg>
+  </div>
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0">Bốn yêu cầu còn lại của AD-18</h3>
+      <ul style="margin-bottom:0">
+        <li>Lệnh ghi bắt vết bằng <b>trigger database</b>, không bằng code ứng dụng — vì web cũ ghi song song, và sổ vết sẵn có của nó (<code>BA.STaxi.Web/AuditTrail/</code>) <b>không có <code>corrId</code></b> và <b>tắt được bằng <code>Global.AuditActive</code></b>.</li>
+        <li>Vết lưu <b>giá trị trước và sau</b> — nếu không thì không dựng lại được vụ ghi đè mà AD-11 chấp nhận.</li>
+        <li><b>Phủ cả lệnh đọc</b> ở chỗ hậu quả nặng nhất: mọi <code>.AcrossTenants(...)</code>, mọi kết xuất lớn, mọi báo cáo vượt ngưỡng số dòng. <b>Rò rỉ dữ liệu là chuyện của lệnh đọc.</b></li>
+        <li>Kho vết <b>chỉ ghi thêm</b>, tách khỏi database nghiệp vụ, thời hạn lưu khai báo tường minh.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <p><b>Điểm dễ bỏ sót nhất khi làm:</b> ba thứ trên đây đều là <b>DDL</b>, không phải C#. Chúng nằm trong <code>db/</code>, chạy bằng grate, phải tương thích ngược với web cũ (AD-10), và phải nhân lên 18 database.</p>
+      <p style="margin-bottom:0">Nghĩa là AD-18 không thể bắt đầu trước khi Q2 (18 DB đang trôi schema bao nhiêu) và Q3 (ai sở hữu <code>[Admin.DbMigrations]</code>) có câu trả lời.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 17 — AD-24 -->
+<section class="slide" data-sec="Quyết định nặng ký" data-title="★ AD-24 — Test rò rỉ hai tenant">
+  <p class="kicker">Quyết định nặng ký 4/5 · AD-24</p>
+  <h2>Test rò rỉ hai tenant là <b>test đầu tiên của dự án</b> — trước tính năng đầu tiên</h2>
+  <p class="lead">Ngăn điều gì: mọi AD cách ly ở trên <b>đúng trên giấy mà chưa từng được chứng minh</b>.</p>
+  <div class="fig w720">
+    <svg viewBox="0 0 720 250" role="img" aria-label="Bốn phép thử rò rỉ giữa hai hãng giả A và B">
+      <rect x="0" y="0" width="200" height="250" rx="10" class="bx-a"/>
+      <text x="100" y="28" class="tb" text-anchor="middle">Hãng giả A</text>
+      <rect x="520" y="0" width="200" height="250" rx="10" class="bx"/>
+      <text x="620" y="28" class="tb" text-anchor="middle">Hãng giả B</text>
+
+      <g>
+        <path class="ln-d" d="M200 62 H512"/><polygon class="fa-d" points="516,62 508,58 508,66"/>
+        <text x="212" y="56" class="ts">1 · gọi HTTP bằng token hãng A xin dữ liệu hãng B</text>
+        <text x="212" y="78" class="tm" style="fill:var(--ok)">phải: 403 / Permission denied, không phải dữ liệu</text>
+      </g>
+      <g>
+        <path class="ln-d" d="M200 122 H512"/><polygon class="fa-d" points="516,122 508,118 508,126"/>
+        <text x="212" y="116" class="ts">2 · phát tin SignalR ở hãng A</text>
+        <text x="212" y="138" class="tm" style="fill:var(--ok)">phải: hãng B KHÔNG nhận được gì</text>
+      </g>
+      <g>
+        <path class="ln-d" d="M200 182 H512"/><polygon class="fa-d" points="516,182 508,178 508,186"/>
+        <text x="212" y="176" class="ts">3 · nạp cache ở hãng A rồi đọc ở hãng B</text>
+        <text x="212" y="198" class="tm" style="fill:var(--ok)">phải: miss, không phải dữ liệu hãng A</text>
+      </g>
+      <g>
+        <path class="ln-d" d="M200 232 H512"/><polygon class="fa-d" points="516,232 508,228 508,236"/>
+        <text x="212" y="226" class="ts">4 · truy vấn qua repository KHÔNG phạm vi</text>
+        <text x="212" y="248" class="tm" style="fill:var(--ok)">phải: ném lỗi, không có đường mặc định</text>
+      </g>
+    </svg>
+  </div>
+  <div class="grid g2">
+    <div class="good">
+      <h3 style="margin-top:0">Hai tính chất khiến nó khác một bộ test thường</h3>
+      <ul style="margin-bottom:0">
+        <li>Nó <b>chạy trong CI mọi lần</b>, không phải một bài kiểm tra chấp nhận chạy trước release.</li>
+        <li>Nó <b>mở rộng mỗi khi thêm một cơ chế cách ly mới</b>. Thêm một loại cache, một hub, một job chạy nền ⇒ thêm một phép thử ở đây, cùng lúc, không phải sau.</li>
+      </ul>
+    </div>
+    <div class="warn">
+      <h3 style="margin-top:0">Vì sao "trước tính năng đầu tiên" là phần quan trọng của luật</h3>
+      <p>Bộ test này chỉ viết được dễ dàng khi hệ thống còn rỗng. Sau tính năng thứ mười, dựng hai hãng giả cần dữ liệu mẫu, cần seed, cần hiểu nghiệp vụ — và nó sẽ bị hoãn.</p>
+      <p style="margin-bottom:0">Đặt nó ở <code>tests/Staxi.TenantLeakTests/</code> ngay trong commit dựng khung, cùng lúc với <code>Staxi.Platform</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 18 — AD-4 deep -->
+<section class="slide" data-sec="Quyết định nặng ký" data-title="★ AD-4 — Phạm vi chỉ từ token">
+  <p class="kicker">Quyết định nặng ký 5/5 · AD-4</p>
+  <h2>Lệnh cấm theo <b>khái niệm</b>, không theo tên biến</h2>
+  <div class="bad" style="margin-bottom:14px">
+    <p style="margin-bottom:0"><b>Đây là lỗ hổng <code>HomeController.ChangeCompany</code> của web cũ, viết thành luật.</b> Ở web cũ, phạm vi đổi được bằng một tham số client gửi lên, và <b>không thấy kiểm tra quyền</b>. Nếu WEB2 nhận phạm vi từ bất kỳ thứ gì client gửi — <i>dù tên biến là gì</i> — chúng ta vừa xây lại đúng lỗ hổng đó trên một nền tảng phục vụ 18 hãng cùng lúc thay vì một.</p>
+  </div>
+  <div class="grid g2" style="margin-bottom:12px">
+    <div class="card">
+      <h3 style="margin-top:0">Nguồn phạm vi hợp lệ — đúng một</h3>
+      <p>Token đã ký, mang <code>tenantCode</code> + <code>companyId</code> + <code>permissionVersion</code> + <code>securityStamp</code>.</p>
+      <h3>Nguồn bị cấm — tất cả phần còn lại</h3>
+      <p style="margin-bottom:0">query · body · header · form · route · tham số hub — <b>bất kể đặt tên là gì</b>.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Đổi công ty làm thế nào</h3>
+      <ol class="steps" style="margin-bottom:0">
+        <li>Gọi <code>select-company</code>.</li>
+        <li><b>Kiểm tra lại quyền từ DB</b> — không tin token hiện tại.</li>
+        <li><b>Cấp token mới.</b> Phạm vi cũ chết theo token cũ.</li>
+        <li>SignalR: rời group cũ, vào group mới (AD-7).</li>
+      </ol>
+    </div>
+  </div>
+  <div class="note">
+    <p style="margin-bottom:0"><b>Ép bằng ba lớp, không bằng code review:</b> model binder chặn toàn cục · bài kiểm cấu trúc quét DTO và chữ ký tham số · gateway xoá mọi header <code>X-Tenant*</code>/<code>X-Company*</code> đến từ ngoài. Lý do phải có cả ba: một lệnh cấm "theo khái niệm" không grep được bằng một chuỗi ký tự, nên nó cần một cơ chế bắt ở mỗi tầng mà khái niệm đó có thể lọt qua.</p>
+  </div>
+</section>
+
+<!-- 19 — AD-15 table -->
+<section class="slide" data-sec="Ép buộc" data-title="AD-15 — Mỗi điều cấm ⇄ một cơ chế ép">
+  <p class="kicker">AD-15 · bảng ép</p>
+  <h2>Mỗi điều cấm ⇄ một cơ chế ép</h2>
+  <div class="note" style="margin-bottom:14px">
+    <p style="margin-bottom:0"><b>Luật của chính bảng này:</b> một điều cấm <b>không có dòng trong bảng</b> thì <b>không được viết vào spine</b>. CI làm <b>đỏ build</b> khi bất kỳ cơ chế nào dưới đây kêu. Đây là thứ ngăn 24 AD thoái hoá thành lời khuyên.</p>
+  </div>
+  <div class="scroll">
+    <table class="tight">
+      <thead><tr><th style="min-width:230px">Điều cấm</th><th style="width:110px">AD</th><th>Cơ chế ép</th></tr></thead>
+      <tbody>
+        <tr><td>Suy phạm vi từ dữ liệu client gửi</td><td class="mono">AD-4</td><td>Model binder chặn toàn cục + quét DTO/chữ ký tham số + gateway xoá header</td></tr>
+        <tr><td><code>new SqlConnection</code> ngoài factory</td><td class="mono">AD-2</td><td>Quét assembly</td></tr>
+        <tr><td>Factory gọi khi không có <code>TenantScope</code></td><td class="mono">AD-2</td><td>Ném lỗi lúc chạy + <code>ValidateScopes</code> mọi môi trường</td></tr>
+        <tr><td>Bảng chưa phân hạng tenant</td><td class="mono">AD-5</td><td>Test quét mô hình đối chiếu sổ đăng ký hạng</td></tr>
+        <tr><td><code>CacheKey</code> dựng thiếu phạm vi</td><td class="mono">AD-6</td><td>Kiểu không có constructor thiếu <code>TenantScope</code></td></tr>
+        <tr><td>Key cache dùng chung ngoài sổ</td><td class="mono">AD-6</td><td>Test đối chiếu sổ <code>SharedReferenceData</code></td></tr>
+        <tr><td><code>Clients.All</code> / <code>Others</code> / <code>AllExcept</code></td><td class="mono">AD-7</td><td>Quét assembly + <code>IHubContext</code> bọc sau lớp chỉ nhận <code>TenantScope</code></td></tr>
+        <tr><td>Phạm vi lấy từ tham số hub method</td><td class="mono">AD-7</td><td>Quét chữ ký hub</td></tr>
+        <tr><td>HTTP 200 kèm lỗi</td><td class="mono">AD-8</td><td>Test hợp đồng API trong CI</td></tr>
+        <tr><td>DTO/enum/ngày định nghĩa ngoài <code>Staxi.Contracts</code></td><td class="mono">AD-8</td><td>Test hợp đồng</td></tr>
+        <tr><td>Proc có ghi mà vẫn giữ trong SQL</td><td class="mono">AD-9</td><td>Sổ đăng ký proc + test đối chiếu <code>sys.sql_modules</code></td></tr>
+        <tr><td>DDL vi phạm luật tương thích ngược</td><td class="mono">AD-10</td><td>Kiểm tra script trong CI trước khi grate chạy</td></tr>
+        <tr><td>Lệnh ghi không để lại vết</td><td class="mono">AD-11 / AD-18</td><td><b>Trigger DB</b>, không phải code ứng dụng</td></tr>
+        <tr><td>Trạng thái static thay đổi được</td><td class="mono">—</td><td>Quét assembly (ngoại lệ phải khai báo kèm lý do)</td></tr>
+        <tr><td><code>HttpContext</code> ngoài một adapter</td><td class="mono">—</td><td>Quét assembly</td></tr>
+        <tr><td>Singleton giữ dịch vụ scoped</td><td class="mono">AD-2</td><td><code>ValidateScopes</code> + <code>ValidateOnBuild</code></td></tr>
+        <tr><td>Rò <code>TenantScope</code> sang công việc chạy nền</td><td class="mono">AD-2</td><td>Công việc nền phải tạo scope mới tường minh; quét assembly</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="stat"><div class="n">17</div><div class="l">điều cấm có cơ chế ép</div></div>
+    <div class="stat"><div class="n sm">7</div><div class="l">trong đó ép bằng <b>quét assembly</b> — ở <code>Staxi.ArchitectureTests</code></div></div>
+    <div class="stat"><div class="n sm">1</div><div class="l">ép bằng <b>trigger DB</b> vì code ứng dụng không đủ (AD-18)</div></div>
+  </div>
+</section>
+
+<!-- 20 — Stack -->
+<section class="slide" data-sec="Stack" data-title="Stack và cảnh báo bắt buộc">
+  <p class="kicker">Stack · đã kiểm chứng trên NuGet và npm ngày 2026-09-17</p>
+  <h2>Phiên bản đã ghim — và bốn cảnh báo phải đọc <b>trước khi cài</b></h2>
+  <div class="grid g2" style="margin-bottom:14px">
+    <div class="scroll">
+      <table class="tight">
+        <thead><tr><th>Backend</th><th class="mono">Version</th></tr></thead>
+        <tbody>
+          <tr><td>.NET</td><td class="mono">10 (LTS, tới 14/11/2028)</td></tr>
+          <tr><td>Yarp.ReverseProxy</td><td class="mono">2.3.0</td></tr>
+          <tr><td>Dapper</td><td class="mono">2.1.86</td></tr>
+          <tr><td>Microsoft.Data.SqlClient</td><td class="mono">7.0.3</td></tr>
+          <tr><td>StackExchange.Redis</td><td class="mono">2.13.17 ⚠</td></tr>
+          <tr><td>SignalR.StackExchangeRedis</td><td class="mono">10.0.12</td></tr>
+          <tr><td>Serilog.AspNetCore</td><td class="mono">10.0.0</td></tr>
+          <tr><td>grate (dotnet tool)</td><td class="mono">2.1.6</td></tr>
+          <tr><td>SQL Server</td><td class="mono">giữ bản đang chạy, <b>phải ở mức vá hiện hành</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="scroll">
+      <table class="tight">
+        <thead><tr><th>Frontend</th><th class="mono">Version</th></tr></thead>
+        <tbody>
+          <tr><td>React</td><td class="mono">19.3.0</td></tr>
+          <tr><td>Vite</td><td class="mono">8.3.0</td></tr>
+          <tr><td>TypeScript</td><td class="mono">5.9.3 ⚠</td></tr>
+          <tr><td>@tanstack/react-query</td><td class="mono">5.103.1</td></tr>
+          <tr><td>react-router-dom</td><td class="mono">7.18.4</td></tr>
+          <tr><td>@microsoft/signalr</td><td class="mono">10.0.11</td></tr>
+        </tbody>
+      </table>
+      <div style="padding:11px 13px;border-top:1px solid var(--line)">
+        <p style="margin:0"><small><b>Chưa ghim, phải ghim trước khi dựng môi trường:</b> Node.js · Redis server · HAProxy · OpenTelemetry SDK · mức vá tối thiểu của SQL Server.</small></p>
+      </div>
+    </div>
+  </div>
+  <div class="grid g2">
+    <div class="bad">
+      <p><b>1 · <code>Encrypt</code> mặc định là <code>true</code> từ <code>Microsoft.Data.SqlClient</code> 4.0.</b> 18 SQL Server đang chạy trên IP nội bộ, gần như chắc chắn không có chuỗi chứng chỉ tin cậy ⇒ <b>mọi kết nối sẽ fail lúc khởi động</b>. Phải xử lý tử tế bằng chứng chỉ, <b>chứ không phải bằng <code>TrustServerCertificate=true</code></b> — cái đó vô hiệu hoá chính lớp mã hoá đường truyền. (Q4.)</p>
+    </div>
+    <div class="warn">
+      <p><b>2 · StackExchange.Redis ghim 2.13.17, không phải 3.2.1.</b> <code>SignalR.StackExchangeRedis 10.0.12</code> khai báo phụ thuộc <code>StackExchange.Redis 2.7.27</code>. NuGet sẽ nâng lên 3.x và <b>build vẫn xanh</b> — nhưng backplane chưa từng xây trên 3.x, <b>lỗi chỉ hiện lúc chạy</b>.</p>
+    </div>
+    <div class="warn">
+      <p><b>3 · TypeScript ghim 5.9.3, không phải 7.0.2.</b> <code>typescript-eslint 8.70.0</code> khai báo peer <code>typescript &gt;=4.8.4 &lt;6.1.0</code> — <b>không bộ lint nào hỗ trợ TS 7</b>.</p>
+    </div>
+    <div class="note">
+      <p><b>4 · TFM không khớp là bình thường ở đây.</b> <code>Microsoft.Data.SqlClient 7.0.3</code> chưa có TFM <code>net10.0</code>; asset <code>net9.0</code> chạy trên .NET 10. <code>Yarp.ReverseProxy 2.3.0</code> có TFM cao nhất <code>net8.0</code>; tài liệu Microsoft cho ASP.NET Core 10 xác nhận nó hỗ trợ .NET 8 trở lên. <b>Không "sửa" bằng cách hạ .NET.</b></p>
+    </div>
+  </div>
+  <p style="margin-top:12px"><small><b>AD-1:</b> mọi dịch vụ .NET nhắm <code>net10.0</code>; FE build ra <b>file tĩnh</b> — không framework cần Node chạy phía server. <b>Không dùng .NET 8 cho code mới</b> (hết hỗ trợ 10/11/2026).</small></p>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-sec="Stack" data-title="Cây nguồn và quy ước">
+  <p class="kicker">Structural seed</p>
+  <h2>Cây nguồn — tên thư mục đã chốt</h2>
+  <div class="grid g2">
+    <div class="card" style="padding:14px">
+      <pre style="margin:0;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.55"><code style="background:none;border:0;padding:0;display:block;white-space:pre">web2/
+  src/
+    Staxi.Contracts/          # DTO, enum, hình dạng dây
+    Staxi.Platform/           # TenantScope, ConnectionFactory,
+                              # CacheKey, ProblemDetails, tracing
+    Staxi.Auth.{Domain,Application,Infrastructure,Api}
+    Staxi.Admin.{Domain,Application,Infrastructure,Api}
+    Staxi.Reporting.{Application,Infrastructure,Api}
+    Staxi.Notification.Api    # SignalR
+    Staxi.Bff.Web
+    Staxi.Gateway             # YARP
+  apps/
+    admin-web/                # Vite + React + TS
+  db/
+    up/ views/ sprocs/ functions/   # tên thư mục theo grate
+    tenancy-classes.json            # sổ hạng tenant (AD-5)
+    screen-owners.json              # sổ chủ sở hữu màn hình (AD-20)
+  tests/
+    Staxi.ArchitectureTests/  # bảng ép của AD-15
+    Staxi.TenantLeakTests/    # AD-24 — viết TRƯỚC tính năng đầu</code></pre>
+    </div>
+    <div>
+      <div class="scroll">
+        <table class="tight">
+          <thead><tr><th>Concern</th><th>Convention</th></tr></thead>
+          <tbody>
+            <tr><td>Đặt tên</td><td><code>I{X}Service</code> / <code>I{X}Repository</code>; private <code>_camelCase</code>; endpoint <code>kebab-case</code>; group SignalR <code>{tenantCode}:{companyId}:{chủ-đề}</code>; quyền <code>{TàiNguyên}.{HànhĐộng}</code></td></tr>
+            <tr><td>Định danh</td><td><code>tenantCode</code> là <code>string</code>, <b>không đoán được theo quy luật</b>; <code>companyId</code> là <code>int</code>; id bản ghi giữ nguyên kiểu trong DB</td></tr>
+            <tr><td>Số &amp; tiền</td><td>Số thập phân truyền dạng <b>chuỗi</b> trên dây để không mất chính xác; tiền là <code>decimal</code>, không <code>double</code></td></tr>
+            <tr><td>Xác thực</td><td>JWT ngắn hạn + refresh thu hồi được; <code>securityStamp</code> + <code>permissionVersion</code> kiểm mỗi request; <b>không dùng server session</b></td></tr>
+            <tr><td>Truy cập dữ liệu</td><td>Dapper; mọi truy vấn qua repository có phạm vi; connection chỉ từ <code>ITenantConnectionFactory</code></td></tr>
+            <tr><td>Cấu hình</td><td>Không bí mật trong mã nguồn hay git; connection string chỉ đến từ sổ đăng ký hãng</td></tr>
+            <tr><td>Ngôn ngữ</td><td>Chuỗi giao diện và bình luận <b>tiếng Việt</b>, theo lệ sẵn có</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 -->
+<section class="slide" data-sec="Cái chưa làm" data-title="Hoãn — và điều kiện xem lại">
+  <p class="kicker">Deferred</p>
+  <h2>Hoãn có điều kiện xem lại, không phải bỏ</h2>
+  <div class="scroll">
+    <table class="tight">
+      <thead><tr><th style="min-width:210px">Hoãn</th><th>Vì sao hoãn được</th><th style="min-width:200px">Điều kiện xem lại</th></tr></thead>
+      <tbody>
+        <tr><td>Cơ chế lệch phiên bản DB qua <code>[Version.ApiSupported]</code> (ADR-001)</td><td>Đợt đầu vài màn hình, chưa phát sinh</td><td>Khi hãng thứ hai lên WEB2 ở mức schema khác hãng thứ nhất — <b>và không muộn hơn</b></td></tr>
+        <tr><td><b>Phân hạng tenant cho 350 bảng chưa rõ</b></td><td>Đợt đầu chỉ chạm một phần nhỏ</td><td><b>Trước mỗi lần thêm một vùng nghiệp vụ mới</b></td></tr>
+        <tr><td>Tách BE thành nhiều dịch vụ</td><td>Chưa có gì để tách; BFF đã đủ chỗ gom</td><td>Khi hai vùng nghiệp vụ có nhịp phát hành khác nhau</td></tr>
+        <tr><td>BFF cho mobile</td><td>Chưa có client mobile</td><td>Khi có ứng dụng mobile dùng nền tảng này</td></tr>
+        <tr><td>Nâng StackExchange.Redis lên 3.x</td><td>2.13.17 khớp backplane và đang chạy được</td><td>Khi <code>SignalR.StackExchangeRedis</code> khai báo phụ thuộc 3.x</td></tr>
+        <tr><td>Nối log WEB2 với log web cũ</td><td>Hai trang web riêng, người dùng không đi qua lại trong một phiên</td><td>Nếu về sau có luồng chuyển tiếp giữa hai hệ</td></tr>
+        <tr><td>Kubernetes</td><td><b>Bài toán là multi-tenant, không phải mở rộng quy mô</b></td><td>Khi 6 máy không còn đủ</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn" style="margin-top:14px">
+    <p style="margin-bottom:0"><b>Dòng nguy hiểm nhất là dòng thứ nhất.</b> ADR-003 bước 1 — đo 18 DB đang trôi schema bao nhiêu — <b>chưa ai chạy</b>. Chừng nào chưa có số đo đó, việc hoãn cơ chế lệch phiên bản không phải một quyết định có căn cứ mà là <b>một canh bạc mù</b>. Đó là Q2.</p>
+  </div>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-sec="Cái chưa làm" data-title="Rủi ro đã chấp nhận có ý thức">
+  <p class="kicker">Rủi ro</p>
+  <h2>Đã chấp nhận <b>có ý thức</b> — không phải chỗ quên nghĩ tới</h2>
+  <div class="scroll">
+    <table class="tight">
+      <thead><tr><th style="min-width:230px">Rủi ro</th><th style="min-width:180px">Quyết định</th><th>Bù đắp</th></tr></thead>
+      <tbody>
+        <tr><td>Hai ứng dụng cùng ghi ⇒ <b>mất dữ liệu âm thầm</b></td><td>Last-write-wins (AD-11)</td><td>Trigger DB ghi vết trước/sau (AD-18) — <b>phát hiện sau khi xảy ra</b>, không ngăn được</td></tr>
+        <tr><td>Tầng Domain <b>không ép được bất biến</b></td><td>Chấp nhận trong giai đoạn song song</td><td>Bất biến sống còn đặt trong DB bằng constraint (AD-11)</td></tr>
+        <tr><td>Sổ đăng ký hãng là <b>điểm chết đơn lẻ</b></td><td>Đổi lấy việc thêm hãng chỉ là thêm một dòng</td><td>Cache cục bộ + health check + backup có diễn tập (AD-14, AD-21)</td></tr>
+        <tr><td>Cache cục bộ ⇒ <b>18 connection string giải mã trong RAM</b></td><td>Đánh đổi để sống sót khi sổ đăng ký tạm mất</td><td>Tắt crash dump, ưu tiên xác thực không mật khẩu, khoá xoay được (AD-14, AD-22)</td></tr>
+        <tr style="background:var(--danger-soft)"><td><b><code>HomeController.ChangeCompany</code> của web cũ</b> không thấy kiểm tra quyền</td><td>Không phải việc của WEB2</td><td><b>Xác minh trên hệ chạy thật và vá ở web cũ ngay — độc lập với WEB2</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bad" style="margin-top:14px">
+    <p style="margin-bottom:0"><b>Dòng cuối không phải một mục trong deck kiến trúc — nó là một việc phải làm tuần này.</b> Nó không chờ WEB2, không chờ Q1, không chờ ai duyệt spine. Nếu lỗ hổng đó có thật trên hệ chạy thật thì nó đang mở <b>ngay lúc bạn đọc slide này</b>.</p>
+  </div>
+</section>
+
+<!-- 24 -->
+<section class="slide" data-sec="Cái chưa làm" data-title="9 câu hỏi mở">
+  <p class="kicker">Câu hỏi mở · phải trả lời trước khi hãng đầu tiên lên production</p>
+  <h2>9 câu hỏi mở</h2>
+  <div class="scroll">
+    <table class="tight">
+      <thead><tr><th style="width:44px">#</th><th style="min-width:250px">Câu hỏi</th><th style="min-width:120px">Ai trả lời</th><th style="min-width:200px">Chặn cái gì</th></tr></thead>
+      <tbody>
+        <tr style="background:var(--danger-soft)"><td class="mono"><b>Q1</b></td><td><b>DBA có cấp được 18 login SQL riêng không?</b></td><td>DBA / hạ tầng</td><td><b>AD-19 — chốt chắn mạnh nhất của spine</b></td></tr>
+        <tr><td class="mono">Q2</td><td>18 DB đang <b>trôi schema</b> bao nhiêu? (bước 1 của ADR-003, chưa ai chạy)</td><td>đội DB</td><td>AD-10, và làm việc hoãn ADR-001 thành canh bạc mù</td></tr>
+        <tr><td class="mono">Q3</td><td>Ai sở hữu <code>[Admin.DbMigrations]</code> và <code>[Version.ApiSupported]</code>?</td><td>nội bộ</td><td>AD-10 — hai sổ cái trên cùng 18 DB</td></tr>
+        <tr><td class="mono">Q4</td><td>18 SQL Server xử lý <code>Encrypt=true</code> thế nào — cấp chứng chỉ hay chấp nhận rủi ro?</td><td>hạ tầng</td><td>Toàn bộ kết nối dữ liệu</td></tr>
+        <tr><td class="mono">Q5</td><td>Mức vá SQL Server tối thiểu; có lỗ hổng leo quyền nào đang mở không?</td><td>DBA</td><td>AD-2/AD-5/AD-19 đều dựa vào biên giới database</td></tr>
+        <tr><td class="mono">Q6</td><td>Kết nối 18 DB × N instance × <code>Max Pool Size</code> — đặt bao nhiêu?</td><td>đội nền tảng</td><td>Ổn định lúc tải cao</td></tr>
+        <tr><td class="mono">Q7</td><td>Mã hãng đặt theo quy tắc nào; có tái dùng <code>XNCode</code> sẵn có?</td><td>nghiệp vụ</td><td>AD-3</td></tr>
+        <tr><td class="mono">Q8</td><td>Thời hạn lưu vết và log theo <b>Nghị định 13/2023/NĐ-CP</b>?</td><td>pháp chế</td><td>AD-13, AD-18</td></tr>
+        <tr><td class="mono">Q9</td><td>HAProxy hiện là điểm chết đơn lẻ — có cặp active-passive chưa?</td><td>hạ tầng</td><td><b>Bán kính ảnh hưởng tăng gấp 18</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note" style="margin-top:14px">
+    <p style="margin-bottom:0"><b>Đọc cột "Ai trả lời".</b> <b>Sáu</b> trong chín câu không ai trong phòng này trả lời được — chúng thuộc DBA, hạ tầng, pháp chế và nghiệp vụ. Nghĩa là việc đầu tiên của tuần này không phải viết code, mà là <b>gửi sáu câu hỏi đó đi</b> và đặt hạn trả lời.</p>
+  </div>
+</section>
+
+<!-- 25 -->
+<section class="slide" data-sec="Hành động" data-title="★ Tranh luận gì bây giờ">
+  <p class="kicker">Phần thảo luận</p>
+  <h2>Tranh luận gì <b>bây giờ</b></h2>
+  <p class="lead">Không tranh luận về React hay Vue, về Dapper hay EF. Những thứ đó đã chốt và không phải rủi ro. Bốn câu dưới đây là thứ có thể đổi hình dạng dự án.</p>
+  <div class="grid g2">
+    <div class="card" style="border-color:var(--danger);border-width:1.5px">
+      <span class="tag d">Ưu tiên 1 · chặn mọi thứ</span>
+      <h3>Nếu Q1 trả lời "không" thì chúng ta làm gì?</h3>
+      <p>AD-19 là chốt chắn duy nhất không phụ thuộc vào việc code viết đúng. Không có nó, <b>mọi cách ly đều nằm trong code của chúng ta</b>.</p>
+      <p style="margin-bottom:0"><b>Câu hỏi cho phòng:</b> ta có chấp nhận khởi động dự án khi chưa biết câu trả lời không? Nếu có, mốc nào là hạn chót để biết? Nếu DBA từ chối, phương án hai là gì — và nó có đủ để đi production với 18 khách hàng không?</p>
+    </div>
+    <div class="card" style="border-color:var(--warn);border-width:1.5px">
+      <span class="tag w">Ưu tiên 2 · Q2 + Q3</span>
+      <h3>Ai chạy bước đo trôi schema, và khi nào?</h3>
+      <p>Không ai biết 18 DB lệch nhau bao nhiêu. <code>[Admin.DbMigrations]</code> đã có <b>chủ khác</b> và ta chưa tìm ra ai.</p>
+      <p style="margin-bottom:0"><b>Câu hỏi cho phòng:</b> việc này chỉ-đọc và làm được ngay tuần này — ai nhận? Và trước khi tìm ra chủ sở hữu sổ cái, ta có được phép chạy grate lên <b>bất kỳ</b> DB nào không (kể cả dev)?</p>
+    </div>
+    <div class="card">
+      <span class="tag">Ưu tiên 3 · Q4 + Q9</span>
+      <h3>Hai thứ chặn ngày đầu tiên chạy được</h3>
+      <p><code>Encrypt=true</code> làm <b>mọi kết nối fail lúc khởi động</b> nếu không có chứng chỉ, và <code>TrustServerCertificate=true</code> không phải câu trả lời. HAProxy là điểm chết đơn lẻ với bán kính ảnh hưởng gấp 18.</p>
+      <p style="margin-bottom:0"><b>Câu hỏi cho phòng:</b> ai đi hỏi hạ tầng, và ta chấp nhận cấu hình tạm nào ở dev mà <b>không</b> để nó trôi lên production?</p>
+    </div>
+    <div class="card">
+      <span class="tag">Ưu tiên 4 · không phải câu hỏi mở, nhưng đáng cãi</span>
+      <h3>Ba chỗ spine đã chốt mà đội nên xác nhận là mình đồng ý</h3>
+      <ul style="margin-bottom:0">
+        <li><b>AD-11 last-write-wins:</b> ta thực sự chấp nhận mất dữ liệu âm thầm, chỉ phát hiện <b>sau khi xảy ra</b>?</li>
+        <li><b>AD-9:</b> mọi proc <b>có ghi</b> phải viết lại trong .NET, không ngoại lệ — kể cả proc 500 dòng?</li>
+        <li><b>AD-24 + AD-15 trước tính năng đầu tiên:</b> đội chấp nhận sprint đầu <b>không có màn hình nào chạy được</b> để đổi lấy khung test và khung ép?</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:12px"><small>Bốn câu hỏi mở còn lại — Q5 mức vá SQL, Q6 pool size, Q7 quy tắc mã hãng, Q8 thời hạn lưu theo Nghị định 13/2023 — <b>vẫn phải gửi đi tuần này</b>, nhưng chúng không đổi hình dạng kiến trúc, nên đừng dùng thời gian họp cho chúng.</small></p>
+</section>
+
+<!-- 26 -->
+<section class="slide" data-sec="Hành động" data-title="★ Thứ Hai bạn làm gì">
+  <p class="kicker">Bắt đầu</p>
+  <h2>Thứ Hai bạn làm gì</h2>
+  <div class="grid g2">
+    <div>
+      <h3 style="margin-top:0">Code — theo đúng thứ tự này</h3>
+      <ol class="steps">
+        <li><b>Dựng khung <code>web2/</code></b> theo cây nguồn đã chốt. Chưa có tính năng nào cả.</li>
+        <li><b><code>Staxi.Platform</code> trước mọi thứ:</b> <code>TenantScope</code>, <code>ITenantConnectionFactory</code> (không tham số tenant, không có scope thì ném lỗi), <code>CacheKey</code> (không có constructor thiếu scope), <code>IClock</code>, ánh xạ ProblemDetails + <code>corrId</code>.</li>
+        <li><b><code>tests/Staxi.TenantLeakTests/</code></b> với hai hãng giả — bốn phép thử của AD-24, <b>cùng commit</b> với bước 2.</li>
+        <li><b><code>tests/Staxi.ArchitectureTests/</code></b> — bắt đầu từ các dòng quét assembly của bảng AD-15: <code>new SqlConnection</code>, <code>Clients.All</code>, static mutable, <code>HttpContext</code>, singleton giữ scoped.</li>
+        <li><b>Bật <code>ValidateScopes</code> + <code>ValidateOnBuild</code></b> ở mọi môi trường ngay từ commit đầu — bật sau thì sẽ có thứ phải sửa.</li>
+        <li><b>Khởi tạo <code>db/tenancy-classes.json</code> và <code>db/screen-owners.json</code></b>, dù ban đầu gần như rỗng. Một sổ rỗng có mặt trong git khác hẳn một sổ chưa tồn tại.</li>
+      </ol>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Không phải code — làm song song, đừng chờ</h3>
+      <ol class="steps">
+        <li><b>Gửi Q1 cho DBA</b> với hạn trả lời. Đây là câu duy nhất có thể đổi mức rủi ro của cả dự án.</li>
+        <li><b>Chạy bước đo trôi schema 18 DB</b> (Q2) — chỉ-đọc, làm được ngay.</li>
+        <li><b>Truy chủ sở hữu <code>[Admin.DbMigrations]</code></b> (Q3) trước khi grate chạm bất kỳ DB nào.</li>
+        <li><b>Hỏi hạ tầng về <code>Encrypt=true</code></b> (Q4) và cặp active-passive cho HAProxy (Q9).</li>
+        <li><b>Ghim Node.js, Redis server, HAProxy, OpenTelemetry SDK, mức vá SQL Server tối thiểu</b> — năm thứ còn để trống trong Stack.</li>
+        <li><b>Xác minh và vá <code>HomeController.ChangeCompany</code> ở web cũ.</b> Việc này <b>độc lập với WEB2</b> và không chờ gì cả.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="good" style="margin-top:6px">
+    <p style="margin-bottom:0"><b>Dấu hiệu bạn đang làm đúng sau tuần đầu:</b> repo build xanh, <b>chưa có một màn hình nào</b>, nhưng CI đã có bốn phép thử rò rỉ hai tenant chạy mỗi lần push — và ít nhất một trong số chúng đã từng đỏ.</p>
+  </div>
+</section>
+
+<!-- 27 -->
+<section class="slide" data-sec="Hành động" data-title="Tóm lại một trang">
+  <p class="kicker">Tóm lại</p>
+  <h2>Một trang mang về</h2>
+  <div class="grid g2" style="margin-bottom:14px">
+    <div class="card">
+      <h3 style="margin-top:0">Năm câu nếu chỉ nhớ được năm câu</h3>
+      <ol style="margin-bottom:0">
+        <li><b>Hãng ≠ công ty.</b> <code>TenantScope = (tenantCode, companyId)</code>, và nó chỉ đến từ token đã ký.</li>
+        <li><b>Một đường duy nhất tới dữ liệu.</b> <code>ITenantConnectionFactory</code>, không tham số tenant, không scope thì ném lỗi.</li>
+        <li><b>Cột kế thừa là giờ địa phương GMT+7.</b> Ghi UTC vào đó là hỏng dữ liệu ngay ngày đầu.</li>
+        <li><b>Mỗi điều cấm phải có một cơ chế làm đỏ build.</b> Không có cơ chế thì không phải luật.</li>
+        <li><b>Bất biến chỉ nằm trong code .NET là bất biến không có thật</b> khi web cũ ghi song song.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Ba thứ deck này cố tình không giấu</h3>
+      <ul style="margin-bottom:0">
+        <li>Spine ở trạng thái <b><code>draft</code></b>, và một trụ cột (AD-19) <b>chưa được xác nhận</b>.</li>
+        <li><b>350 bảng chưa rõ hạng tenant</b> và <b>không ai biết 18 DB lệch nhau bao nhiêu</b>.</li>
+        <li><b>Mất dữ liệu âm thầm là rủi ro đã chấp nhận</b>, không phải chỗ chưa nghĩ tới — và thứ duy nhất bù lại là một sổ vết <b>chưa được xây</b>.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid g4">
+    <div class="stat cool"><div class="n">24</div><div class="l">AD</div></div>
+    <div class="stat cool"><div class="n">17</div><div class="l">cơ chế ép</div></div>
+    <div class="stat hot"><div class="n">9</div><div class="l">câu hỏi mở</div></div>
+    <div class="stat hot"><div class="n">5</div><div class="l">rủi ro đã chấp nhận</div></div>
+  </div>
+  <p style="margin-top:16px"><small>Nguồn: <code>ARCHITECTURE-SPINE.md</code> (2026-09-17, draft) · ADR-001 lệch phiên bản DB · ADR-002 cách ly tenant SignalR · ADR-003 chiến lược schema 18 DB · ADR-004 một domain, định danh và topo.</small></p>
+</section>
+
+</main>
+
+<div id="bottom">
+  <button class="btn" id="prev">← Trước</button>
+  <button class="btn" id="next">Sau →</button>
+  <span class="hint">← → chuyển slide · Home/End đầu-cuối · i mở mục lục</span>
+  <button class="btn" id="btnTheme">Sáng / Tối</button>
+</div>
+
+<div id="ovl" role="dialog" aria-modal="true" aria-label="Mục lục">
+  <div class="wrap">
+    <div style="display:flex;align-items:center;gap:12px">
+      <h2 style="flex:1;margin:6px 0 14px">Mục lục</h2>
+      <button class="btn" id="btnClose">Đóng (Esc)</button>
+    </div>
+    <div id="idxbody"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var n = slides.length;
+  var i = 0;
+  var fill = document.getElementById('barfill');
+  var count = document.getElementById('count');
+  var secname = document.getElementById('secname');
+  var ovl = document.getElementById('ovl');
+
+  function pad(x){ return (x < 10 ? '0' : '') + x; }
+
+  function render(){
+    for (var k = 0; k < n; k++){ slides[k].classList.toggle('on', k === i); }
+    fill.style.width = ((i + 1) / n * 100) + '%';
+    count.textContent = pad(i + 1) + ' / ' + pad(n);
+    secname.textContent = slides[i].getAttribute('data-sec') + ' — ' + slides[i].getAttribute('data-title');
+    var btns = ovl.querySelectorAll('.idx button');
+    for (var j = 0; j < btns.length; j++){
+      btns[j].classList.toggle('cur', parseInt(btns[j].getAttribute('data-i'), 10) === i);
+    }
+    try { history.replaceState(null, '', '#s' + (i + 1)); } catch (e) {}
+    window.scrollTo(0, 0);
+  }
+
+  function go(k){
+    if (k < 0) k = 0;
+    if (k > n - 1) k = n - 1;
+    i = k;
+    render();
+  }
+
+  // build index
+  (function(){
+    var body = document.getElementById('idxbody');
+    var lastSec = null, group = null, list = null;
+    for (var k = 0; k < n; k++){
+      var sec = slides[k].getAttribute('data-sec');
+      if (sec !== lastSec){
+        group = document.createElement('div');
+        group.className = 'idxgroup';
+        var h = document.createElement('div');
+        h.className = 'h';
+        h.textContent = sec;
+        group.appendChild(h);
+        list = document.createElement('div');
+        list.className = 'idx';
+        group.appendChild(list);
+        body.appendChild(group);
+        lastSec = sec;
+      }
+      var b = document.createElement('button');
+      b.setAttribute('data-i', k);
+      var num = document.createElement('span');
+      num.className = 'num';
+      num.textContent = pad(k + 1);
+      var tx = document.createElement('span');
+      tx.textContent = slides[k].getAttribute('data-title');
+      b.appendChild(num);
+      b.appendChild(tx);
+      b.addEventListener('click', (function(idx){
+        return function(){ closeOvl(); go(idx); };
+      })(k));
+      list.appendChild(b);
+    }
+  })();
+
+  function openOvl(){ ovl.classList.add('on'); }
+  function closeOvl(){ ovl.classList.remove('on'); }
+  function toggleOvl(){ if (ovl.classList.contains('on')) closeOvl(); else openOvl(); }
+
+  document.getElementById('prev').addEventListener('click', function(){ go(i - 1); });
+  document.getElementById('next').addEventListener('click', function(){ go(i + 1); });
+  document.getElementById('btnIdx').addEventListener('click', toggleOvl);
+  document.getElementById('btnClose').addEventListener('click', closeOvl);
+
+  document.getElementById('btnTheme').addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = cur ? (cur === 'dark') : dark;
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+    if (e.key === 'Escape'){ closeOvl(); return; }
+    if (e.key === 'i' || e.key === 'I'){ toggleOvl(); e.preventDefault(); return; }
+    if (ovl.classList.contains('on')) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown'){ go(i + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ go(i - 1); e.preventDefault(); }
+    else if (e.key === 'Home'){ go(0); e.preventDefault(); }
+    else if (e.key === 'End'){ go(n - 1); e.preventDefault(); }
+  });
+
+  var m = /^#s(\d+)$/.exec(location.hash || '');
+  if (m){ i = Math.min(n - 1, Math.max(0, parseInt(m[1], 10) - 1)); }
+  render();
+})();
+</script>
+</body>
+</html>
