@@ -42,8 +42,8 @@ jobs:
       - name: Verify formatting
         run: dotnet format Staxi.slnx --verify-no-changes --no-restore
 
-  tenant-leak-tests:
-    name: Tenant leak tests (AD-24)
+  tests:
+    name: "Test: rò rỉ tenant (AD-24) + kiến trúc (AD-15)"
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -62,46 +62,55 @@ jobs:
       - name: Build
         run: dotnet build Staxi.slnx -c Release --no-restore -m:1 -nr:false
       - name: Test tenant isolation
-        run: dotnet test Staxi.slnx -c Release --no-build -m:1 -nr:false --logger "trx;LogFileName=tenant-leak-tests.trx" --logger "console;verbosity=normal" --results-directory TestResults
-      # Cong nay chan bo test lang le ngung chay phan lon chinh no (bi filter, bi Skip) ma CI van xanh vi nhanh hon.
-      # Khi them bai test moi thi nang MINIMUM_TENANT_LEAK_TESTS.
+        run: dotnet test tests/Staxi.TenantLeakTests/Staxi.TenantLeakTests.csproj -c Release --no-build -m:1 -nr:false --logger "trx;LogFileName=tenant-leak-tests.trx" --logger "console;verbosity=normal" --results-directory TestResults
+      - name: Test architecture rules
+        run: dotnet test tests/Staxi.ArchitectureTests/Staxi.ArchitectureTests.csproj -c Release --no-build -m:1 -nr:false --logger "trx;LogFileName=architecture-tests.trx" --logger "console;verbosity=normal" --results-directory TestResults
+      # Hai project test phai ghi ra HAI file TRX khac ten. Dung chung mot ten thi file sau de len file truoc
+      # va ket qua cua mot bo bien mat im lang trong khi cong van xanh - dung kieu hong ma cong nay sinh ra de chan.
+      # Cong chan bo test lang le ngung chay phan lon chinh no (bi filter, bi Skip) ma CI van xanh vi nhanh hon.
+      # Khi them bai test moi thi nang nguong tuong ung o khoi env cap workflow.
       - name: Assert test count ratchet
         shell: bash
         run: |
           set -euo pipefail
-          trx="TestResults/tenant-leak-tests.trx"
-          if [[ ! -f "$trx" ]]; then
-            echo "Loi: khong tim thay file $trx."
-            exit 1
-          fi
-          counters=$(grep -o '<Counters[[:space:]][^>]*>' "$trx" || true)
-          total=$(sed -n 's/.*[[:space:]]total="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
-          executed=$(sed -n 's/.*[[:space:]]executed="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
-          passed=$(sed -n 's/.*[[:space:]]passed="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
-          failed=$(sed -n 's/.*[[:space:]]failed="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
-          for count in "$total" "$executed" "$passed" "$failed"; do
-            if [[ ! "$count" =~ ^[0-9]+$ ]]; then
-              echo "Loi: khong doc duoc cac thuoc tinh Counters hop le trong TRX."
+          kiem_tra() {
+            local trx="$1" toi_thieu="$2" nhan="$3"
+            if [[ ! -f "$trx" ]]; then
+              echo "Loi: khong tim thay file $trx cho $nhan."
               exit 1
             fi
-          done
-          echo "TRX: total=$total executed=$executed passed=$passed failed=$failed (toi thieu=$MINIMUM_TENANT_LEAK_TESTS)"
-          if [[ "$failed" -ne 0 ]]; then
-            echo "Loi: co bai test that bai (failed=$failed)."
-            exit 1
-          fi
-          if [[ "$passed" -ne "$total" ]]; then
-            echo "Loi: co bai test bi bo qua hoac khong chay (passed=$passed, total=$total)."
-            exit 1
-          fi
-          if [[ "$total" -lt "$MINIMUM_TENANT_LEAK_TESTS" ]]; then
-            echo "Loi: tong so bai test ($total) thap hon muc toi thieu ($MINIMUM_TENANT_LEAK_TESTS)."
-            exit 1
-          fi
+            local counters total executed passed failed
+            counters=$(grep -o '<Counters[[:space:]][^>]*>' "$trx" || true)
+            total=$(sed -n 's/.*[[:space:]]total="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
+            executed=$(sed -n 's/.*[[:space:]]executed="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
+            passed=$(sed -n 's/.*[[:space:]]passed="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
+            failed=$(sed -n 's/.*[[:space:]]failed="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
+            for count in "$total" "$executed" "$passed" "$failed"; do
+              if [[ ! "$count" =~ ^[0-9]+$ ]]; then
+                echo "Loi: khong doc duoc cac thuoc tinh Counters hop le trong $trx."
+                exit 1
+              fi
+            done
+            echo "$nhan: total=$total executed=$executed passed=$passed failed=$failed (toi thieu=$toi_thieu)"
+            if [[ "$failed" -ne 0 ]]; then
+              echo "Loi: $nhan co bai test that bai (failed=$failed)."
+              exit 1
+            fi
+            if [[ "$passed" -ne "$total" ]]; then
+              echo "Loi: $nhan co bai test bi bo qua hoac khong chay (passed=$passed, total=$total)."
+              exit 1
+            fi
+            if [[ "$total" -lt "$toi_thieu" ]]; then
+              echo "Loi: $nhan co $total bai, thap hon muc toi thieu $toi_thieu."
+              exit 1
+            fi
+          }
+          kiem_tra "TestResults/tenant-leak-tests.trx" "$MINIMUM_TENANT_LEAK_TESTS" "Bo test ro ri hai tenant (AD-24)"
+          kiem_tra "TestResults/architecture-tests.trx" "$MINIMUM_ARCHITECTURE_TESTS" "Bo luat kien truc (AD-15)"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tenant-leak-test-results
+          name: ket-qua-test
           path: TestResults
           retention-days: 30
 
@@ -109,7 +118,7 @@ jobs:
     name: Burn-in (phát hiện test chập chờn)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: tenant-leak-tests
+    needs: tests
     if: github.event_name == 'pull_request' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
@@ -147,7 +156,7 @@ jobs:
   report:
     name: Report
     runs-on: ubuntu-latest
-    needs: [lint, tenant-leak-tests, burn-in]
+    needs: [lint, tests, burn-in]
     if: always()
     steps:
       - uses: actions/checkout@v4
@@ -155,13 +164,13 @@ jobs:
         shell: bash
         env:
           LINT_RESULT: ${{ needs.lint.result }}
-          TENANT_LEAK_RESULT: ${{ needs.tenant-leak-tests.result }}
+          TESTS_RESULT: ${{ needs.tests.result }}
           BURN_IN_RESULT: ${{ needs.burn-in.result }}
         run: |
           {
             echo '| Job | Kết quả |'
             echo '| --- | --- |'
             printf '| Lint (dotnet format) | %s |\n' "$LINT_RESULT"
-            printf '| Tenant leak tests (AD-24) | %s |\n' "$TENANT_LEAK_RESULT"
+            printf '| Test: ro ri tenant (AD-24) + kien truc (AD-15) | %s |\n' "$TESTS_RESULT"
             printf '| Burn-in (phát hiện test chập chờn) | %s |\n' "$BURN_IN_RESULT"
           } >> "$GITHUB_STEP_SUMMARY"
