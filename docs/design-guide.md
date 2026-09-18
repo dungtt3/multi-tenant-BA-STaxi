@@ -146,8 +146,17 @@ nhẹ, dùng kết hợp:
 3. **Đo trước khi dựng.** Lấy màn hình dày cột nhất của web cũ, đếm số cột, thử ở 16px trên độ phân giải
    thật của máy điều phối viên. Phát hiện lúc dựng thì sửa được; phát hiện lúc hãng thí điểm chạy thì không.
 
-Font `Open Sans` và bộ icon Font Awesome đã có sẵn file `.woff`/`.ttf` trong bộ mẫu. **Tự host**, đừng gọi
-CDN — 18 hãng chạy trên mạng nội bộ. Glyphicons trong bộ mẫu thì bỏ: Bootstrap 5 không còn dùng.
+**Tự host font, đừng gọi CDN** — 18 hãng chạy trên mạng nội bộ.
+
+Lưu ý một chỗ dễ nhầm: bộ mẫu **không** kèm file Open Sans, nó nạp từ `fonts.googleapis.com`. Chỉ Font
+Awesome và Glyphicons mới có sẵn file `.woff`/`.ttf` trong bộ. WEB2 tự host Open Sans bằng
+`@fontsource/open-sans` 5.3.0, và **chỉ nạp subset `latin`, `latin-ext`, `vietnamese`** — nạp cả bộ thì
+kéo theo cyrillic, greek, hebrew, gấp đôi kích thước tải mà không ai dùng.
+
+Subset `vietnamese` là bắt buộc, không phải tuỳ chọn: thiếu nó thì chữ có dấu rơi về font dự phòng và
+lệch hẳn khỏi phần còn lại của giao diện.
+
+Glyphicons thì bỏ: Bootstrap 5 không còn dùng.
 
 ### Card — `.ibox`
 

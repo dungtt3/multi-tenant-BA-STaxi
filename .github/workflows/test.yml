@@ -114,6 +114,43 @@ jobs:
           path: TestResults
           retention-days: 30
 
+  frontend:
+    name: Frontend (typecheck + build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/admin-web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: apps/admin-web/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build
+        run: npm run build
+      # FE phai build ra FILE TINH (AD-1). Buoc nay chan truong hop cau hinh doi kieu output
+      # ma khong ai de y - vi du them mot plugin can server.
+      - name: Assert static output
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f dist/index.html ]]; then
+            echo "Loi: khong tim thay dist/index.html - FE phai build ra file tinh (AD-1)."
+            exit 1
+          fi
+          so_js=$(find dist/assets -name '*.js' | wc -l)
+          if [[ "$so_js" -lt 1 ]]; then
+            echo "Loi: khong co file .js nao trong dist/assets."
+            exit 1
+          fi
+          echo "dist/index.html co, $so_js file js trong dist/assets"
+
   burn-in:
     name: Burn-in (phát hiện test chập chờn)
     runs-on: ubuntu-latest
@@ -156,7 +193,7 @@ jobs:
   report:
     name: Report
     runs-on: ubuntu-latest
-    needs: [lint, tests, burn-in]
+    needs: [lint, tests, frontend, burn-in]
     if: always()
     steps:
       - uses: actions/checkout@v4
@@ -165,6 +202,7 @@ jobs:
         env:
           LINT_RESULT: ${{ needs.lint.result }}
           TESTS_RESULT: ${{ needs.tests.result }}
+          FRONTEND_RESULT: ${{ needs.frontend.result }}
           BURN_IN_RESULT: ${{ needs.burn-in.result }}
         run: |
           {
@@ -172,5 +210,6 @@ jobs:
             echo '| --- | --- |'
             printf '| Lint (dotnet format) | %s |\n' "$LINT_RESULT"
             printf '| Test: ro ri tenant (AD-24) + kien truc (AD-15) | %s |\n' "$TESTS_RESULT"
+            printf '| Frontend (typecheck + build) | %s |\n' "$FRONTEND_RESULT"
             printf '| Burn-in (phát hiện test chập chờn) | %s |\n' "$BURN_IN_RESULT"
           } >> "$GITHUB_STEP_SUMMARY"
