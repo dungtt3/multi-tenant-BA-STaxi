@@ -1,0 +1,2525 @@
+{
+  "phienBan": 1,
+  "capNhat": "2026-09-18",
+  "nguon": "Rut tu [Table(...)] trong ba_staxi_webadmin/BA.STaxi.Data/Models/*.cs ngay 18-09-2026. Day la tap bang ma MA NGUON web cu cham toi, khong phai toan bo schema.",
+  "ghiChu": "Moi muc dang la chuaDuyet: hang o day suy tu su co mat cua cot khoa cong ty, khong phai phan quyet cua con nguoi. AD-5 doi mot phan quyet. Bang co khoa cong ty chua chac la PerCompany (co the la CrossLink); bang khong co chua chac la PerTenant (co the la Global).",
+  "quyUocCotKhoa": {
+    "ghiChu": "Schema ke thua KHONG dung mot ten cot thong nhat cho khoa cong ty. Do duoc trong Models/*.cs: bon cach viet cung ton tai.",
+    "cacCachViet": [
+      "CompanyId",
+      "CompanyID",
+      "FK_CompanyID",
+      "FK_CompanyId"
+    ],
+    "hauQua": "Repository khong the gia dinh ten cot la CompanyId. TenantScopedRepository.QueryPerCompanyAsync doi SQL co tham so @CompanyId, nhung TEN COT trong menh de WHERE phai lay tu so nay."
+  },
+  "hangHopLe": [
+    "Global",
+    "PerTenant",
+    "PerCompany",
+    "CrossLink"
+  ],
+  "trangThaiHopLe": [
+    "daDuyet",
+    "chuaDuyet"
+  ],
+  "thongKe": {
+    "tongSoBangTrongSo": 279,
+    "daDuyet": 0,
+    "chuaDuyet": 279,
+    "theoHang": {
+      "Global": 0,
+      "PerTenant": 115,
+      "PerCompany": 164,
+      "CrossLink": 0
+    },
+    "soMucCoCanhBao": 120,
+    "uocTinhTongSoBangTrongDb": 565,
+    "ghiChuDoPhu": "Spine ghi 565 bang / 215 bang co CompanyId tren DB dang chay. So nay chi phu phan ma nguon web cu co model."
+  },
+  "bang": [
+    {
+      "ten": "[Admin.Acronyms]",
+      "thucThe": "AdminAcronym",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Advertise]",
+      "thucThe": "AdminAdvertise",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.AdvertiseFile]",
+      "thucThe": "AdminAdvertiseFile",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Answers]",
+      "thucThe": "AdminAnswer",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Article]",
+      "thucThe": "AdminArticle",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.AuditTrail]",
+      "thucThe": "AdminAuditTrail",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.BanRules]",
+      "thucThe": "AdminBanRule",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.BlacklistMobile]",
+      "thucThe": "AdminBlacklistMobile",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.CarTypes]",
+      "thucThe": "AdminCarType",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.CarTypesInCompany]",
+      "thucThe": "AdminCarTypeInCompany",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.ConfigApp]",
+      "thucThe": "AdminConfigApp",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.ConfigDeleteSchedule]",
+      "thucThe": "AdminConfigDeleteSchedule",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.ConfigMap]",
+      "thucThe": "AdminConfigMap",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.ConfigServer]",
+      "thucThe": "AdminConfigServer",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Dashboard.Trip]",
+      "thucThe": "AdminTripDashboard",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Dashboard]",
+      "thucThe": "BookDashboard, AdminDashboard",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": [
+        "Nhieu model cung tro vao mot bang"
+      ]
+    },
+    {
+      "ten": "[Admin.DriverRankCategory]",
+      "thucThe": "AdminDriverRankCategory",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Employee]",
+      "thucThe": "AdminEmployee",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.EmployeeLandmark]",
+      "thucThe": "AdminEmployeeLandmark",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.EmployeeTypes]",
+      "thucThe": "AdminEmployeeType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.ExchangePointConfig]",
+      "thucThe": "AdminExchangePointConfig",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.FeedbackTypes]",
+      "thucThe": "AdminFeedbackType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.FixedCar]",
+      "thucThe": "AdminFixedCar",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.FixedRoute]",
+      "thucThe": "AdminFixedRoute",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.FixedTruck]",
+      "thucThe": "AdminFixedTruck",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.GroupUserReferences]",
+      "thucThe": "AdminGroupUserReferences",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Jobs]",
+      "thucThe": "AdminJob",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.Landmark]",
+      "thucThe": "AdminLandmark",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.LandmarkPromote]",
+      "thucThe": "AdminLandmarkPromote",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.LandmarkTypes]",
+      "thucThe": "AdminLandmarkType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.LikeDislike]",
+      "thucThe": "CustomerLikeDisLike",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.Lock]",
+      "thucThe": "AdminLock",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.LockReason]",
+      "thucThe": "AdminLockReason",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.LogConnections]",
+      "thucThe": "AdminLogConnection",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.LuckyDraw]",
+      "thucThe": "AdminLuckyDraw",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.LuckyDrawDetail]",
+      "thucThe": "AdminLuckyDrawDetail",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.MenuFeedback]",
+      "thucThe": "AdminMenuFeedback",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Period]",
+      "thucThe": "AdminPeriod",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.Permissions]",
+      "thucThe": "AdminPermission",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.PermissionTree]",
+      "thucThe": "AdminPermissionTree",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.Promote]",
+      "thucThe": "AdminPromote",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.PromoteApp]",
+      "thucThe": "AdminPromoteApp",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.PromoteCheckin]",
+      "thucThe": "AdminPromoteCheckin",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.PromoteCondition]",
+      "thucThe": "AdminPromoteCondition",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.PromoteCustomerRule]",
+      "thucThe": "AdminPromoteCustomerRule",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.PromoteDetail]",
+      "thucThe": "AdminPromoteDetail",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.PromoteExchange]",
+      "thucThe": "AdminPromoteExchange",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.PromoteTypes]",
+      "thucThe": "AdminPromoteType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Questions]",
+      "thucThe": "AdminQuestion",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Rating]",
+      "thucThe": "CustomerRate",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.ReturnTrips]",
+      "thucThe": "ReturnTrip",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.RolePermissions]",
+      "thucThe": "AdminRolePermission",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Roles]",
+      "thucThe": "AdminRole",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.SessionLinks]",
+      "thucThe": "AdminSessionLink",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.SignCarDetail]",
+      "thucThe": "SignCarDetail",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.SignCarLandmark]",
+      "thucThe": "AdminSignCarLandmark",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.SignCarLandmarkPeriod]",
+      "thucThe": "AdminSignCarLandmarkPeriod",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.SignCarPriority]",
+      "thucThe": "AdminSignCarPriority",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Sms]",
+      "thucThe": "AdminSms",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.SmsTemplate]",
+      "thucThe": "AdminSmsTemplate",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Surcharges]",
+      "thucThe": "AdminSurcharge",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.Surveys]",
+      "thucThe": "AdminSurvey",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Trips]",
+      "thucThe": "AdminTrip",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Admin.UserPermissions]",
+      "thucThe": "AdminUserPermission",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.UserReferences]",
+      "thucThe": "UserReference",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.UserReferencesType]",
+      "thucThe": "UserReferenceType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.UserRoles]",
+      "thucThe": "AdminUserRole",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.Users]",
+      "thucThe": "AdminUser",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.UsersIPAddress]",
+      "thucThe": "AdminUsersIPAddress",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.UsersOTPHistory]",
+      "thucThe": "AdminUsersOTPHistory",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.UserTableConfig]",
+      "thucThe": "AdminUserTableConfig",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.UserTypes]",
+      "thucThe": "AdminUserType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Admin.ViolationConfig]",
+      "thucThe": "AdminViolationConfig",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.ViolationConfigCompany]",
+      "thucThe": "ViolationConfigCompany",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Admin.ViolationType]",
+      "thucThe": "AdminViolationType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Alert.DriverDisconnectTaxiMeter]",
+      "thucThe": "AlertDriverDisconnectTaxiMeter",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Alert.Emergency]",
+      "thucThe": "AlertEmergency",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Alert.VirtualDriverMissTrip]",
+      "thucThe": "AlertVirtualDriverMissTrip",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Category.AppId]",
+      "thucThe": "CategoryAppId",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.Article]",
+      "thucThe": "Article",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Comp.ArticleRead]",
+      "thucThe": "ArticleRead",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.ArticleSendTemp]",
+      "thucThe": "ArticleSendTemp",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.BookType]",
+      "thucThe": "BookType",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.Car.AssignLandmark]",
+      "thucThe": "CompCarAssignLandmark",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.CarBusinessTypes]",
+      "thucThe": "CompCarBusinessType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.Card]",
+      "thucThe": "CompCard",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.CardActiveHistory]",
+      "thucThe": "CompCardActiveHistory",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.CardBenefitDetail]",
+      "thucThe": "CompCardBenefitDetail",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.CardBenefits]",
+      "thucThe": "CompCardBenefits",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.CardContract]",
+      "thucThe": "CompCardContract",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.CardDebtClose]",
+      "thucThe": "CompCardDebtClose",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.CardDebtCloseDetail]",
+      "thucThe": "CompCardDebtCloseDetail",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.CardDebtCloseHis]",
+      "thucThe": "CompCardDebtCloseHis",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.CardHistory]",
+      "thucThe": "CompCardHistory",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.CardIssuanceHistory]",
+      "thucThe": "CompCardIssuanceHistory",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.CardPartner]",
+      "thucThe": "CompCardPartner",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.CardPaymentBillAttachment]",
+      "thucThe": "PaymentBillAttachment",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.CardPaymentHis]",
+      "thucThe": "CompCardPaymentHis",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.CardPaymentHisCredit]",
+      "thucThe": "CompCardPaymentHisCredit",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.CardRole]",
+      "thucThe": "AdminUserPosition",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.CardTransactions]",
+      "thucThe": "CompCardTransaction",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.Cars]",
+      "thucThe": "Vehicle",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Comp.Companies]",
+      "thucThe": "Company",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Comp.CompConnectDate]",
+      "thucThe": "CompConnectDate",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.ConfigAccountTest]",
+      "thucThe": "ConfigAccountTest",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.ConfigCardRank]",
+      "thucThe": "ConfigCardRank",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.ConfigCustReward]",
+      "thucThe": "CompConfigCustReward",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.ConfigDriver]",
+      "thucThe": "CompConfigDriver",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.ConfigSignCarType]",
+      "thucThe": "SignCar",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Comp.ConfigWebPage]",
+      "thucThe": "ConfigWebPage",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.Counter]",
+      "thucThe": "AdminCounter",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Comp.DriverGroups]",
+      "thucThe": "CompDriverGroup",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.EInvoiceConfig]",
+      "thucThe": "CompEInvoiceConfig",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.FavouritePage]",
+      "thucThe": "CompFavouritePage",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.Groups]",
+      "thucThe": "CompGroup",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.HitMap]",
+      "thucThe": "HitMap",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.HitMapConfig]",
+      "thucThe": "HitMapConfig",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.Ignore]",
+      "thucThe": "CompanyIgnore",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Comp.InternalDebtPaymentHistory]",
+      "thucThe": "CompInternalDebtPaymentHistory",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.InternalDebtSettlement]",
+      "thucThe": "CompInternalDebtSettlement",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.Landmark.Trace]",
+      "thucThe": "CompLandmarkTrace",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.Landmark]",
+      "thucThe": "CompLandmark",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.LegalEntity]",
+      "thucThe": "CompLegalEntity",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.PartnerCarType]",
+      "thucThe": "PartnerVehicleType",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Comp.PointLandmark]",
+      "thucThe": "CompPointLandmark",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.Scheduler]",
+      "thucThe": "CompScheduler",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.SchedulerDetail]",
+      "thucThe": "CompSchedulerDetail",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.SmartphoneDevice]",
+      "thucThe": "SmartphoneDevice",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Comp.ThirdpartyConfig]",
+      "thucThe": "ConfigThirdParty",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?",
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Comp.ThirdPartyConfigFields]",
+      "thucThe": "CompThirdPartyConfigFields",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.UserGroups]",
+      "thucThe": "CompUserGroup",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Comp.VehicleGroups]",
+      "thucThe": "CompVehicleGroup",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Config.AutoDeleteData]",
+      "thucThe": "ConfigAutoDeleteData",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Config.FeeVNPayList]",
+      "thucThe": "ConfigFeeVNPay",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Config.Group]",
+      "thucThe": "ConfigGroup",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Config.GroupMapping]",
+      "thucThe": "ConfigGroupMapping",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Config.Main]",
+      "thucThe": "ConfigMS",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Config.PriceList]",
+      "thucThe": "ConfigPrice",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Config.TopupBonus]",
+      "thucThe": "ConfigTopupBonus",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Config.TopupBonusDetail]",
+      "thucThe": "ConfigTopupBonusDetail",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.Article]",
+      "thucThe": "CustArticle",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Cust.Bans]",
+      "thucThe": "CustomerBan",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?",
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Cust.BookAcceptance]",
+      "thucThe": "BookAcceptance",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.BookAcceptanceWork]",
+      "thucThe": "BookAcceptanceWork",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.BookContract]",
+      "thucThe": "BookContract",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Cust.BookIncreasePrice]",
+      "thucThe": "BookIncreasePrice",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.BookInvoice]",
+      "thucThe": "BookInvoice",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Cust.BookInWeeks]",
+      "thucThe": "BookEntityInWeeks",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.BookMoneyAudit]",
+      "thucThe": "BookMoneyAudit",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Cust.BookNoCar]",
+      "thucThe": "CustBookNoCar",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.BookRevenue]",
+      "thucThe": "CustBookRevenue",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.BookRevenueSummary]",
+      "thucThe": "CustBookRevenueSummary",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Cust.Books]",
+      "thucThe": "BookEntity",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyId' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyId', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Cust.Config]",
+      "thucThe": "CustomerConfig",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Cust.CustGroups]",
+      "thucThe": "CustGroups",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.GroupBookInvoice]",
+      "thucThe": "GroupBookInvoice",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.Groups]",
+      "thucThe": "CustGroup",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.GroupType]",
+      "thucThe": "CustomerGroupType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.MessageRead]",
+      "thucThe": "CustomerMessageRead",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.Messages]",
+      "thucThe": "CustomerMessage",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.MessageSendTemp]",
+      "thucThe": "CustomerMessageSendTemp",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.News]",
+      "thucThe": "CustNew",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Cust.Onboarding]",
+      "thucThe": "CustOnboarding",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Cust.Ranking]",
+      "thucThe": "CustRanking",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Cust.RankType]",
+      "thucThe": "CustRankType",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Cust.SmsOtpType]",
+      "thucThe": "CustSmsOtpType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.TripContract]",
+      "thucThe": "CustTripContract",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu long?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?",
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Cust.Type]",
+      "thucThe": "CustomerType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.UserLogins]",
+      "thucThe": "Customer",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.Users]",
+      "thucThe": "CustomerUser",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.UserTests]",
+      "thucThe": "CustUserTests",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Cust.Utilities]",
+      "thucThe": "CustUtilities",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Customer.CompenstatePay]",
+      "thucThe": "CompenstatePay",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Customer.CompenstatePayDetail]",
+      "thucThe": "CompenstatePayDetail",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[dbo].[LandmarkConfigLink]",
+      "thucThe": "LandmarkConfigLinkNew",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Driver.AssignCar]",
+      "thucThe": "DriverAssignCar",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.AssignLandmark]",
+      "thucThe": "DriverAssignLandmark",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Driver.AssignScheduler]",
+      "thucThe": "DriverAssignScheduler",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.BankAccount]",
+      "thucThe": "DriverBankAccount",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.BonusPoint]",
+      "thucThe": "DriverBonusPoint",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.BulkPayment]",
+      "thucThe": "DriverBulkPayment",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.CheckInOut]",
+      "thucThe": "DriverCheckInOut",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.CommandDraw]",
+      "thucThe": "CommandDraw",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Driver.CommandDrawDetail]",
+      "thucThe": "CommandDrawDetail",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.CommandDrawHis]",
+      "thucThe": "CommandDrawHis",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.DeviceType]",
+      "thucThe": "DeviceType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.DriverAttachment]",
+      "thucThe": "DriverAttachment",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.Drivers]",
+      "thucThe": "Driver",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Driver.EWalletInfo]",
+      "thucThe": "DriverEWalletInfo",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Driver.Feedbacks]",
+      "thucThe": "DriverFeedback",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Driver.FeeTrips]",
+      "thucThe": "FeeTrip",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.FusedLocation]",
+      "thucThe": "DriverFusedLocation",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.HistoryUnLock]",
+      "thucThe": "DriverHistoryUnLock",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Driver.Ignore]",
+      "thucThe": "DriverIgnore",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.LobbyForbidden]",
+      "thucThe": "DriverLobbyForbidden",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.LocationPackages]",
+      "thucThe": "DriverLocationPackages",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?",
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Driver.LockAuto]",
+      "thucThe": "DriverLockAuto",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Driver.LoginSessions]",
+      "thucThe": "DriverLoginSession",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Driver.MapPrice]",
+      "thucThe": "DriverMapPrice",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Driver.NodeHistory]",
+      "thucThe": "DriverNodeHistory",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Driver.NodeLastHistory]",
+      "thucThe": "DriverNodeLastHistory",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Driver.OperatorFee]",
+      "thucThe": "DriverOperatorFee",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Driver.OperatorPrice]",
+      "thucThe": "DriverOperatorPrice",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Driver.ReportCustomer]",
+      "thucThe": "DriverReportCustomer",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Driver.ServicePrice]",
+      "thucThe": "DriverServicePrice",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Driver.ServicePriceHistory]",
+      "thucThe": "DriverServiceHistory",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.SurveyCompleted]",
+      "thucThe": "DriverSurveyCompleted",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.SurveyResult]",
+      "thucThe": "DriverSurveyResult",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.TraceSessions]",
+      "thucThe": "DriverTraceSession",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.UpdatePartnerStateHistory]",
+      "thucThe": "DriverUpdatePartnerStateHistory",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.ViolationDetail]",
+      "thucThe": "DriverViolationDetail",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Driver.ViolationReport]",
+      "thucThe": "ViolationReport",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.Wallet]",
+      "thucThe": "DriverWallet",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.WalletHistory]",
+      "thucThe": "DriverWalletHistory",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Driver.WalletOperationType]",
+      "thucThe": "WalletOperationType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Finan.DriverConfigFee]",
+      "thucThe": "FinanDriverConfigFee",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Finan.ServiceFeeMonth]",
+      "thucThe": "FinanServiceFeeMonth",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Finan.ServiceFeeQuarter]",
+      "thucThe": "FinanServiceFeeQuarter",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Finan.SmsConfigFee]",
+      "thucThe": "FinanSmsConfigFee",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Finan.SmsFeeMonth]",
+      "thucThe": "FinanSmsFeeByMonth",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Finan.SmsFeeQuarter]",
+      "thucThe": "FinanSmsFeeByQuarter",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Finan.TotalFeeMonth]",
+      "thucThe": "FinanTotalFeeMonth",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Finan.TotalFeeQuarter]",
+      "thucThe": "FinanTotalFeeQuarter",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Finan.TotalFeeYear]",
+      "thucThe": "FinanTotalFeeYear",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Floor.EmployeeLoginSession]",
+      "thucThe": "EmployeeLoginSession",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[G5.MobileOperationCommands]",
+      "thucThe": "DriverCommand",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[G5.MobileOperationStepWorkflows]",
+      "thucThe": "DriverStepWorkflow",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[GIS.T_DISTRICT]",
+      "thucThe": "AdminDistrict",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[GIS.T_PROVINCE]",
+      "thucThe": "AdminProvince",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[HighlightAddress]",
+      "thucThe": "HighlightAddress",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[HighlightAddressGroup]",
+      "thucThe": "HighlightAddressGroup",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Landmark.FasttaxiVehicleType]",
+      "thucThe": "LandmarkCarType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Landmark.GatewayConfig]",
+      "thucThe": "GatewayConfigLandmark",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Landmark.Routes]",
+      "thucThe": "LandmarkRoute",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Landmark.RouteVehicleTypes]",
+      "thucThe": "LandmarkRouteCarType",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[LOG.CardHistory]",
+      "thucThe": "LogCardHistory",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[LOG.CommandDraw]",
+      "thucThe": "LogCommandDraw",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[LOG.Compenstate]",
+      "thucThe": "LogCompenstate",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Page.Lock]",
+      "thucThe": "PageLock",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Partner.Article]",
+      "thucThe": "PartnerArticle",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[QRPay.Terminals]",
+      "thucThe": "QRPayTerminal",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[QRPay.Transaction]",
+      "thucThe": "QRPayTransaction",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Rating.ActionConfig]",
+      "thucThe": "RatingActionConfig",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Rating.ConfigHistory]",
+      "thucThe": "RatingConfigHistory",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Rating.History]",
+      "thucThe": "RatingHistory",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Rating.RankConfig]",
+      "thucThe": "RatingRankConfig",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Report.AccuracyLevel]",
+      "thucThe": "ReportAccuracyLevel",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Report.AppState]",
+      "thucThe": "ReportAppState",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Report.AppStateDetail]",
+      "thucThe": "ReportAppStateDetail",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Report.AppStateSummary]",
+      "thucThe": "ReportAppStateSummary",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Report.BookInRoad]",
+      "thucThe": "ReportBookInRoad",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Report.DriverKmInTripSummaries]",
+      "thucThe": "ReportDriverKmInTripSummary",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Report.DriverOnlines]",
+      "thucThe": "ReportDriverOnline",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Report.GeneralBook]",
+      "thucThe": "ReportGeneralBook",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Report.KmInTrips]",
+      "thucThe": "ReportKmInTrip",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Report.OfflineTrip]",
+      "thucThe": "OfflineTrip",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Report.Payment]",
+      "thucThe": "PaymentInfo",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Report.TotalMinuteOnline]",
+      "thucThe": "TotalMinuteOnline",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Ship.DebtConfig]",
+      "thucThe": "ShipDebtConfig",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Ship.GoodsType]",
+      "thucThe": "ShipGoodsType",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Ship.Orders]",
+      "thucThe": "ShipOrders",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Ship.PaymentType]",
+      "thucThe": "ShipPaymentType",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Ship.TimeConfig]",
+      "thucThe": "ShipTimeConfig",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Ship.WeatherConfig]",
+      "thucThe": "ShipWeatherConfig",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Ship.WeightConfig]",
+      "thucThe": "ShipWeight",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[Sync.Books]",
+      "thucThe": "SyncBook",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[TaxiReturn.LongTrips]",
+      "thucThe": "LongTrip",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "[UserReport.Contacts]",
+      "thucThe": "CustomerReportContact",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'FK_CompanyID' kieu int",
+      "canhBao": [
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Vehicle.Ignore]",
+      "thucThe": "VehicleIgnore",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Vehicle.VehicleTypes]",
+      "thucThe": "VehicleType",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Version.Datas2]",
+      "thucThe": "VersionSyncDriver",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?",
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Version.Datas3]",
+      "thucThe": "VersionSyncCustomer",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyID' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?",
+        "Ten cot la 'CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that"
+      ]
+    },
+    {
+      "ten": "[Version.Group]",
+      "thucThe": "ConfigGV",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Version.Software3]",
+      "thucThe": "VersionSoftware3",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
+      "canhBao": []
+    },
+    {
+      "ten": "[Version.Softwares2]",
+      "thucThe": "VersionSoftware2",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "[Version.Softwares]",
+      "thucThe": "VersionSoftware",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu string",
+      "canhBao": [
+        "Khoa cong ty kieu string, lech quy uoc companyId la int cua AGENTS.md"
+      ]
+    },
+    {
+      "ten": "[Warning.System]",
+      "thucThe": "WarningSystem",
+      "hang": "PerCompany",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int?",
+      "canhBao": [
+        "Khoa cong ty nullable: dong co gia tri NULL thuoc ve ai?"
+      ]
+    },
+    {
+      "ten": "DataExportRequests",
+      "thucThe": "DataExportRequests",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    },
+    {
+      "ten": "POI",
+      "thucThe": "StaxiPOI",
+      "hang": "PerTenant",
+      "trangThai": "chuaDuyet",
+      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
+      "canhBao": []
+    }
+  ],
+  "gioiHanDaBiet": [
+    "Chi phu 279 bang ma web cu co model; con khoang 286 bang trong DB chua co mat trong so nay.",
+    "KHONG phat hien duoc ung vien CrossLink khi bang da co khoa so huu. Cac cot nhu CompanyIDOrg, PaymentCompanyId, PromoteCompanyIds tro toi cong ty KHAC va chi nguoi duyet moi phan biet duoc.",
+    "Khong phan biet duoc Global voi PerTenant: ca hai deu bieu hien la 'khong co khoa cong ty'. Mac dinh gan PerTenant, nguoi duyet phai nang len Global neu du lieu giong nhau o moi hang va co noi o vat ly xac dinh (AD-6)."
+  ]
+}
