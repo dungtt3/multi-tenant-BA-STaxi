@@ -1,19 +1,55 @@
 # Design guide — WEB2
 
-Nguồn: `C:\Users\dungtt3\Files\HTML5_Full` — **INSPINIA Responsive Admin Theme**, Bootstrap 4.1.0.
+Nguồn tham chiếu hình dạng: `C:\Users\dungtt3\Files\HTML5_Full` — **INSPINIA Responsive Admin Theme**,
 216 trang HTML mẫu, 81 CSS, 853 ảnh.
 
-## Vì sao là bộ này, và vì sao điều đó quan trọng hơn vẻ ngoài
+Ba quyết định dưới đây là của chủ sản phẩm, chốt ngày 2026-09-18, và **ghi đè** phần tương ứng của bộ mẫu.
 
-`BA.STaxi.Web` **đang chạy chính theme này**. Đếm trong `BA.STaxi.Web/Content`: `#1ab394` xuất hiện
-**314 lần**, `#e7eaec` **351 lần**, `#2f4050` **39 lần**.
+| | Chốt | Thay cho |
+|---|---|---|
+| Màu chủ đạo | `#337ab7` | `#1ab394` của INSPINIA |
+| Cỡ chữ | chuẩn hôm nay, gốc `16px` | `13px` |
+| Khung CSS | **Bootstrap 5.3.8** | Bootstrap 4.1.0 của bộ mẫu |
 
-WEB2 mọc bên cạnh web cũ trên một domain mới và từng màn hình chuyển dần (Strangler Fig, xem
-`docs/ARCHITECTURE-SPINE.md`). Một điều phối viên tổng đài sẽ dùng **cả hai** trong cùng một ca làm
-việc, có khi cùng một giờ. Nếu WEB2 trông như một sản phẩm khác thì mỗi màn hình chuyển sang là một
-lần đào tạo lại, và `AD-20` (sổ chủ sở hữu màn hình) biến thành sổ ghi những lần người dùng phàn nàn.
+---
 
-Giữ nguyên ngôn ngữ thị giác là cách rẻ nhất để việc chuyển đổi **không ai để ý**.
+## Vì sao ba quyết định này không phá tính liền mạch
+
+Web cũ **không** thuần INSPINIA. Đếm trong `ba_staxi_webadmin`:
+
+| Màu | Số lần xuất hiện | Từ đâu |
+|---|---|---|
+| `#337ab7` | **722** | primary mặc định của Bootstrap 3 |
+| `#e7eaec` | 351 | INSPINIA |
+| `#1ab394` | 314 | INSPINIA |
+| `#2f4050` | 39 | INSPINIA |
+
+`BA.STaxi.Web` là hỗn hợp: một số màn hình dùng theme INSPINIA, phần lớn còn lại dùng Bootstrap 3 thuần
+(có `Bootstrap v3.1.0`, `v3.3.7`, `v3.4.1` cùng tồn tại trong repo). **Màu xanh dương `#337ab7` mới là
+màu phổ biến nhất trong hệ cũ**, không phải màu xanh lá.
+
+Nên chọn `#337ab7` không phải là rời bỏ ngôn ngữ thị giác cũ — nó là chọn đúng cái phổ biến hơn.
+
+Hai lợi ích đi kèm, cả hai đều đo được:
+
+**1. Hết chồng nghĩa màu.** Ở INSPINIA, `#1ab394` vừa là màu thương hiệu vừa là màu "thành công", nên
+một nút chính nằm cạnh một badge trạng thái thì người dùng không phân biệt được đâu là hành động, đâu là
+tình trạng. Ở màn hình điều xe — nơi trạng thái chuyến đi là thông tin sống còn — đó là lỗi thiết kế
+thật. Chuyển primary sang xanh dương thì xanh lá trở lại đúng nghĩa duy nhất: **thành công**.
+
+**2. Độ tương phản đạt chuẩn.** Đo theo WCAG 2.1:
+
+| Tổ hợp | Tỉ lệ | AA cho chữ thường (≥ 4.5:1) |
+|---|---|---|
+| Trắng trên `#1ab394` | 2.65:1 | ❌ trượt |
+| Trắng trên `#337ab7` | 4.56:1 | ✅ đạt |
+| `#337ab7` trên trắng | 4.56:1 | ✅ đạt |
+| `#337ab7` trên nền xám `#f3f3f4` | 4.11:1 | ❌ trượt |
+| `#286090` trên nền xám `#f3f3f4` | 5.98:1 | ✅ đạt |
+
+> **Luật rút ra, áp dụng ngay:** `#337ab7` dùng làm **nền** (nút, thanh chọn). Làm **chữ hoặc link trên
+> nền xám** thì dùng `#286090`. Bản gốc chỉ đạt 4.56:1 trên nền trắng — sát ngưỡng, nên tụt xuống dưới
+> chuẩn ngay khi nền không còn trắng tinh.
 
 ---
 
@@ -21,15 +57,32 @@ Giữ nguyên ngôn ngữ thị giác là cách rẻ nhất để việc chuyể
 
 | | |
 |---|---|
-| ✅ Lấy | bảng màu · thang chữ · thang khoảng cách · hình dạng component · bố cục màn hình · ảnh chụp 216 trang mẫu làm tham chiếu |
-| ⛔ Không lấy | file `.js` · markup jQuery · `metisMenu` · `bootstrap.js` · `.less`/`.scss` của theme |
+| ✅ Lấy | bố cục màn hình · hình dạng component · thang khoảng cách · 216 trang mẫu làm tham chiếu thị giác |
+| ⛔ Không lấy | file `.js` · markup jQuery · `metisMenu` · `bootstrap.js` · `.less`/`.scss` của theme · **bảng màu và cỡ chữ của theme** |
 
-`AD-1` quy định FE là **Vite + React 19 + TypeScript, build ra file tĩnh**. Chép markup jQuery vào
-React là đi ngược kiến trúc và tạo ra thứ không ai bảo trì nổi: một cây DOM do jQuery điều khiển nằm
-trong một cây do React điều khiển.
+`AD-1` quy định FE là **Vite + React 19 + TypeScript, build ra file tĩnh**.
 
-Cách dùng đúng: mở trang mẫu trong trình duyệt, **nhìn**, rồi dựng lại bằng component React của mình
-với token bên dưới.
+Với quyết định Bootstrap 5, luật này càng chặt hơn: bộ mẫu viết cho **Bootstrap 4**, và Bootstrap 5 đổi
+tên hàng loạt class. Chép markup từ trang mẫu sang sẽ cho ra thứ trông gần đúng và hỏng ở chỗ không ai
+ngờ. Mở trang mẫu để **nhìn**, rồi dựng lại bằng component của mình.
+
+Bảng đổi tên hay gặp nhất khi đọc trang mẫu:
+
+| Bootstrap 4 (trong bộ mẫu) | Bootstrap 5 |
+|---|---|
+| `ml-*` / `mr-*` | `ms-*` / `me-*` |
+| `pl-*` / `pr-*` | `ps-*` / `pe-*` |
+| `text-left` / `text-right` | `text-start` / `text-end` |
+| `float-left` / `float-right` | `float-start` / `float-end` |
+| `.form-group` | bỏ hẳn — dùng `mb-3` |
+| `.custom-select` | `.form-select` |
+| `.custom-control` / `.custom-checkbox` | `.form-check` |
+| `.badge-primary` | `.text-bg-primary` |
+| `.close` | `.btn-close` |
+| `.sr-only` | `.visually-hidden` |
+| `.font-weight-bold` | `.fw-bold` |
+| `.no-gutters` | `.g-0` |
+| `.jumbotron`, `.card-deck` | bỏ hẳn |
 
 ---
 
@@ -37,60 +90,77 @@ với token bên dưới.
 
 ### Màu
 
-| Vai trò | Mã | Dùng ở đâu |
+| Vai trò | Mã | Ghi chú |
 |---|---|---|
-| Chủ đạo | `#1ab394` | nút chính, link, trạng thái hoạt động, viền trên của card khi nhấn mạnh |
-| Nền sidebar | `#2f4050` | thanh điều hướng trái, và là `background-color` của `body` |
-| Sidebar hover | `#293846` | mục menu khi rê chuột / focus |
-| Chữ trong sidebar | `#a7b1c2` | mục menu thường; mục đang chọn chuyển `#ffffff` |
-| Nền vùng nội dung | `#f3f3f4` | nền phía sau các card |
-| Nền card | `#ffffff` | `.ibox-title`, `.ibox-content` |
-| Viền / đường kẻ | `#e7eaec` | mọi đường kẻ ngang, viền card, viền bảng |
-| Chữ thường | `#676a6c` | body text |
-| Chữ mờ | `#999999` | chú thích, nhãn phụ |
+| **Chủ đạo** | `#337ab7` | nền nút chính, thanh chọn, trạng thái hoạt động |
+| Chủ đạo — rê chuột | `#286090` | và là màu chữ/link an toàn trên nền xám |
+| Chủ đạo — nhấn giữ | `#204d74` | viền khi active |
+| Nền sidebar | `#2f4050` | giữ của INSPINIA |
+| Sidebar rê chuột | `#293846` | |
+| Chữ trong sidebar | `#a7b1c2` | mục đang chọn chuyển `#ffffff` |
+| Nền vùng nội dung | `#f3f3f4` | |
+| Nền card | `#ffffff` | |
+| Viền / đường kẻ | `#e7eaec` | |
+| Chữ thường | `#676a6c` | |
+| Chữ mờ | `#999999` | chỉ dùng cho chú thích, không dùng cho nội dung |
 
-Màu trạng thái:
+Màu trạng thái — giữ nguyên của INSPINIA, nhưng nay **chỉ còn nghĩa trạng thái**:
 
 | Trạng thái | Mã |
 |---|---|
-| Thành công / chủ đạo | `#1ab394` |
+| Thành công | `#1ab394` |
 | Thông tin | `#23c6c8` |
-| Xanh dương | `#1c84c6` |
 | Cảnh báo | `#f8ac59` |
 | Nguy hiểm | `#ed5565` |
 
-> **Cảnh báo về màu trạng thái:** `#1ab394` vừa là màu thương hiệu vừa là màu "thành công". Khi một
-> nút chính nằm cạnh một badge trạng thái, người dùng không phân biệt được đâu là hành động đâu là
-> tình trạng. Ở màn hình có nhiều trạng thái — điều xe, chuyến đi — dùng badge có chữ, đừng dùng
-> chấm màu trần.
+> Chữ trắng trên `#f8ac59` chỉ đạt khoảng 2:1. Badge cảnh báo phải dùng **chữ sẫm** trên nền vàng, đừng
+> dùng chữ trắng.
 
 ### Chữ
 
 ```
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 13px;
+font-size: 16px;
+line-height: 1.5;
 color: #676a6c;
 ```
 
-13px là nhỏ so với chuẩn hôm nay. **Giữ nguyên** — web cũ đang 13px, và hai hệ đặt cạnh nhau mà lệch
-cỡ chữ thì trông như lỗi hiển thị. Nếu muốn nâng, đó là một quyết định cho **cả hai** hệ, không phải
-việc WEB2 tự làm.
+Thang chữ cho ứng dụng quản trị — chặt hơn mặc định của Bootstrap 5, vì `h1` mặc định 2.5rem quá lớn cho
+màn hình dày dữ liệu:
 
-Font `Open Sans` và bộ icon (Font Awesome, Glyphicons) đã có sẵn file `.woff`/`.ttf` trong bộ. Tự
-host, đừng gọi CDN — 18 hãng chạy trên mạng nội bộ.
+| Cấp | rem | px |
+|---|---|---|
+| `h1` — tiêu đề trang | 1.75 | 28 |
+| `h2` | 1.5 | 24 |
+| `h3` — tiêu đề card | 1.25 | 20 |
+| `h4` | 1.125 | 18 |
+| body | 1 | 16 |
+| bảng, nhãn phụ, chú thích | 0.875 | 14 |
+
+**Hệ quả phải xử lý, không phải chuyện thẩm mỹ:** 13px → 16px là mỗi ký tự rộng thêm khoảng 23%. Một
+bảng điều xe đang vừa 12 cột ở web cũ sẽ chỉ còn vừa khoảng 10 cột ở cùng độ rộng màn hình. Ba cách giảm
+nhẹ, dùng kết hợp:
+
+1. Bảng dùng `0.875rem` (14px) — vẫn lớn hơn 13px cũ, nhưng không mất quá nhiều cột.
+2. Dùng biến thể bảng nén (`.table-sm`) cho màn hình danh sách.
+3. **Đo trước khi dựng.** Lấy màn hình dày cột nhất của web cũ, đếm số cột, thử ở 16px trên độ phân giải
+   thật của máy điều phối viên. Phát hiện lúc dựng thì sửa được; phát hiện lúc hãng thí điểm chạy thì không.
+
+Font `Open Sans` và bộ icon Font Awesome đã có sẵn file `.woff`/`.ttf` trong bộ mẫu. **Tự host**, đừng gọi
+CDN — 18 hãng chạy trên mạng nội bộ. Glyphicons trong bộ mẫu thì bỏ: Bootstrap 5 không còn dùng.
 
 ### Card — `.ibox`
 
-Đơn vị bố cục cơ bản của INSPINIA. Mọi khối nội dung đều nằm trong một `.ibox`.
+Đơn vị bố cục cơ bản. Giữ nguyên hình dạng của INSPINIA:
 
 ```
-.ibox          margin-bottom: 25px
-.ibox-title    nền #ffffff · viền trên 2px #e7eaec · không viền dưới
-.ibox-content  nền #ffffff · padding 15px 20px 20px 20px · viền trên-dưới 1px #e7eaec
+khoảng cách giữa các card   25px
+tiêu đề card                nền #ffffff · viền trên 2px #e7eaec · không viền dưới
+thân card                   nền #ffffff · padding 15px 20px 20px 20px · viền trên-dưới 1px #e7eaec
 ```
 
-Đặc điểm nhận dạng: **viền trên 2px** trên tiêu đề card, không bo góc, không đổ bóng. Đây là thứ làm
-INSPINIA trông ra INSPINIA — bỏ nó đi là màn hình lạc khỏi web cũ ngay cả khi màu vẫn đúng.
+Đặc điểm nhận dạng là **viền trên 2px**, không bo góc, không đổ bóng. Bỏ nó đi thì màn hình lạc khỏi hệ cũ
+ngay cả khi màu đúng. Đây là component React đầu tiên cần dựng.
 
 ### Khoảng cách
 
@@ -111,13 +181,27 @@ INSPINIA trông ra INSPINIA — bỏ nó đi là màn hình lạc khỏi web cũ
 │  sidebar     ├──────────────────────────────────────┤
 │  #2f4050     │  tiêu đề trang                       │
 │              │  ┌────────────────────────────────┐  │
-│  menu nhiều  │  │ .ibox                          │  │
+│  menu nhiều  │  │ card .ibox                     │  │
 │  cấp         │  └────────────────────────────────┘  │
 │              │  nền #f3f3f4                         │
 └──────────────┴──────────────────────────────────────┘
 ```
 
-Sidebar thu gọn được thành dải icon (`body.mini-navbar`). Giữ hành vi này — người dùng web cũ đã quen.
+Sidebar thu gọn được thành dải icon. Giữ hành vi này — người dùng web cũ đã quen.
+
+---
+
+## Phiên bản — kiểm chứng trên npm ngày 2026-09-18
+
+| Gói | Bản | Ghi chú |
+|---|---|---|
+| `bootstrap` | 5.3.8 | không cần jQuery; có sẵn CSS custom properties `--bs-*`; có chế độ màu qua `data-bs-theme` |
+| `react-bootstrap` | 2.10.10 | peer `react >= 16.14.0` — React 19.3.0 của spine thoả |
+| `bootstrap-icons` | 1.13.1 | chỉ cần nếu không dùng Font Awesome có sẵn trong bộ mẫu |
+
+> **Chưa đưa vào bảng Stack của spine.** `AGENTS.md` quy định spine là luật và không sửa spine mà bỏ qua
+> `docs/.architecture-memlog.md`. Ba dòng trên cần được ghi vào memlog rồi mới thêm vào bảng Stack — là
+> một việc riêng, có review.
 
 ---
 
@@ -133,27 +217,30 @@ Sidebar thu gọn được thành dải icon (`body.mini-navbar`). Giữ hành v
 | Trạng thái rỗng / lỗi | `404.html`, `500.html` |
 | Biểu đồ | `c3.html`, `chart_flot.html`, `morris.html` |
 
-Cột "mở trang nào" là để **nhìn**, không phải để chép.
+Cột bên phải là để **nhìn**, không phải để chép.
 
 ---
 
 ## Việc cần làm khi `apps/admin-web` bắt đầu
 
-1. Đổ bảng màu và thang khoảng cách ở trên thành **CSS custom properties** trong một file token duy
-   nhất. Một nơi đổi, cả app đổi theo.
-2. Quyết định thư viện component **trước màn hình đầu tiên**. INSPINIA là Bootstrap 4; React có
-   react-bootstrap, hoặc dựng thuần. Đây là quyết định kiến trúc, cần một ADR — chưa ai chốt.
-3. Tự host Open Sans + Font Awesome từ file trong bộ.
-4. Dựng `.ibox` thành component React đầu tiên. Mọi màn hình sau đó đều là nó lặp lại.
-5. Chuỗi giao diện tiếng Việt, theo lệ sẵn có (`AGENTS.md`).
+1. Đổ bảng màu, thang chữ và thang khoảng cách ở trên thành **CSS custom properties** trong một file
+   token duy nhất, ánh xạ sang biến `--bs-*` của Bootstrap 5. Một nơi đổi, cả app đổi theo.
+2. Dựng `.ibox` thành component React đầu tiên. Mọi màn hình sau đó là nó lặp lại.
+3. Tự host Open Sans + Font Awesome từ file trong bộ mẫu.
+4. Đo lại mật độ bảng ở 16px trước khi dựng màn hình danh sách đầu tiên.
+5. Một màn lỗi hiện `corrId` cho người dùng đọc cho CSKH (`AD-23`).
+6. Chuỗi giao diện tiếng Việt (`AGENTS.md`).
 
 ---
 
 ## Chưa trả lời
 
-- **Bản quyền INSPINIA.** Đây là theme thương mại. Web cũ đã dùng nên giấy phép nhiều khả năng có sẵn,
-  nhưng **chưa ai kiểm tra** nó phủ thêm một sản phẩm mới hay chỉ phủ đúng một site. Việc này phải
-  làm rõ trước khi hãng đầu tiên lên production, không phải sau.
-- **Bootstrap 4 đã hết hỗ trợ.** Nếu dùng react-bootstrap thì nó nhắm Bootstrap 5, và Bootstrap 5 đổi
-  tên nhiều class cùng hệ lưới. Hoặc chấp nhận lệch, hoặc dựng thuần từ token. Một ADR nữa.
-- **Chế độ tối.** Bộ này không có. Đừng tự thêm khi web cũ không có — hai hệ cạnh nhau sẽ lệch.
+- **Bản quyền INSPINIA.** Theme thương mại. Web cũ đã dùng nên giấy phép nhiều khả năng có sẵn, nhưng
+  **chưa ai kiểm** nó phủ thêm một sản phẩm mới hay chỉ phủ đúng một site. Với quyết định Bootstrap 5 +
+  bảng màu riêng, phần thực sự lấy từ bộ mẫu chỉ còn là **bố cục và hình dạng** — nhưng đó vẫn là thứ có
+  bản quyền. Phải làm rõ trước khi hãng đầu tiên lên production.
+- **`react-bootstrap` hay dựng thuần?** Chưa chốt. Dùng thư viện thì nhanh và đã xử lý sẵn phần trợ năng
+  của hộp thoại, dropdown; dựng thuần thì kiểm soát hoàn toàn và không gánh một lớp phụ thuộc nữa. Đây là
+  một ADR, cần chốt **trước màn hình đầu tiên**, không phải sau.
+- **Chế độ tối.** Bootstrap 5.3 có sẵn `data-bs-theme`, nên giờ rẻ. Vẫn hoãn: web cũ không có, hai hệ chạy
+  song song mà lệch thì rối. Xem lại khi web cũ rỗng.
