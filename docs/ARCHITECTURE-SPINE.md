@@ -7,7 +7,7 @@ paradigm: 'Clean Architecture 4 lớp bên trong mỗi dịch vụ; Strangler Fi
 scope: 'WEB2 — admin multi-tenant mới (React + .NET 10 + YARP), chạy song song với BA.STaxi.Web, dùng chung 18 database khách hàng'
 status: final
 created: '2026-09-17'
-updated: '2026-09-17'
+updated: '2026-09-18'
 binds: []
 sources:
   - '../ba_staxi_webadmin/_bmad-output/brainstorming/brainstorm-multi-tenant-web-moi-2026-09-17/brainstorm-intent.md  # repo cu, lich su'
@@ -15,6 +15,9 @@ sources:
   - docs/adr/ADR-002-cach-ly-tenant-signalr.md
   - docs/adr/ADR-003-chien-luoc-schema-18-db.md
   - docs/adr/ADR-004-mot-domain-dinh-danh-va-topo.md
+  - docs/adr/ADR-005-thu-vien-component-frontend.md
+  - docs/adr/ADR-006-bang-du-lieu-va-bieu-do.md
+  - docs/design-guide.md
 companions: []
 ---
 
@@ -296,7 +299,7 @@ Ba từ dưới đây bị dùng lẫn lộn sẽ tái tạo đúng lỗ hổng 
 
 ## Stack
 
-*Đã kiểm chứng trên NuGet và npm registry ngày 2026-09-17.*
+*Backend kiểm chứng trên NuGet ngày 2026-09-17; frontend kiểm chứng trên npm ngày 2026-09-18.*
 
 | Name | Version |
 |---|---|
@@ -314,6 +317,12 @@ Ba từ dưới đây bị dùng lẫn lộn sẽ tái tạo đúng lỗ hổng 
 | @tanstack/react-query | 5.103.1 |
 | react-router-dom | 7.18.4 |
 | @microsoft/signalr | 10.0.11 |
+| bootstrap | 5.3.8 |
+| react-bootstrap | 2.10.10 — *xem ghi chú* |
+| bootstrap-icons | 1.13.1 |
+| ag-grid-community · ag-grid-enterprise · ag-grid-react | 36.2.0 — *xem ghi chú* |
+| echarts | 6.1.0 — *xem ghi chú* |
+| echarts-for-react | 3.0.6 |
 | SQL Server | giữ bản đang chạy, **phải ở mức vá hiện hành** |
 
 **Ghi chú bắt buộc đọc trước khi cài:**
@@ -322,6 +331,9 @@ Ba từ dưới đây bị dùng lẫn lộn sẽ tái tạo đúng lỗ hổng 
 - **StackExchange.Redis ghim 2.13.17, không phải 3.2.1.** 3.2.1 tuy mới nhất nhưng `SignalR.StackExchangeRedis 10.0.12` khai báo phụ thuộc `StackExchange.Redis 2.7.27`. NuGet sẽ nâng lên 3.x và **build vẫn xanh**, nhưng backplane chưa từng xây trên 3.x — lỗi chỉ hiện lúc chạy.
 - **TypeScript ghim 5.9.3, không phải 7.0.2.** `typescript-eslint 8.70.0` khai báo peer `typescript >=4.8.4 <6.1.0` — không bộ lint nào hỗ trợ TS 7.
 - `Microsoft.Data.SqlClient 7.0.3` chưa có TFM `net10.0`; asset `net9.0` chạy trên .NET 10. `Yarp.ReverseProxy 2.3.0` có TFM cao nhất `net8.0`; tài liệu Microsoft cho ASP.NET Core 10 xác nhận nó hỗ trợ .NET 8 trở lên.
+- **`react-bootstrap 2.10.10` chạy được trên React 19, nhưng có đúng một ràng buộc.** React 19 đã gỡ bỏ `ReactDOM.findDOMNode`; `react-bootstrap` còn `safeFindDOMNode` dùng ở `Overlay`, `OverlayTrigger`, `TransitionWrapper`. Đã đọc mã nguồn gói: `react-transition-group 4.4.5` gọi `findDOMNode` ở bốn chỗ nhưng đều dạng `props.nodeRef ? … : findDOMNode(this)`, và `TransitionWrapper` **có** truyền `nodeRef` nên nhánh đó không chạy; chỗ còn lại chỉ gọi khi đối số là thể hiện **class component**. ⇒ **Cấm truyền class component làm con của** `Modal`, `Fade`, `Collapse`, `Overlay`, `OverlayTrigger`, `Tooltip`, `Popover`, `Dropdown`. Vi phạm là **lỗi lúc chạy**, build vẫn xanh. Xem ADR-005.
+- **AG Grid dùng bản Enterprise không nạp khoá, làm tương tự web 1.** Đã kiểm trong `ag-grid-enterprise@36.2.0`: tính năng **không** bị chặn, nhưng console in `License Key Not Found` và phần tử `.ag-watermark` **hiện trên lưới ở mọi môi trường** — tức người dùng cuối của cả 18 hãng đều thấy. Ba gói AG Grid phải **cùng một số bản**. Xem ADR-006.
+- **ECharts không tự co giãn.** Phải gắn `ResizeObserver` lên vùng chứa, không chỉ nghe `window.resize` — sidebar thu gọn làm đổi kích thước vùng chứa mà cửa sổ không đổi. Vùng chứa phải có chiều cao tường minh. Nhập theo tree-shaking, đừng nhập cả gói.
 - **Chưa ghim, phải ghim trước khi dựng môi trường:** Node.js, Redis server, HAProxy, OpenTelemetry SDK, mức vá tối thiểu của SQL Server.
 
 ---

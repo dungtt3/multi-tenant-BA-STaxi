@@ -56,7 +56,11 @@ Hai hệ quả dễ quên:
 
 ```
 docs/ARCHITECTURE-SPINE.md    # LUẬT — 24 AD, quy ước, stack, câu hỏi mở
-docs/adr/                     # 4 ADR: lệch phiên bản DB · SignalR · schema 18 DB · một domain + topo
+docs/adr/                     # 6 ADR: lệch phiên bản DB · SignalR · schema 18 DB · một domain + topo
+                              #        · thư viện component FE · bảng dữ liệu và biểu đồ
+docs/design-guide.md          # token màu/chữ/khoảng cách, responsive, luật "lấy thiết kế không lấy code"
+docs/ghi-chu-thiet-ke-platform.md  # vì sao code nền tảng trông như vậy (code không mang comment)
+docs/ci.md                    # pipeline chất lượng: đỏ ở đâu thì làm gì
 docs/architecture-deck.html   # bản trình bày cho team (27 slide, mở bằng trình duyệt)
 docs/reviews/                 # 4 review độc lập của spine — còn nhiều phát hiện medium/low chưa đưa vào spine
 docs/evidence/                # danh sách 2.003 proc, và 279 proc mã nguồn cũ thực sự gọi tới
@@ -104,9 +108,11 @@ Và một việc **độc lập hoàn toàn với repo này**: `HomeController.C
 
 ## Thứ tự làm việc mà spine đề ra
 
-1. `Staxi.Platform` — `TenantScope`, `ITenantConnectionFactory`, `CacheKey`, ProblemDetails, tracing.
-2. **`Staxi.TenantLeakTests` — bộ test rò rỉ hai tenant, viết TRƯỚC tính năng đầu tiên** (`AD-24`). Hai hãng giả: gọi HTTP bằng token hãng A xin dữ liệu hãng B; phát tin SignalR ở A và khẳng định B không nhận gì; nạp cache ở A đọc ở B; truy vấn không phạm vi.
-3. `Staxi.ArchitectureTests` — bảng ép của `AD-15`.
-4. Rồi mới tới tính năng: danh mục, CRUD config, dashboard.
+1. ✅ `Staxi.Platform` — `TenantScope`, `ITenantConnectionFactory`, `CacheKey`, ProblemDetails, tracing.
+2. ✅ **`Staxi.TenantLeakTests` — bộ test rò rỉ hai tenant, viết TRƯỚC tính năng đầu tiên** (`AD-24`). 45 bài, hai hãng giả.
+3. ✅ `Staxi.ArchitectureTests` — bảng ép của `AD-15`. 11 luật quét IL.
+4. ⬜ Rồi mới tới tính năng: danh mục, CRUD config, dashboard.
+
+Ba bước đầu xong ngày 18-09-2026 (56/56 xanh, CI chạy bộ test rò rỉ mỗi PR). `apps/admin-web` chưa có dòng nào — đọc `docs/design-guide.md` và ADR-005/006 trước khi dựng.
 
 Spine này **chưa được chứng minh, mới được rà**. Bốn người duyệt tìm ra ~100 lỗi trong bản đầu. Thứ sẽ phát hiện phần còn lại là `AD-24` và hãng thí điểm đầu tiên — không phải thêm một vòng review.
