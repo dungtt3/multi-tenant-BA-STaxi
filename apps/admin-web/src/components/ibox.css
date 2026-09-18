@@ -1,0 +1,43 @@
+.ibox {
+  display: block;
+  margin-bottom: var(--staxi-cach-giua-card);
+  margin-top: 0;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.ibox-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background-color: var(--staxi-nen-card);
+  border-color: var(--staxi-duong-ke);
+  border-style: solid solid none;
+  border-width: 2px 0 0;
+  color: inherit;
+  padding: 14px 20px 8px 20px;
+}
+
+.ibox-title-chu {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.ibox-title-hanh-dong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ibox-content {
+  background-color: var(--staxi-nen-card);
+  color: inherit;
+  padding: var(--staxi-dem-trong-card);
+  border-color: var(--staxi-duong-ke);
+  border-style: solid solid none;
+  border-width: 1px 0;
+  border-radius: 0;
+}

@@ -1,0 +1,144 @@
+:root {
+  --staxi-chu-dao-nen: #337ab7;
+  --staxi-chu-dao-nen-re-chuot: #286090;
+  --staxi-chu-dao-nen-nhan-giu: #204d74;
+  --staxi-chu-dao-chu-tren-nen-sang: #286090;
+  --staxi-chu-dao-chu-tren-nen-sang-re-chuot: #204d74;
+
+  --staxi-thanh-ben-nen: #2f4050;
+  --staxi-thanh-ben-nen-re-chuot: #293846;
+  --staxi-thanh-ben-chu: #a7b1c2;
+  --staxi-thanh-ben-chu-dang-chon: #ffffff;
+
+  --staxi-nen-noi-dung: #f3f3f4;
+  --staxi-nen-card: #ffffff;
+  --staxi-duong-ke: #e7eaec;
+  --staxi-chu-thuong: #676a6c;
+  --staxi-chu-mo: #999999;
+
+  --staxi-thanh-cong: #1ab394;
+  --staxi-thong-tin: #23c6c8;
+  --staxi-canh-bao: #f8ac59;
+  --staxi-nguy-hiem: #ed5565;
+
+  --staxi-font: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --staxi-co-chu-goc: 1rem;
+  --staxi-co-chu-phu: 0.875rem;
+  --staxi-cao-dong: 1.5;
+
+  --staxi-cach-giua-card: 25px;
+  --staxi-dem-trong-card: 15px 20px 20px 20px;
+  --staxi-dem-muc-thanh-ben: 14px 20px 14px 25px;
+  --staxi-dem-tieu-de-trang: 0 10px 20px 10px;
+
+  --bs-primary: var(--staxi-chu-dao-nen);
+  --bs-primary-rgb: 51, 122, 183;
+  --bs-success: var(--staxi-thanh-cong);
+  --bs-success-rgb: 26, 179, 148;
+  --bs-info: var(--staxi-thong-tin);
+  --bs-info-rgb: 35, 198, 200;
+  --bs-warning: var(--staxi-canh-bao);
+  --bs-warning-rgb: 248, 172, 89;
+  --bs-danger: var(--staxi-nguy-hiem);
+  --bs-danger-rgb: 237, 85, 101;
+
+  --bs-body-font-family: var(--staxi-font);
+  --bs-body-font-size: var(--staxi-co-chu-goc);
+  --bs-body-line-height: var(--staxi-cao-dong);
+  --bs-body-color: var(--staxi-chu-thuong);
+  --bs-body-bg: var(--staxi-nen-noi-dung);
+  --bs-border-color: var(--staxi-duong-ke);
+  --bs-secondary-color: var(--staxi-chu-mo);
+
+  --bs-link-color: var(--staxi-chu-dao-chu-tren-nen-sang);
+  --bs-link-color-rgb: 40, 96, 144;
+  --bs-link-hover-color: var(--staxi-chu-dao-chu-tren-nen-sang-re-chuot);
+  --bs-link-hover-color-rgb: 32, 77, 116;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--staxi-font);
+  font-size: var(--staxi-co-chu-goc);
+  line-height: var(--staxi-cao-dong);
+  color: var(--staxi-chu-thuong);
+  background-color: var(--staxi-nen-noi-dung);
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+h4 {
+  font-size: 1.125rem;
+}
+
+h5,
+h6 {
+  font-size: var(--staxi-co-chu-goc);
+}
+
+.table {
+  font-size: var(--staxi-co-chu-phu);
+  --bs-table-border-color: var(--staxi-duong-ke);
+}
+
+.form-text,
+.small,
+small {
+  font-size: var(--staxi-co-chu-phu);
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--staxi-chu-dao-nen);
+  --bs-btn-border-color: var(--staxi-chu-dao-nen);
+  --bs-btn-hover-bg: var(--staxi-chu-dao-nen-re-chuot);
+  --bs-btn-hover-border-color: var(--staxi-chu-dao-nen-re-chuot);
+  --bs-btn-active-bg: var(--staxi-chu-dao-nen-nhan-giu);
+  --bs-btn-active-border-color: var(--staxi-chu-dao-nen-nhan-giu);
+  --bs-btn-disabled-bg: var(--staxi-chu-dao-nen);
+  --bs-btn-disabled-border-color: var(--staxi-chu-dao-nen);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--staxi-chu-dao-chu-tren-nen-sang);
+  --bs-btn-border-color: var(--staxi-chu-dao-nen);
+  --bs-btn-hover-bg: var(--staxi-chu-dao-nen);
+  --bs-btn-hover-border-color: var(--staxi-chu-dao-nen);
+  --bs-btn-active-bg: var(--staxi-chu-dao-nen-nhan-giu);
+  --bs-btn-active-border-color: var(--staxi-chu-dao-nen-nhan-giu);
+}
+
+@media (pointer: coarse) {
+  .btn {
+    --bs-btn-padding-y: 0.625rem;
+    --bs-btn-padding-x: 1rem;
+  }
+
+  .form-control,
+  .form-select {
+    min-height: 2.75rem;
+  }
+
+  .table > :not(caption) > * > * {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .nav-link {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
