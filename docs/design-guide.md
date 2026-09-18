@@ -196,7 +196,7 @@ Sidebar thu gọn được thành dải icon. Giữ hành vi này — người d
 | Gói | Bản | Ghi chú |
 |---|---|---|
 | `bootstrap` | 5.3.8 | không cần jQuery; có sẵn CSS custom properties `--bs-*`; có chế độ màu qua `data-bs-theme` |
-| `react-bootstrap` | 2.10.10 | peer `react >= 16.14.0` — React 19.3.0 của spine thoả |
+| `react-bootstrap` | 2.10.10 | chốt ở ADR-005; peer `react >= 16.14.0` nên React 19.3.0 thoả |
 | `bootstrap-icons` | 1.13.1 | chỉ cần nếu không dùng Font Awesome có sẵn trong bộ mẫu |
 
 > **Chưa đưa vào bảng Stack của spine.** `AGENTS.md` quy định spine là luật và không sửa spine mà bỏ qua
@@ -226,21 +226,31 @@ Cột bên phải là để **nhìn**, không phải để chép.
 1. Đổ bảng màu, thang chữ và thang khoảng cách ở trên thành **CSS custom properties** trong một file
    token duy nhất, ánh xạ sang biến `--bs-*` của Bootstrap 5. Một nơi đổi, cả app đổi theo.
 2. Dựng `.ibox` thành component React đầu tiên. Mọi màn hình sau đó là nó lặp lại.
-3. Tự host Open Sans + Font Awesome từ file trong bộ mẫu.
-4. Đo lại mật độ bảng ở 16px trước khi dựng màn hình danh sách đầu tiên.
-5. Một màn lỗi hiện `corrId` cho người dùng đọc cho CSKH (`AD-23`).
-6. Chuỗi giao diện tiếng Việt (`AGENTS.md`).
+3. Nạp CSS của Bootstrap 5.3.8 rồi ghi đè bằng token — không dùng theme dựng sẵn, không cài
+   `bootstrap.js`, không cài jQuery.
+4. Tự host Open Sans + Font Awesome từ file trong bộ mẫu.
+5. Đo lại mật độ bảng ở 16px trước khi dựng màn hình danh sách đầu tiên.
+6. Một màn lỗi hiện `corrId` cho người dùng đọc cho CSKH (`AD-23`).
+7. Chuỗi giao diện tiếng Việt (`AGENTS.md`).
 
 ---
 
+## Đã chốt
+
+- **Bản quyền INSPINIA:** đã có, xác nhận của chủ sản phẩm ngày 2026-09-18. Được dùng bộ mẫu làm tham
+  chiếu bố cục và hình dạng.
+- **Thư viện component:** `react-bootstrap` 2.10.10 trên `bootstrap` 5.3.8 — xem
+  `docs/adr/ADR-005-thu-vien-component-frontend.md`.
+
+  Một ràng buộc từ ADR đó phải nhớ khi viết màn hình: **không truyền class component làm con của**
+  `Modal`, `Fade`, `Collapse`, `Overlay`, `OverlayTrigger`, `Tooltip`, `Popover`, `Dropdown`. React 19 đã
+  gỡ `ReactDOM.findDOMNode`, và đó là đường duy nhất trong `react-bootstrap` còn chạm tới nó — hỏng **lúc
+  chạy**, không phải lúc build.
+
 ## Chưa trả lời
 
-- **Bản quyền INSPINIA.** Theme thương mại. Web cũ đã dùng nên giấy phép nhiều khả năng có sẵn, nhưng
-  **chưa ai kiểm** nó phủ thêm một sản phẩm mới hay chỉ phủ đúng một site. Với quyết định Bootstrap 5 +
-  bảng màu riêng, phần thực sự lấy từ bộ mẫu chỉ còn là **bố cục và hình dạng** — nhưng đó vẫn là thứ có
-  bản quyền. Phải làm rõ trước khi hãng đầu tiên lên production.
-- **`react-bootstrap` hay dựng thuần?** Chưa chốt. Dùng thư viện thì nhanh và đã xử lý sẵn phần trợ năng
-  của hộp thoại, dropdown; dựng thuần thì kiểm soát hoàn toàn và không gánh một lớp phụ thuộc nữa. Đây là
-  một ADR, cần chốt **trước màn hình đầu tiên**, không phải sau.
 - **Chế độ tối.** Bootstrap 5.3 có sẵn `data-bs-theme`, nên giờ rẻ. Vẫn hoãn: web cũ không có, hai hệ chạy
   song song mà lệch thì rối. Xem lại khi web cũ rỗng.
+- **Thư viện bảng dữ liệu.** `react-bootstrap` chỉ có `<Table>` trần; màn hình danh sách cần sắp xếp, phân
+  trang, cột co giãn.
+- **Thư viện biểu đồ.** Bộ mẫu dùng c3/flot/morris — đều là jQuery, không dùng lại được.
