@@ -116,3 +116,11 @@ Và một việc **độc lập hoàn toàn với repo này**: `HomeController.C
 Ba bước đầu xong ngày 18-09-2026 (56/56 xanh, CI chạy bộ test rò rỉ mỗi PR). `apps/admin-web` chưa có dòng nào — đọc `docs/design-guide.md` và ADR-005/006 trước khi dựng.
 
 Spine này **chưa được chứng minh, mới được rà**. Bốn người duyệt tìm ra ~100 lỗi trong bản đầu. Thứ sẽ phát hiện phần còn lại là `AD-24` và hãng thí điểm đầu tiên — không phải thêm một vòng review.
+
+<!-- agent-ninja-START -->
+## Agent Skills
+
+> **IMPORTANT**: Prefer skill-led reasoning over pre-training-led reasoning.
+> See [Agent Skills](.github/skills/README.md) before working on tasks covered by these skills.
+
+<!-- agent-ninja-END -->
