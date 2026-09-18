@@ -45,6 +45,23 @@ và nó làm vậy một cách hoàn toàn "đúng luật".
 `TenantScopedRepository.QueryPerCompanyAsync` đòi SQL có tham số `@CompanyId`, nhưng **tên cột** trong
 mệnh đề `WHERE` phải tra từ sổ này.
 
+### Chính sách duyệt: **theo nhu cầu**
+
+Quyết định của chủ sản phẩm, 2026-09-18: **không duyệt hàng loạt**. Mỗi màn hình duyệt vài bảng mà nó
+chạm tới, ngay trong cùng thay đổi đang làm.
+
+Đổi lại, việc duyệt rải đều suốt dự án thay vì dồn một buổi — và `R14` là thứ nhắc bạn đúng lúc cần nhắc,
+không sớm hơn.
+
+#### Luồng thực tế
+
+1. Bạn viết repository cho màn hình mới, có câu SQL chạm bảng `[X]`.
+2. Build đỏ ở `R14`, thông điệp nói rõ bảng nào và đang ở trạng thái gì.
+3. Bạn duyệt đúng bảng đó (bên dưới), rồi build lại.
+
+**Đừng duyệt trước cho những bảng chưa dùng tới.** Phán quyết mà không có màn hình cụ thể trong đầu là
+phán quyết dựa trên phỏng đoán, tức đúng thứ trạng thái `chuaDuyet` đang ghi nhận.
+
 ### Cách duyệt một bảng
 
 1. Đọc `chungCu` và `canhBao` của mục đó.
@@ -53,11 +70,15 @@ mệnh đề `WHERE` phải tra từ sổ này.
    - Thuộc về hãng nhưng **không** chia theo công ty? ⇒ `PerTenant`
    - Thuộc về **một** công ty? ⇒ `PerCompany`
    - **Nối** giữa các công ty trong cùng hãng? ⇒ `CrossLink`
-3. Sửa `hang` nếu cần, đổi `trangThai` thành `daDuyet`, ghi lại lý do vào `chungCu`.
-4. Cập nhật `thongKe` cho khớp.
+3. Nếu khoá công ty là `nullable`, trả lời trước: **dòng có giá trị NULL thuộc về ai?** Chưa trả lời được
+   thì chưa duyệt được — 85 mục trong sổ đang vướng câu này.
+4. Sửa `hang` nếu cần, đổi `trangThai` thành `daDuyet`, và **viết lại `chungCu` thành lý do thật** của
+   phán quyết, thay cho câu suy ra tự động.
+5. Cập nhật `thongKe`. Không cần đếm tay: chạy `R12`, nó sẽ đỏ và **nói thẳng con số đúng** —
+   `thongKe.daDuyet = 0 nhưng đếm thật được 1`.
 
-Đổi trạng thái là một thay đổi **có review**. Đừng duyệt hàng loạt: cái giá của một phán quyết sai là rò
-rỉ dữ liệu giữa các công ty, và nó không để lại lỗi nào để ai phát hiện.
+Đổi trạng thái là một thay đổi **có review**. Cái giá của một phán quyết sai là rò rỉ dữ liệu giữa các
+công ty, và nó không để lại lỗi nào để ai phát hiện.
 
 ### Ba giới hạn đã biết của bản rút tự động
 

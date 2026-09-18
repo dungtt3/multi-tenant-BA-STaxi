@@ -84,11 +84,13 @@ public sealed class SoHangTenantTests(AssemblyCatalog assemblies)
 
         if (!theoTen.TryGetValue(ten, out var muc))
         {
-            return $"{noiGoi}: bảng '{ten}' chưa có trong sổ hạng tenant";
+            return $"{noiGoi}: bảng '{ten}' chưa có trong sổ hạng tenant — thêm mục cho nó vào db/tenancy-classes.json "
+                   + "rồi duyệt, theo quy trình ở db/README.md";
         }
 
         return muc.TrangThai == "daDuyet"
             ? null
-            : $"{noiGoi}: bảng '{ten}' đang ở trạng thái '{muc.TrangThai}' — hạng {muc.Hang} mới là phỏng đoán, chưa có người duyệt";
+            : $"{noiGoi}: bảng '{ten}' đang ở trạng thái '{muc.TrangThai}' — hạng {muc.Hang} mới là phỏng đoán, chưa có người duyệt. "
+              + "Duyệt theo nhu cầu: duyệt bảng này trong cùng thay đổi đang làm, theo quy trình ở db/README.md";
     }
 }
