@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\db\tenancy-classes.json" Link="db\tenancy-classes.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Staxi.Platform\Staxi.Platform.csproj" />
     <ProjectReference Include="..\Staxi.TenantLeakTests\Staxi.TenantLeakTests.csproj" />
   </ItemGroup>
