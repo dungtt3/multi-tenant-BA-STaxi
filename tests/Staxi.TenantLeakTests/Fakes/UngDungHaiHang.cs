@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Staxi.Admin.Application;
 using Staxi.Admin.Infrastructure;
+using Staxi.Auth.Application;
+using Staxi.Auth.Infrastructure;
 using Staxi.Platform.Caching;
 using Staxi.Platform.Data;
 using Staxi.Platform.DependencyInjection;
@@ -66,6 +68,13 @@ public sealed class UngDungHaiHang : IAsyncDisposable
         services.AddScoped<LoaiXeRepository>();
         services.AddScoped<ILoaiXeRepository, Staxi.Admin.Infrastructure.LoaiXeRepository>();
         services.AddScoped<LayDanhSachLoaiXe>();
+        services.AddScoped<INguoiDungXacThucRepository, NguoiDungXacThucRepository>();
+        services.AddSingleton<IKiemMatKhau, MatKhauKeThuaMd5>();
+        services.AddSingleton<ISecurityStampFactory, SecurityStampTuDuLieu>();
+        services.AddSingleton<ITokenFactory>(sp => new JwtTokenFactory(
+            new CauHinhToken(HaiHangGia.KhoaKyTest, "staxi-test", "staxi-test", TimeSpan.FromMinutes(10)),
+            sp.GetRequiredService<Staxi.Platform.Time.IClock>()));
+        services.AddScoped<DangNhap>();
         services.AddSignalR();
         services.AddSingleton<ITenantNotifier, SignalRTenantNotifier<ThongBaoHub>>();
         services.AddAuthorization();

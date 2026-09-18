@@ -80,7 +80,7 @@ public sealed class SoHangTenantTests(AssemblyCatalog assemblies)
 
     private static string? KiemTraBang(MethodDefinition method, string ten, Dictionary<string, TenancyTableEntry> theoTen)
     {
-        var noiGoi = $"{method.DeclaringType.FullName}.{method.Name}";
+        var noiGoi = $"{TypeScanner.KieuNguoiViet(method.DeclaringType).FullName}.{TypeScanner.TenPhuongThucNguoiViet(method)}";
 
         if (!theoTen.TryGetValue(ten, out var muc))
         {

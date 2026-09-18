@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Staxi.Auth.Application</RootNamespace>
+    <AssemblyName>Staxi.Auth.Application</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Staxi.Auth.Domain\Staxi.Auth.Domain.csproj" />
+    <ProjectReference Include="..\Staxi.Platform\Staxi.Platform.csproj" />
+  </ItemGroup>
+
+</Project>

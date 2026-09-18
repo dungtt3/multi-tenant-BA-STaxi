@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Staxi.Auth.Domain</RootNamespace>
+    <AssemblyName>Staxi.Auth.Domain</AssemblyName>
+  </PropertyGroup>
+
+</Project>

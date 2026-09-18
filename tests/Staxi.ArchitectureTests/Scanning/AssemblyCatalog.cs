@@ -11,6 +11,7 @@ public sealed class AssemblyCatalog : IDisposable
 {
     private readonly DefaultAssemblyResolver _resolver = new();
     private readonly Dictionary<string, AssemblyDefinition> _assemblies = new(StringComparer.Ordinal);
+    private IReadOnlyList<AssemblyDefinition>? _sanPham;
 
     public AssemblyCatalog()
     {
@@ -25,18 +26,28 @@ public sealed class AssemblyCatalog : IDisposable
 
     public AssemblyDefinition Platform => Get<TenantScope>();
 
-    public IReadOnlyList<AssemblyDefinition> SanPham =>
-    [
-        Platform,
-        Get<LoaiXe>(),
-        Get<ILoaiXeRepository>(),
-        Get<LoaiXeRepository>(),
-        GetTheoTen("Staxi.Admin.Api"),
-    ];
+    public IReadOnlyList<AssemblyDefinition> SanPham => _sanPham ??= DocSanPham();
 
     public IReadOnlyList<AssemblyDefinition> SanPhamVaLeakTests => [.. SanPham, Get<PhamViCacheTests>()];
 
     public AssemblyDefinition AdminDomain => Get<LoaiXe>();
+
+    private IReadOnlyList<AssemblyDefinition> DocSanPham()
+    {
+        var cacFile = Directory.EnumerateFiles(AppContext.BaseDirectory, "Staxi.*.dll")
+            .Where(duongDan => !Path.GetFileNameWithoutExtension(duongDan).EndsWith("Tests", StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        if (cacFile.Length == 0)
+        {
+            throw new InvalidOperationException(
+                $"Không tìm thấy assembly sản phẩm nào trong '{AppContext.BaseDirectory}'. "
+                + "Bài kiểm kiến trúc sẽ xanh một cách giả tạo nếu danh sách này rỗng.");
+        }
+
+        return [.. cacFile.Select(Doc)];
+    }
 
     public AssemblyDefinition GetTheoTen(string tenAssembly)
     {

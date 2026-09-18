@@ -16,16 +16,30 @@ public sealed class HaiHangGia : IDisposable
 
     public const string KhoaKyGiaMao = "khoa-gia-mao-cua-ke-tan-cong-cung-dai-32-byte-tro-len";
 
+    public const string MatKhauHangA = "matkhau-hang-a";
+
+    public const string MatKhauHangB = "matkhau-hang-b";
+
+    public const string MatKhauBiKhoa = "matkhau-bi-khoa";
+
+    public const string BamMatKhauHangA = "DA7EC2614771E257986E269EDDB23337";
+
+    public const string BamMatKhauHangB = "94497C6B6867FD6A9252A40AF517AB25";
+
+    public const string BamMatKhauBiKhoa = "9F62790D3FFEF3A5B5659BDD9B3D06E7";
+
     private readonly string _thuMuc;
     private readonly List<SqliteConnection> _giuKetNoi = [];
 
     public HaiHangGia()
     {
+        GuidChoSqlite.DangKyMotLan();
+
         _thuMuc = Path.Combine(Path.GetTempPath(), "staxi-leak-" + Guid.NewGuid().ToString("n"));
         Directory.CreateDirectory(_thuMuc);
 
-        DungDatabase(HangA, "hang_a.db", "HANG-A", congTy1: "Xe 4 cho HANG-A", congTy2: "Xe 7 cho HANG-A cong ty 2");
-        DungDatabase(HangB, "hang_b.db", "HANG-B", congTy1: "Xe 4 cho HANG-B", congTy2: "Xe 7 cho HANG-B cong ty 2");
+        DungDatabase(HangA, "hang_a.db", "HANG-A", BamMatKhauHangA, congTy1: "Xe 4 cho HANG-A", congTy2: "Xe 7 cho HANG-A cong ty 2");
+        DungDatabase(HangB, "hang_b.db", "HANG-B", BamMatKhauHangB, congTy1: "Xe 4 cho HANG-B", congTy2: "Xe 7 cho HANG-B cong ty 2");
 
         Store = new InMemoryTenantRegistryStore(
         [
@@ -65,7 +79,7 @@ public sealed class HaiHangGia : IDisposable
 
     public string DuongDanKetNoi(string tenFile) => $"Data Source={Path.Combine(_thuMuc, tenFile)}";
 
-    private void DungDatabase(string tenantCode, string tenFile, string nhan, string congTy1, string congTy2)
+    private void DungDatabase(string tenantCode, string tenFile, string nhan, string bamMatKhau, string congTy1, string congTy2)
     {
         var connection = new SqliteConnection(DuongDanKetNoi(tenFile));
         connection.Open();
@@ -84,6 +98,14 @@ public sealed class HaiHangGia : IDisposable
                    (2, 2, $xeC2, NULL, 7, 900, NULL),
                    (3, NULL, $xeKhongCongTy, NULL, 5, 600, NULL),
                    (4, 1, $xeDaXoa, NULL, 4, 500, 1);
+
+            CREATE TABLE [Admin.Users] (
+              AdminId TEXT PRIMARY KEY, UserName TEXT NULL, Password TEXT NULL,
+              FK_CompanyID INTEGER NOT NULL, IsLock INTEGER NULL, IsDeleted INTEGER NULL);
+            INSERT INTO [Admin.Users] (AdminId, UserName, Password, FK_CompanyID, IsLock, IsDeleted)
+            VALUES ($idQuanTri, 'quantri', $bamQuanTri, 1, 0, 0),
+                   ($idBiKhoa, 'bikhoa', $bamBiKhoa, 1, 1, 0),
+                   ($idDaXoa, 'daxoa', $bamQuanTri, 1, 0, 1);
             """;
         command.Parameters.AddWithValue("$congTy1", congTy1);
         command.Parameters.AddWithValue("$congTy2", congTy2);
@@ -91,6 +113,11 @@ public sealed class HaiHangGia : IDisposable
         command.Parameters.AddWithValue("$xeC2", $"Xe 7 cho {nhan} C2");
         command.Parameters.AddWithValue("$xeKhongCongTy", $"Xe khong cong ty {nhan}");
         command.Parameters.AddWithValue("$xeDaXoa", $"Xe da xoa {nhan} C1");
+        command.Parameters.AddWithValue("$idQuanTri", Guid.NewGuid().ToString("n"));
+        command.Parameters.AddWithValue("$idBiKhoa", Guid.NewGuid().ToString("n"));
+        command.Parameters.AddWithValue("$idDaXoa", Guid.NewGuid().ToString("n"));
+        command.Parameters.AddWithValue("$bamQuanTri", bamMatKhau);
+        command.Parameters.AddWithValue("$bamBiKhoa", BamMatKhauBiKhoa);
         command.ExecuteNonQuery();
 
         _giuKetNoi.Add(connection);

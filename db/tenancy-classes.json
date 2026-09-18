@@ -25,15 +25,15 @@
   ],
   "thongKe": {
     "tongSoBangTrongSo": 279,
-    "daDuyet": 1,
-    "chuaDuyet": 278,
+    "daDuyet": 2,
+    "chuaDuyet": 277,
     "theoHang": {
       "Global": 0,
       "PerTenant": 115,
       "PerCompany": 164,
       "CrossLink": 0
     },
-    "soMucCoCanhBao": 120,
+    "soMucCoCanhBao": 121,
     "uocTinhTongSoBangTrongDb": 565,
     "ghiChuDoPhu": "Spine ghi 565 bang / 215 bang co CompanyId tren DB dang chay. So nay chi phu phan ma nguon web cu co model."
   },
@@ -633,11 +633,16 @@
     },
     {
       "ten": "[Admin.Users]",
-      "thucThe": "AdminUser",
+      "thucThe": "AdminUser, NguoiDung",
       "hang": "PerCompany",
-      "trangThai": "chuaDuyet",
-      "chungCu": "Model web cu co cot khoa cong ty 'CompanyId' kieu int",
-      "canhBao": []
+      "trangThai": "daDuyet",
+      "chungCu": "Do tren DB that TestG7 ngay 18-09-2026: cot khoa cong ty ten FK_CompanyID (int, NOT NULL) - moi nguoi dung thuoc dung mot cong ty so huu. 315 user hoat dong tren 20 cong ty.",
+      "canhBao": [
+        "CHO CHU SAN PHAM XAC NHAN: hang nay do agent dat theo bang chung, chua co phan quyet tuong minh cua nguoi. Dat PerCompany la huong AN TOAN - neu that ra la PerTenant thi hau qua la loc chat qua (giau du lieu), khong phai ro ri.",
+        "Ten cot la 'FK_CompanyID', khong phai 'CompanyId' - repository phai anh xa dung ten that.",
+        "NGOAI LE CO CHU Y: truy van dang nhap tra nguoi dung theo UserName KHONG loc cong ty, vi AD-3 xac thuc TRUOC khi biet cong ty. No khong di qua TenantScopedRepository ma di qua IAuthenticationConnectionFactory, duong duy nhat duoc mo ket noi khi chua co TenantScope, va bi R16 gioi han chi cho Staxi.Auth.",
+        "Bang con co CurrentCompanyId va CurrentXnCode - cho web cu luu 'dang xem cong ty nao', tuc co che ChangeCompany. Do duoc 50/315 user dang xem mot cong ty KHAC cong ty so huu. WEB2 khong duoc lay pham vi tu hai cot nay: pham vi chi den tu token da ky (AD-4)."
+      ]
     },
     {
       "ten": "[Admin.UsersIPAddress]",

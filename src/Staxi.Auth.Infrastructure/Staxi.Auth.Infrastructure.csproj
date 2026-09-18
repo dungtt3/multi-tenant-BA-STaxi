@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Staxi.Auth.Infrastructure</RootNamespace>
+    <AssemblyName>Staxi.Auth.Infrastructure</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Staxi.Auth.Application\Staxi.Auth.Application.csproj" />
+    <ProjectReference Include="..\Staxi.Platform\Staxi.Platform.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Staxi.Admin.Infrastructure\Staxi.Admin.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Staxi.Auth.Infrastructure\Staxi.Auth.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Staxi.Platform\Staxi.Platform.csproj" />
   </ItemGroup>
 

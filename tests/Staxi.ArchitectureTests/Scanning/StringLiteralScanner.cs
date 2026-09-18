@@ -8,7 +8,7 @@ internal readonly record struct StringLiteral(MethodDefinition Method, string Va
 internal static class StringLiteralScanner
 {
     public static IEnumerable<StringLiteral> Read(AssemblyDefinition assembly)
-        => TypeScanner.Read(assembly).SelectMany(type => type.Methods)
+        => TypeScanner.ReadTatCa(assembly).SelectMany(type => type.Methods)
             .Where(method => method.HasBody)
             .SelectMany(method => method.Body.Instructions
                 .Where(instruction => instruction.OpCode.Code == Code.Ldstr)
