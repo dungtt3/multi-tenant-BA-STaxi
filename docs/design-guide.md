@@ -198,6 +198,9 @@ Sidebar thu gọn được thành dải icon. Giữ hành vi này — người d
 | `bootstrap` | 5.3.8 | không cần jQuery; có sẵn CSS custom properties `--bs-*`; có chế độ màu qua `data-bs-theme` |
 | `react-bootstrap` | 2.10.10 | chốt ở ADR-005; peer `react >= 16.14.0` nên React 19.3.0 thoả |
 | `bootstrap-icons` | 1.13.1 | chỉ cần nếu không dùng Font Awesome có sẵn trong bộ mẫu |
+| `ag-grid-react` | 36.2.0 | chốt ở ADR-006; peer khai báo React 19 tường minh |
+| `echarts` | 6.1.0 | chốt ở ADR-006 |
+| `echarts-for-react` | 3.0.6 | lớp bọc mỏng, còn bảo trì |
 
 > **Chưa đưa vào bảng Stack của spine.** `AGENTS.md` quy định spine là luật và không sửa spine mà bỏ qua
 > `docs/.architecture-memlog.md`. Ba dòng trên cần được ghi vào memlog rồi mới thêm vào bảng Stack — là
@@ -235,6 +238,42 @@ Cột bên phải là để **nhìn**, không phải để chép.
 
 ---
 
+## Responsive — ưu tiên đã chốt: cả mobile lẫn PC
+
+Điểm ngắt dùng mặc định của Bootstrap 5: `576` · `768` · `992` · `1200` · `1400`.
+
+| Vùng | Dưới `md` (< 768) | Từ `lg` (≥ 992) |
+|---|---|---|
+| Sidebar | ẩn, mở dạng off-canvas | cố định, thu gọn được thành dải icon |
+| Card `.ibox` | một cột | lưới theo nội dung |
+| Bảng dữ liệu | **xem mục dưới** | lưới đầy đủ |
+| Biểu đồ | chiều cao cố định, ẩn bớt nhãn trục | đầy đủ |
+
+**Bảng dữ liệu là chỗ khó thật.** Một lưới 12 cột không thu nhỏ được xuống màn hình 390px bằng cách cho
+nó co lại — chữ sẽ nhỏ tới mức vô dụng. Hai lối đi, phải chọn trước màn hình danh sách đầu tiên:
+chuyển sang **danh sách thẻ** dưới `md` (mỗi dòng thành một thẻ, chỉ hiện 3–4 trường quan trọng), hoặc
+**cuộn ngang có ghim cột đầu**. Ghi ở `ADR-006`, chưa chốt.
+
+**Vùng chạm.** Chuẩn trợ năng đòi vùng chạm tối thiểu ~44px, trong khi màn hình quản trị lại cần dày đặc.
+Hoà giải bằng con trỏ chứ không bằng bề rộng màn hình:
+
+```
+@media (pointer: coarse) { /* nới padding hàng, nút, ô chọn */ }
+```
+
+Máy điều phối viên dùng chuột thì giữ mật độ cao; điện thoại và máy tính bảng thì nới ra. Đây là hai
+trục khác nhau — màn hình rộng vẫn có thể là màn hình cảm ứng.
+
+**ECharts không tự co giãn.** Gắn `ResizeObserver` lên vùng chứa, không chỉ nghe `window.resize`:
+sidebar thu gọn làm đổi kích thước vùng chứa mà cửa sổ không đổi. Chi tiết ở `ADR-006`.
+
+**Chưa biết, cần trả lời:** ai dùng bản mobile và để làm gì. Điều phối viên ngồi bàn thì gần như chắc
+chắn dùng PC; quản lý xem báo cáo trên điện thoại là một kịch bản khác hẳn về màn hình cần có. Làm
+responsive cho *mọi* màn hình là tốn công cho những màn hình không ai mở trên điện thoại. Cần danh sách
+màn hình ưu tiên cho mobile.
+
+---
+
 ## Đã chốt
 
 - **Bản quyền INSPINIA:** đã có, xác nhận của chủ sản phẩm ngày 2026-09-18. Được dùng bộ mẫu làm tham
@@ -246,11 +285,13 @@ Cột bên phải là để **nhìn**, không phải để chép.
   `Modal`, `Fade`, `Collapse`, `Overlay`, `OverlayTrigger`, `Tooltip`, `Popover`, `Dropdown`. React 19 đã
   gỡ `ReactDOM.findDOMNode`, và đó là đường duy nhất trong `react-bootstrap` còn chạm tới nó — hỏng **lúc
   chạy**, không phải lúc build.
+- **Bảng dữ liệu:** AG Grid, như web 1. **Biểu đồ:** Apache ECharts. Xem
+  `docs/adr/ADR-006-bang-du-lieu-va-bieu-do.md` — kèm một điều kiện bản quyền chưa xác minh.
+- **Chế độ tối: bỏ.** Không làm. Công sức dồn cho responsive trên cả mobile lẫn PC.
 
 ## Chưa trả lời
 
-- **Chế độ tối.** Bootstrap 5.3 có sẵn `data-bs-theme`, nên giờ rẻ. Vẫn hoãn: web cũ không có, hai hệ chạy
-  song song mà lệch thì rối. Xem lại khi web cũ rỗng.
-- **Thư viện bảng dữ liệu.** `react-bootstrap` chỉ có `<Table>` trần; màn hình danh sách cần sắp xếp, phân
-  trang, cột co giãn.
-- **Thư viện biểu đồ.** Bộ mẫu dùng c3/flot/morris — đều là jQuery, không dùng lại được.
+- **Giấy phép AG Grid Enterprise.** Web 1 dùng bản Enterprise nhưng không nạp khoá bản quyền ở đâu trong
+  mã nguồn. Chặn màn hình danh sách đầu tiên — xem `ADR-006`.
+- **Bảng trên màn hình hẹp:** danh sách thẻ hay cuộn ngang ghim cột đầu.
+- **Màn hình nào ưu tiên cho mobile.**
