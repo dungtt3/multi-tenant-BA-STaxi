@@ -1,6 +1,6 @@
 # ADR-006 — Bảng dữ liệu và biểu đồ
 
-- **Trạng thái:** Chốt về thư viện · **một điều kiện bản quyền chưa xác minh**
+- **Trạng thái:** Chốt
 - **Ngày:** 2026-09-18
 - **Liên quan:** `ADR-005` (react-bootstrap), `docs/design-guide.md`, `AD-1` (FE build tĩnh), `AD-4` (phạm vi chỉ từ token đã ký), `AD-12` (BFF gom dữ liệu)
 
@@ -56,29 +56,46 @@ Còn có `AgGridSvSideGroup.js`, tức server-side kèm gom nhóm — cũng Ente
 
 ---
 
-## ⚠️ Điều kiện chưa xác minh: giấy phép AG Grid Enterprise
+## Bản quyền AG Grid Enterprise: làm tương tự web 1
 
-Tìm `setLicenseKey` trong toàn bộ `BA.STaxi.Web`: **chỉ thấy trong chính file thư viện**
-(`ag-grid-enterprise.js` / `.min.js`), **không có một lời gọi nào trong mã ứng dụng**.
+**Quyết định của chủ sản phẩm, 2026-09-18: làm tương tự web 1** — dùng bản Enterprise, không nạp khoá.
 
-Nghĩa là web 1 đang chạy AG Grid Enterprise **không nạp khoá bản quyền** — bản Enterprise khi đó vẫn chạy
-đủ tính năng nhưng hiện watermark và ghi lỗi ra console.
+Tìm `setLicenseKey` trong toàn bộ `BA.STaxi.Web` chỉ thấy trong chính file thư viện, không có lời gọi nào
+trong mã ứng dụng. WEB2 làm giống vậy.
 
-Ba khả năng, và chúng dẫn tới ba việc khác hẳn nhau:
+Đã kiểm tận nơi trong `ag-grid-enterprise@36.2.0` xem bản mới xử sự thế nào — web 1 đang ở v30, sáu bản
+chính cách nhau nên không suy từ hành vi cũ ra được. Chuỗi lấy thẳng từ mã nguồn gói:
 
-| Khả năng | Việc phải làm |
+```
+**  AG Grid Enterprise License  **
+**    License Key Not Found     **
+* All AG Grid Enterprise features are unlocked for trial.
+* If you want to hide the watermark please email info@ag-grid.com...
+```
+
+Kèm một phần tử watermark hiện trên lưới (`.ag-watermark`, `.ag-watermark-text`, font Impact 19px).
+
+Nghĩa là ở v36 hành vi vẫn **giống v30**:
+
+| | |
 |---|---|
-| Đã mua giấy phép, khoá nằm ngoài repo | Lấy khoá, nạp qua biến môi trường lúc build. **Không commit khoá vào git** (`AD-22`) |
-| Đã mua nhưng chưa ai nạp khoá | Sửa cả hai hệ. Web 1 đang chạy sai cấu hình suốt thời gian qua |
-| Chưa mua | Quyết định thương mại. Enterprise tính phí **theo số lập trình viên**. Hoặc mua, hoặc thiết kế lại màn hình danh sách để không cần `serverSide`/`sideBar` |
+| Tính năng | **Không bị chặn** — `serverSide`, `sideBar` chạy đủ |
+| Console | in bảng thông báo mỗi lần khởi tạo lưới |
+| Giao diện | **watermark hiện trên lưới, ở mọi môi trường** |
 
-**Không giả định khả năng nào.** Khác với INSPINIA — chủ sản phẩm đã xác nhận có bản quyền — chỗ này
-chưa ai xác nhận. Đây là việc phải trả lời **trước khi viết màn hình danh sách đầu tiên**, vì nếu rơi vào
-khả năng thứ ba thì hình dạng màn hình đổi, không phải chỉ đổi một dòng `import`.
+Một hệ quả nên biết trước chứ không nên gặp lúc hãng thí điểm chạy: watermark là thứ **người dùng cuối
+nhìn thấy**, không phải chỉ phiền lúc phát triển. 18 hãng sẽ thấy nó trên mọi màn hình có lưới. Web 1 đã
+như vậy, nên đây không phải thay đổi — chỉ là điều cần nói rõ một lần.
+
+Chính AG Grid gọi trạng thái này là *trial*. Đây là quyết định thương mại của chủ sản phẩm, ghi lại ở đây
+để về sau không ai phải đoán nó là cố ý hay bỏ sót.
+
+**Hệ quả kỹ thuật:** không có khoá thì không có bí mật nào phải quản, nên `AD-22` không bị đụng tới. Nếu
+sau này mua giấy phép, khoá nạp qua biến môi trường lúc build và **không commit vào git**.
 
 Bản Community (MIT) đủ cho: sắp xếp, lọc, phân trang phía client, đổi kích thước và thứ tự cột, cell
-renderer, xuất CSV. **Không** đủ cho: server-side row model, gom nhóm, pivot, tool panel, xuất Excel,
-master/detail, set filter.
+renderer, xuất CSV. **Không** đủ cho `serverSide` và `sideBar` — hai thứ web 1 đang dùng — nên hạ xuống
+Community không phải một lựa chọn tương đương.
 
 ---
 
@@ -125,10 +142,29 @@ gắn — lớp bọc chỉ theo dõi cửa sổ.
 
 ---
 
+## Bảng trên màn hình hẹp: chỉ dashboard và CRUD
+
+Quyết định của chủ sản phẩm, 2026-09-18:
+
+| Loại màn hình | Màn hình hẹp |
+|---|---|
+| **Báo cáo** | **Không áp dụng.** Giữ lưới đầy đủ, cuộn ngang. Báo cáo là việc của máy để bàn |
+| **Dashboard** | Có — thẻ xếp một cột, biểu đồ co theo vùng chứa |
+| **CRUD** | Có — lưới chuyển sang **danh sách thẻ** dưới `md` |
+
+Chọn danh sách thẻ (không phải cuộn ngang ghim cột đầu) cho dashboard và CRUD, vì màn hình CRUD thường
+ít cột và thiên về hành động — mỗi dòng thành một thẻ hiện 3–4 trường quan trọng cộng nút sửa/xoá thì đọc
+được bằng ngón tay cái. Cuộn ngang giữ lại cho báo cáo, nơi số cột mới là thứ người dùng cần.
+
+Lợi ích đi kèm: không phải làm responsive cho bảy màn hình báo cáo — phần tốn công nhất và ít người mở
+trên điện thoại nhất.
+
+---
+
 ## Hệ quả
 
-- Ghim `ag-grid-react` / `ag-grid-community` (và `ag-grid-enterprise` nếu có giấy phép) ở **36.2.0**;
-  `echarts` 6.1.0; `echarts-for-react` 3.0.6.
+- Ghim `ag-grid-react`, `ag-grid-community` và `ag-grid-enterprise` ở **36.2.0**; `echarts` 6.1.0;
+  `echarts-for-react` 3.0.6. Ba gói AG Grid phải cùng một số bản — lệch bản giữa chúng là lỗi lúc chạy.
 - Web 1 đang ở AG Grid **v30**, WEB2 sẽ ở **v36**. Đừng bê cấu hình lưới từ web 1 sang — sáu bản chính
   cách nhau, API cấu hình cột và theme đã đổi. Lấy **hình dạng màn hình**, không lấy cấu hình.
 - **Theme của lưới phải ánh xạ sang token** trong `docs/design-guide.md` (`#337ab7`, viền `#e7eaec`, chữ
@@ -141,8 +177,6 @@ gắn — lớp bọc chỉ theo dõi cửa sổ.
 
 ## Việc còn mở
 
-- [ ] **Giấy phép AG Grid Enterprise: đã mua chưa, khoá ở đâu?** Chặn màn hình danh sách đầu tiên
-- [ ] Nếu chưa mua: màn hình danh sách thiết kế lại thế nào để sống được với bản Community
 - [ ] Danh sách trắng cột cho phép sắp xếp/lọc — đặt ở đâu, ai giữ (liên quan `AD-5`, `AD-9`)
 - [ ] Ngưỡng số dòng của một lần kết xuất, và ngưỡng nào thì bắt ghi vết (`AD-18`)
-- [ ] Bảng trên màn hình hẹp: chuyển sang danh sách thẻ, hay cuộn ngang có ghim cột đầu
+- [ ] Ngưỡng độ rộng chuyển sang danh sách thẻ, và chọn 3–4 trường nào cho mỗi màn hình CRUD

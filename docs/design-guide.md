@@ -246,13 +246,19 @@ Cột bên phải là để **nhìn**, không phải để chép.
 |---|---|---|
 | Sidebar | ẩn, mở dạng off-canvas | cố định, thu gọn được thành dải icon |
 | Card `.ibox` | một cột | lưới theo nội dung |
-| Bảng dữ liệu | **xem mục dưới** | lưới đầy đủ |
+| Bảng dữ liệu | tuỳ loại màn hình — xem dưới | lưới đầy đủ |
 | Biểu đồ | chiều cao cố định, ẩn bớt nhãn trục | đầy đủ |
 
-**Bảng dữ liệu là chỗ khó thật.** Một lưới 12 cột không thu nhỏ được xuống màn hình 390px bằng cách cho
-nó co lại — chữ sẽ nhỏ tới mức vô dụng. Hai lối đi, phải chọn trước màn hình danh sách đầu tiên:
-chuyển sang **danh sách thẻ** dưới `md` (mỗi dòng thành một thẻ, chỉ hiện 3–4 trường quan trọng), hoặc
-**cuộn ngang có ghim cột đầu**. Ghi ở `ADR-006`, chưa chốt.
+**Bảng dữ liệu — chỉ dashboard và CRUD mới làm màn hình hẹp:**
+
+| Loại màn hình | Màn hình hẹp |
+|---|---|
+| **Báo cáo** | **Không áp dụng.** Giữ lưới đầy đủ, cuộn ngang. Báo cáo là việc của máy để bàn |
+| **Dashboard** | Có — thẻ xếp một cột, biểu đồ co theo vùng chứa |
+| **CRUD** | Có — lưới chuyển **danh sách thẻ** dưới `md`, mỗi dòng thành một thẻ 3–4 trường + nút thao tác |
+
+Nhờ vậy bảy màn hình báo cáo — phần tốn công nhất, ít người mở trên điện thoại nhất — không phải làm
+responsive. Chi tiết ở `ADR-006`.
 
 **Vùng chạm.** Chuẩn trợ năng đòi vùng chạm tối thiểu ~44px, trong khi màn hình quản trị lại cần dày đặc.
 Hoà giải bằng con trỏ chứ không bằng bề rộng màn hình:
@@ -285,13 +291,13 @@ màn hình ưu tiên cho mobile.
   `Modal`, `Fade`, `Collapse`, `Overlay`, `OverlayTrigger`, `Tooltip`, `Popover`, `Dropdown`. React 19 đã
   gỡ `ReactDOM.findDOMNode`, và đó là đường duy nhất trong `react-bootstrap` còn chạm tới nó — hỏng **lúc
   chạy**, không phải lúc build.
-- **Bảng dữ liệu:** AG Grid, như web 1. **Biểu đồ:** Apache ECharts. Xem
-  `docs/adr/ADR-006-bang-du-lieu-va-bieu-do.md` — kèm một điều kiện bản quyền chưa xác minh.
+- **Bảng dữ liệu:** AG Grid Enterprise 36.2.0, **làm tương tự web 1** — không nạp khoá bản quyền, chấp
+  nhận watermark hiện trên lưới ở mọi môi trường. **Biểu đồ:** Apache ECharts 6.1.0. Xem
+  `docs/adr/ADR-006-bang-du-lieu-va-bieu-do.md`.
 - **Chế độ tối: bỏ.** Không làm. Công sức dồn cho responsive trên cả mobile lẫn PC.
 
 ## Chưa trả lời
 
-- **Giấy phép AG Grid Enterprise.** Web 1 dùng bản Enterprise nhưng không nạp khoá bản quyền ở đâu trong
-  mã nguồn. Chặn màn hình danh sách đầu tiên — xem `ADR-006`.
-- **Bảng trên màn hình hẹp:** danh sách thẻ hay cuộn ngang ghim cột đầu.
-- **Màn hình nào ưu tiên cho mobile.**
+- **Màn hình nào ưu tiên cho mobile.** Đã biết báo cáo thì không; còn lại dashboard và CRUD nào thực sự
+  có người mở trên điện thoại thì chưa rõ.
+- **Ngưỡng và trường hiển thị của danh sách thẻ** cho từng màn hình CRUD.
