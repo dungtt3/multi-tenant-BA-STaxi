@@ -5,6 +5,7 @@ using Staxi.Admin.Api;
 using Staxi.Admin.Application;
 using Staxi.Admin.Infrastructure;
 using Staxi.Contracts;
+using Staxi.Platform.Authorization;
 using Staxi.Platform.Data;
 using Staxi.Platform.DependencyInjection;
 
@@ -16,6 +17,7 @@ builder.Services.AddStaxiPlatform();
 builder.Services.AddSingleton<ITenantRegistryStore>(_ => SoDangKyHangCauHinh.Doc(builder.Configuration));
 builder.Services.AddScoped<ILoaiXeRepository, LoaiXeRepository>();
 builder.Services.AddScoped<LayDanhSachLoaiXe>();
+builder.Services.AddSingleton<IPermissionCatalog, QuyenDanhMuc>();
 builder.Services.AddAuthorization();
 
 builder.Services
@@ -49,6 +51,6 @@ app.MapGet("/api/danh-muc/loai-xe", async (LayDanhSachLoaiXe useCase, Cancellati
     IReadOnlyList<LoaiXeDto> ketQua = await useCase.ThucThiAsync(ct);
 
     return Results.Ok(ketQua);
-}).RequireAuthorization();
+}).RequireAuthorization().RequirePermission(QuyenDanhMuc.XemLoaiXe);
 
 await app.RunAsync();

@@ -28,6 +28,11 @@ public sealed class HaiHangGia : IDisposable
 
     public const string BamMatKhauBiKhoa = "9F62790D3FFEF3A5B5659BDD9B3D06E7";
 
+    public static Guid IdQuanTri(string tenantCode)
+        => tenantCode == HangA
+            ? new Guid("aaaaaaaa-0000-0000-0000-000000000001")
+            : new Guid("bbbbbbbb-0000-0000-0000-000000000001");
+
     private readonly string _thuMuc;
     private readonly List<SqliteConnection> _giuKetNoi = [];
 
@@ -106,6 +111,17 @@ public sealed class HaiHangGia : IDisposable
             VALUES ($idQuanTri, 'quantri', $bamQuanTri, 1, 0, 0),
                    ($idBiKhoa, 'bikhoa', $bamBiKhoa, 1, 1, 0),
                    ($idDaXoa, 'daxoa', $bamQuanTri, 1, 0, 1);
+
+            CREATE TABLE [Admin.UserPermissions] (
+              PK_UserPermissionID INTEGER PRIMARY KEY, FK_AdminId TEXT NOT NULL, PermissionValue TEXT NOT NULL);
+            CREATE TABLE [Admin.UserRoles] (FK_AdminId TEXT NOT NULL, FK_RoleID INTEGER NOT NULL);
+            CREATE TABLE [Admin.RolePermissions] (
+              PK_RolePermissionID INTEGER PRIMARY KEY, FK_RoleID INTEGER NOT NULL, PermissionValue TEXT NOT NULL);
+            INSERT INTO [Admin.UserPermissions] (PK_UserPermissionID, FK_AdminId, PermissionValue)
+            VALUES (1, $idQuanTri, $quyenRieng);
+            INSERT INTO [Admin.UserRoles] (FK_AdminId, FK_RoleID) VALUES ($idQuanTri, 7);
+            INSERT INTO [Admin.RolePermissions] (PK_RolePermissionID, FK_RoleID, PermissionValue)
+            VALUES (1, 7, $quyenVaiTro);
             """;
         command.Parameters.AddWithValue("$congTy1", congTy1);
         command.Parameters.AddWithValue("$congTy2", congTy2);
@@ -113,11 +129,13 @@ public sealed class HaiHangGia : IDisposable
         command.Parameters.AddWithValue("$xeC2", $"Xe 7 cho {nhan} C2");
         command.Parameters.AddWithValue("$xeKhongCongTy", $"Xe khong cong ty {nhan}");
         command.Parameters.AddWithValue("$xeDaXoa", $"Xe da xoa {nhan} C1");
-        command.Parameters.AddWithValue("$idQuanTri", Guid.NewGuid().ToString("n"));
-        command.Parameters.AddWithValue("$idBiKhoa", Guid.NewGuid().ToString("n"));
-        command.Parameters.AddWithValue("$idDaXoa", Guid.NewGuid().ToString("n"));
+        command.Parameters.AddWithValue("$idQuanTri", IdQuanTri(tenantCode));
+        command.Parameters.AddWithValue("$idBiKhoa", Guid.NewGuid());
+        command.Parameters.AddWithValue("$idDaXoa", Guid.NewGuid());
         command.Parameters.AddWithValue("$bamQuanTri", bamMatKhau);
         command.Parameters.AddWithValue("$bamBiKhoa", BamMatKhauBiKhoa);
+        command.Parameters.AddWithValue("$quyenRieng", tenantCode == HangA ? "301,302,9999" : "304");
+        command.Parameters.AddWithValue("$quyenVaiTro", tenantCode == HangA ? "303" : "");
         command.ExecuteNonQuery();
 
         _giuKetNoi.Add(connection);

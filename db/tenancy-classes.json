@@ -25,15 +25,15 @@
   ],
   "thongKe": {
     "tongSoBangTrongSo": 279,
-    "daDuyet": 2,
-    "chuaDuyet": 277,
+    "daDuyet": 5,
+    "chuaDuyet": 274,
     "theoHang": {
       "Global": 0,
       "PerTenant": 115,
       "PerCompany": 164,
       "CrossLink": 0
     },
-    "soMucCoCanhBao": 121,
+    "soMucCoCanhBao": 124,
     "uocTinhTongSoBangTrongDb": 565,
     "ghiChuDoPhu": "Spine ghi 565 bang / 215 bang co CompanyId tren DB dang chay. So nay chi phu phan ma nguon web cu co model."
   },
@@ -497,9 +497,12 @@
       "ten": "[Admin.RolePermissions]",
       "thucThe": "AdminRolePermission",
       "hang": "PerTenant",
-      "trangThai": "chuaDuyet",
-      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
-      "canhBao": []
+      "trangThai": "daDuyet",
+      "chungCu": "Do tren DB that TestG7 18-09-2026: FK_RoleID + PermissionValue (varchar CSV ma so), khong co cot cong ty. 78 dong.",
+      "canhBao": [
+        "CHO CHU SAN PHAM XAC NHAN: hang do agent dat theo bang chung, chua co phan quyet tuong minh cua nguoi.",
+        "NGOAI LE CO CHU Y: bang nay duoc doc qua duong xac thuc (IAuthenticationConnectionFactory) de nap quyen hieu luc, tuc KHI CHUA CO TenantScope. Duong do bi R16 gioi han chi cho Staxi.Auth."
+      ]
     },
     {
       "ten": "[Admin.Roles]",
@@ -603,9 +606,13 @@
       "ten": "[Admin.UserPermissions]",
       "thucThe": "AdminUserPermission",
       "hang": "PerTenant",
-      "trangThai": "chuaDuyet",
-      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
-      "canhBao": []
+      "trangThai": "daDuyet",
+      "chungCu": "Do tren DB that TestG7 18-09-2026: cot FK_AdminId + PermissionValue (varchar CSV ma so), khong co cot cong ty. Quyen tim theo nguoi dung, ma nguoi dung da thuoc mot cong ty roi. 67 dong.",
+      "canhBao": [
+        "CHO CHU SAN PHAM XAC NHAN: hang do agent dat theo bang chung, chua co phan quyet tuong minh cua nguoi.",
+        "NGOAI LE CO CHU Y: bang nay duoc doc qua duong xac thuc (IAuthenticationConnectionFactory) de nap quyen hieu luc, tuc KHI CHUA CO TenantScope. Duong do bi R16 gioi han chi cho Staxi.Auth.",
+        "PermissionValue la CHUOI CSV cac ma so, co dong dai 1403 ky tu - di san cua UrlNumberCode 5212 dong. AD-17 cam tai tao enum do; WEB2 chi DOC va anh xa sang so dang ky quyen bang code."
+      ]
     },
     {
       "ten": "[Admin.UserReferences]",
@@ -627,9 +634,12 @@
       "ten": "[Admin.UserRoles]",
       "thucThe": "AdminUserRole",
       "hang": "PerTenant",
-      "trangThai": "chuaDuyet",
-      "chungCu": "Model web cu khong co cot nao lien quan den cong ty",
-      "canhBao": []
+      "trangThai": "daDuyet",
+      "chungCu": "Do tren DB that TestG7 18-09-2026: FK_AdminId + FK_RoleID, khong co cot cong ty. 326 dong, 64 role duoc dung.",
+      "canhBao": [
+        "CHO CHU SAN PHAM XAC NHAN: hang do agent dat theo bang chung, chua co phan quyet tuong minh cua nguoi.",
+        "NGOAI LE CO CHU Y: bang nay duoc doc qua duong xac thuc (IAuthenticationConnectionFactory) de nap quyen hieu luc, tuc KHI CHUA CO TenantScope. Duong do bi R16 gioi han chi cho Staxi.Auth."
+      ]
     },
     {
       "ten": "[Admin.Users]",

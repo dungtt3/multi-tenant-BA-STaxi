@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Staxi.Platform.AspNetCore;
+using Staxi.Platform.Authorization;
 using Staxi.Platform.Caching;
 using Staxi.Platform.Data;
 using Staxi.Platform.Errors;
@@ -35,6 +36,11 @@ public static class PlatformServiceCollectionExtensions
         services.TryAddScoped<ITenantConnectionFactory, TenantConnectionFactory>();
         services.TryAddScoped<IAuthenticationConnectionFactory, AuthenticationConnectionFactory>();
 
+        services.TryAddSingleton<AsyncLocalPermissionSetAccessor>();
+        services.TryAddSingleton<IPermissionSetAccessor>(sp => sp.GetRequiredService<AsyncLocalPermissionSetAccessor>());
+        services.TryAddSingleton<IPermissionSetBinder>(sp => sp.GetRequiredService<AsyncLocalPermissionSetAccessor>());
+        services.TryAddSingleton<SoDangKyQuyen>();
+
         services.TryAddSingleton<ScopeParameterGuardOptions>();
 
         return services;
@@ -57,6 +63,8 @@ public static class PlatformApplicationBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        return app.UseMiddleware<HttpContextTenantScopeMiddleware>();
+        app.UseMiddleware<HttpContextTenantScopeMiddleware>();
+
+        return app.UseMiddleware<PermissionEndpointMiddleware>();
     }
 }

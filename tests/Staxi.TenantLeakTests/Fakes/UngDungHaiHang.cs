@@ -11,6 +11,7 @@ using Staxi.Admin.Application;
 using Staxi.Admin.Infrastructure;
 using Staxi.Auth.Application;
 using Staxi.Auth.Infrastructure;
+using Staxi.Platform.Authorization;
 using Staxi.Platform.Caching;
 using Staxi.Platform.Data;
 using Staxi.Platform.DependencyInjection;
@@ -75,6 +76,8 @@ public sealed class UngDungHaiHang : IAsyncDisposable
             new CauHinhToken(HaiHangGia.KhoaKyTest, "staxi-test", "staxi-test", TimeSpan.FromMinutes(10)),
             sp.GetRequiredService<Staxi.Platform.Time.IClock>()));
         services.AddScoped<DangNhap>();
+        services.AddSingleton<IPermissionCatalog, Staxi.Admin.Application.QuyenDanhMuc>();
+        services.AddScoped<IPermissionSource, QuyenTuDatabase>();
         services.AddSignalR();
         services.AddSingleton<ITenantNotifier, SignalRTenantNotifier<ThongBaoHub>>();
         services.AddAuthorization();
