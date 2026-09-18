@@ -1,0 +1,166 @@
+name: Test Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 2 * * 0"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  MINIMUM_TENANT_LEAK_TESTS: "45"
+
+# Không chia shard hay matrix: 45 bài chạy ~9 giây, chỉ tốn thêm thời gian khởi động runner; xem lại khi bộ test vượt 5 phút.
+jobs:
+  lint:
+    name: Lint (dotnet format)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore
+        run: dotnet restore Staxi.slnx
+      - name: Verify formatting
+        run: dotnet format Staxi.slnx --verify-no-changes --no-restore
+
+  tenant-leak-tests:
+    name: Tenant leak tests (AD-24)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore
+        run: dotnet restore Staxi.slnx
+      - name: Build
+        run: dotnet build Staxi.slnx -c Release --no-restore -m:1 -nr:false
+      - name: Test tenant isolation
+        run: dotnet test Staxi.slnx -c Release --no-build -m:1 -nr:false --logger "trx;LogFileName=tenant-leak-tests.trx" --logger "console;verbosity=normal" --results-directory TestResults
+      # Cong nay chan bo test lang le ngung chay phan lon chinh no (bi filter, bi Skip) ma CI van xanh vi nhanh hon.
+      # Khi them bai test moi thi nang MINIMUM_TENANT_LEAK_TESTS.
+      - name: Assert test count ratchet
+        shell: bash
+        run: |
+          set -euo pipefail
+          trx="TestResults/tenant-leak-tests.trx"
+          if [[ ! -f "$trx" ]]; then
+            echo "Loi: khong tim thay file $trx."
+            exit 1
+          fi
+          counters=$(grep -o '<Counters[[:space:]][^>]*>' "$trx" || true)
+          total=$(sed -n 's/.*[[:space:]]total="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
+          executed=$(sed -n 's/.*[[:space:]]executed="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
+          passed=$(sed -n 's/.*[[:space:]]passed="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
+          failed=$(sed -n 's/.*[[:space:]]failed="\([0-9][0-9]*\)".*/\1/p' <<< "$counters")
+          for count in "$total" "$executed" "$passed" "$failed"; do
+            if [[ ! "$count" =~ ^[0-9]+$ ]]; then
+              echo "Loi: khong doc duoc cac thuoc tinh Counters hop le trong TRX."
+              exit 1
+            fi
+          done
+          echo "TRX: total=$total executed=$executed passed=$passed failed=$failed (toi thieu=$MINIMUM_TENANT_LEAK_TESTS)"
+          if [[ "$failed" -ne 0 ]]; then
+            echo "Loi: co bai test that bai (failed=$failed)."
+            exit 1
+          fi
+          if [[ "$passed" -ne "$total" ]]; then
+            echo "Loi: co bai test bi bo qua hoac khong chay (passed=$passed, total=$total)."
+            exit 1
+          fi
+          if [[ "$total" -lt "$MINIMUM_TENANT_LEAK_TESTS" ]]; then
+            echo "Loi: tong so bai test ($total) thap hon muc toi thieu ($MINIMUM_TENANT_LEAK_TESTS)."
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tenant-leak-test-results
+          path: TestResults
+          retention-days: 30
+
+  burn-in:
+    name: Burn-in (phát hiện test chập chờn)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: tenant-leak-tests
+    if: github.event_name == 'pull_request' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore
+        run: dotnet restore Staxi.slnx
+      - name: Build
+        run: dotnet build Staxi.slnx -c Release --no-restore -m:1 -nr:false
+      - name: Repeat tenant leak tests five times
+        shell: bash
+        run: |
+          for round in {1..5}; do
+            echo "Vòng burn-in ${round}/5"
+            if dotnet test Staxi.slnx -c Release --no-build -m:1 -nr:false --logger "trx;LogFileName=burn-in-${round}.trx" --logger "console;verbosity=normal" --results-directory "TestResults/round-${round}"; then
+              echo "Vòng ${round}/5 thành công"
+            else
+              echo "Vòng ${round}/5 thất bại"
+              exit 1
+            fi
+          done
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: burn-in-failures
+          path: TestResults
+
+  report:
+    name: Report
+    runs-on: ubuntu-latest
+    needs: [lint, tenant-leak-tests, burn-in]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write job summary
+        shell: bash
+        env:
+          LINT_RESULT: ${{ needs.lint.result }}
+          TENANT_LEAK_RESULT: ${{ needs.tenant-leak-tests.result }}
+          BURN_IN_RESULT: ${{ needs.burn-in.result }}
+        run: |
+          {
+            echo '| Job | Kết quả |'
+            echo '| --- | --- |'
+            printf '| Lint (dotnet format) | %s |\n' "$LINT_RESULT"
+            printf '| Tenant leak tests (AD-24) | %s |\n' "$TENANT_LEAK_RESULT"
+            printf '| Burn-in (phát hiện test chập chờn) | %s |\n' "$BURN_IN_RESULT"
+          } >> "$GITHUB_STEP_SUMMARY"
